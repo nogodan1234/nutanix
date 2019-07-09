@@ -1,16 +1,25 @@
 #!/usr/bin/bash
 
-echo "Removing files from delete safe directory "
+echo "#############################################"
+echo "1. Removing files from delete safe directory "
+echo "#############################################"
+sleep 2
 rm -rf /home/nutanix/data/cores/*
 rm -rf /home/nutanix/data/binary_logs/*
 rm -rf /home/nutanix/data/ncc/installer/*
 rm -rf /home/nutanix/data/log_collector/*
 rm -rf /home/nutanix/foundation/tmp/*
 
-echo "Checking Prsim service temp directory"
+echo "#############################################"
+echo "2. Checking Prsim service temp directory"
+echo "#############################################"
+sleep 2
 for i in `svmips` ; do echo "$i #####################" ; ssh -q $i du -sh /home/nutanix/prism/temp  /dev/null | head -n 2 ; done
 
-echo "Checking for old AOS installer pkg"
+echo "#############################################"
+echo "3. Checking for old AOS installer pkg"
+echo "#############################################"
+sleep 2
 CURRENT_VERSION=`ncli cluster info | grep "Cluster Version" | awk '{print $4}'`
 echo "current AOS version is $CURRENT_VERSION"
 
@@ -25,17 +34,30 @@ do
 done
 
 #checking for NCC 3.7.0 bug
-echo "Checking for NCC bug ENG-220802(big big ncc_log_collector.log) "
+echo "#############################################"
+echo "4. Checking for NCC bug ENG-220802(big big ncc_log_collector.log) "
+echo "#############################################"
+sleep 2
 for i in `svmips` ; do echo "$i #################" ; ssh -q $i ls -lSh ~/data/logs/ncc*.log  /dev/null | head -n 2 ; done
 
-echo "Listing +100M file under /home/nutanix/foundation/isos/ "
+echo "#############################################"
+echo "5. Listing +100M file under /home/nutanix/foundation/isos/ "
+echo "#############################################"
+sleep 2
 find /home/nutanix/foundation/isos/ -type f -size +100M -exec ls -l {} \;
 #find /home/nutanix/foundation/isos/ -type f -size +100M -exec rm {} \;
 echo "Please check to see if any file can be deleted"
-sleep 15
+sleep 10
 
-echo "Older than 4 day log files under ~/data/logs/"
+echo "#############################################"
+echo "6. Older than 4 day log files under ~/data/logs/"
+echo "#############################################"
+sleep 2
 find /home/nutanix/data/logs -type f -mtime +4 -exec ls -l {} \;
 #find /home/nutanix/data/logs -type f -mtime +4 -exec rm {} \;
 echo "Please check to see if any file can be deleted"
-sleep 15
+sleep 10
+
+echo "#############################################"
+echo "Delete script is done !!!"
+echo "#############################################"
