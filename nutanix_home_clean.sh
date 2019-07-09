@@ -30,13 +30,13 @@ echo "Checking for NCC bug ENG-220802(big big ncc_log_collector.log) "
 #allssh "ls -lSh ~/data/logs/ncc*.log | head -n 2"
 for i in `svmips` ; do echo $i ; ssh $i ls -lSh ~/data/logs/ncc*.log  /dev/null | head -n 2 ; done
 
-echo "Listing foundation image iso from /home/nutanix/foundation/isos/ "
+echo "Listing +100M file under /home/nutanix/foundation/isos/ "
 find /home/nutanix/foundation/isos/ -type f -size +100M -exec ls -l {} \;
 #find /home/nutanix/foundation/isos/ -type f -size +100M -exec rm {} \;
 echo "Please check to see if any file can be deleted"
 sleep 15
 
-echo "Older than 4 day log files from ~/data/logs/"
+echo "Older than 4 day log files under ~/data/logs/"
 find /home/nutanix/data/logs -type f -mtime +4 -exec ls -l {} \;
 #find /home/nutanix/data/logs -type f -mtime +4 -exec rm {} \;
 echo "Please check to see if any file can be deleted"
