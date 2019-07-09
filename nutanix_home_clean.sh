@@ -8,7 +8,7 @@ rm -rf /home/nutanix/data/log_collector/*
 rm -rf /home/nutanix/foundation/tmp/*
 
 echo "Checking Prsim service temp directory"
-for i in `svmips` ; do echo $i ##################### ; ssh -q $i du -sh /home/nutanix/prism/temp  /dev/null | head -n 2 ; done
+for i in `svmips` ; do echo "$i #####################" ; ssh -q $i du -sh /home/nutanix/prism/temp  /dev/null | head -n 2 ; done
 
 echo "Checking for old AOS installer pkg"
 CURRENT_VERSION=`ncli cluster info | grep "Cluster Version" | awk '{print $4}'`
@@ -26,7 +26,7 @@ done
 
 #checking for NCC 3.7.0 bug
 echo "Checking for NCC bug ENG-220802(big big ncc_log_collector.log) "
-for i in `svmips` ; do echo $i ################# ; ssh -q $i ls -lSh ~/data/logs/ncc*.log  /dev/null | head -n 2 ; done
+for i in `svmips` ; do echo "$i #################" ; ssh -q $i ls -lSh ~/data/logs/ncc*.log  /dev/null | head -n 2 ; done
 
 echo "Listing +100M file under /home/nutanix/foundation/isos/ "
 find /home/nutanix/foundation/isos/ -type f -size +100M -exec ls -l {} \;
