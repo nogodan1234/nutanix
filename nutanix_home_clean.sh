@@ -59,5 +59,5 @@ echo "Please check to see if any file can be deleted"
 sleep 10
 
 echo "#############################################"
-echo "Delete script is done !!!"
+echo "Clean Up script is finished !!!"
 echo "#############################################"
