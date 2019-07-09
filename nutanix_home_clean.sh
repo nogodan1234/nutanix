@@ -25,7 +25,7 @@ allssh "du -sh /home/nutanix/prism/temp"
 echo "Checking for old AOS install pkg"
 CURRENT_VERSION=`ncli cluster info | grep "Cluster Version" | awk '{print $4}'`
 echo "current AOS version is $CURRENT_VERSION"
-ls -latr /home/nutanix/data/installer/ | grep -v $CURRENT_VERSION | grep release | awk '{print $9}'
+ls -latr /home/nutanix/data/installer/ | grep -v $CURRENT_VERSION | grep release-euphrates | awk '{print $9}'
 OLD_AOSVER=`ls -latr /home/nutanix/data/installer/ | grep -v $CURRENT_VERSION | grep release | awk '{print $9}'`
 echo "Old AOS pkg $OLD_AOSVER is detected"
 
