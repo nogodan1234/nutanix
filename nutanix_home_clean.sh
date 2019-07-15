@@ -18,7 +18,7 @@ rm -rf /home/nutanix/data/log_collector/*
 rm -rf /home/nutanix/foundation/tmp/*
 
 echo "#############################################"
-echo "2. Checking Prsim service temp directory"
+echo "2. Checking Prism service temp directory"
 echo "#############################################"
 sleep 2
 for i in `svmips` ; do echo "$i #####################" ; ssh -q $i du -sh /home/nutanix/prism/temp  /dev/null | head -n 2 ; done
