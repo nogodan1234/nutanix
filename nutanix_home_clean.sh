@@ -1,5 +1,12 @@
 #!/usr/bin/bash
 
+# Disclaimer: Usage of this tool must be under guidance of Nutanix Support or an authorised partner
+# Summary: This is clean up script for nutanix home directory - http://portal.nutanix.com/kb/1540
+# Version of the script: Version 1
+# Compatible software version(s): ALL AOS version
+# Brief syntax usage: nutanix$sh nutanix_home_clean.sh
+# Caveats: This script does not delete old log files under ~/data/logs and +100M file under /home/nutanix/foundation/isos/, only displays them
+
 echo "#############################################"
 echo "1. Removing files from delete safe directory "
 echo "#############################################"
