@@ -45,7 +45,7 @@ rg -z "Stargate exited" .
 rg -z "QFATAL Timed out waiting for Zookeeper session establishment" .
 
 echo "#############################################"
-echo "5. Toekn revoke failure"
+echo "5. Token revoke failure"
 echo "#############################################"
 sleep 2
 rg -z "Failed to revoke token from" .
