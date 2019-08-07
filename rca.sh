@@ -8,6 +8,7 @@
 # Caveats: This script does not delete old log files under ~/data/logs and +100M file under /home/nutanix/foundation/isos/, only displays them
 
 tar xvf *.tar
+rm *.tar
 cd *PE
 for i in $(ls -l  | grep gz | awk -F" " '{print $9}'); do tar xvf $i ;done
 rm *.gz
