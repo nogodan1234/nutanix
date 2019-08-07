@@ -62,3 +62,9 @@ echo "#############################################"
 sleep 2
 rg -z "Could not start repair on the node" .
 rg -z "Attempting repair of local node due to health warning" .
+
+echo "#############################################"
+echo "8. Hades Disk service check"
+echo "#############################################"
+sleep 2
+rg -z "Failed to start DiskService. Fix the problem and start again" .
