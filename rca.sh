@@ -9,7 +9,8 @@
 
 tar xvf *.tar
 rm *.tar
-cd *PE
+LOGSET=`ls -al | grep -v tar | grep -i ncc | awk '{print $9}'`
+cd $LOGSET
 for i in $(ls -l  | grep gz | awk -F" " '{print $9}'); do tar xvf $i ;done
 rm *.gz
 
@@ -30,6 +31,7 @@ rg -z -B 1 -A 1 "Out of memory: Kill process" . | egrep -i "ServiceVM_Centos.0.o
 echo "#############################################"
 echo "3. ENG-218803 , ISB-096-2019 Corrupt sstables"
 echo "#############################################"
+
 sleep 2
 rg -z -B 1 -A 1 "Corrupt sstables" .
 rg -z -B 1 -A 1 "kCorruptSSTable" .
