@@ -15,6 +15,26 @@ for i in $(ls -l  | grep gz | awk -F" " '{print $9}'); do tar xvf $i ;done
 rm *.gz
 
 echo "#############################################"
+echo " Network Status Check "
+echo "#############################################"
+find . -name ping_hosts.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" |tail -50 > ~/tmp/ping_hosts.txt
+find . -name ping_gateway.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" |tail -50 > ~/tmp/ping_gw.txt
+find . -name ping_cvm_hosts.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" |tail -50 > ~/tmp/ping_cvm.txt
+sleep 2
+
+echo "#############################################"
+echo " AOS Version check"
+echo "#############################################"
+ find . -name release_* -exec cat {} \; > ~/tmp/AOS_ver.txt
+sleep 2
+
+echo "#############################################"
+echo " ESXi hypervisor network error check "
+echo "#############################################"
+rg -z "Network unreachable" . > ~/tmp/esxi.network.err.txt
+sleep 2
+
+echo "#############################################"
 echo "1. ENG-177414 - Cassandra Too many SSTables "
 echo "#############################################"
 sleep 2
