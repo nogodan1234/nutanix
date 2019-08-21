@@ -29,6 +29,37 @@ echo "#############################################"
 sleep 2
 
 echo "#############################################"
+echo " Hypervisor Version check"
+echo "#############################################"
+ find . -name sysctl_info.txt > ~/tmp/hyper_ver.txt
+ find . -name sysctl_info.txt -exec cat {} \; | grep release  >> ~/tmp/hyper_ver.txt
+sleep 2
+
+echo "#############################################"
+echo " Log collector run time"
+echo "#############################################"
+ find . -name sysctl_info.txt -exec head -1 {} \; > ~/tmp/ncc_run_time.txt
+sleep 2
+
+echo "#############################################"
+echo " Cluster ID"
+echo "#############################################"
+ ls | grep NCC | cut -d '-' -f 6 > ~/tmp/cluster_id.txt
+sleep 2
+
+echo "#############################################"
+echo " Hard Ware Model Check"
+echo "#############################################"
+ rg "Product Part Number" . | grep hardware_logs > ~/tmp/HW.txt
+sleep 2
+
+echo "#############################################"
+echo " BMC/BIOS version"
+echo "#############################################"
+ find . -name hardware_info -exec grep -w -A 6 -e Info -e BIOS -e bmc {} \;> ~/tmp/BMC_BIOS.txt
+sleep 2
+
+echo "#############################################"
 echo " ESXi hypervisor network error check "
 echo "#############################################"
 rg -z "Network unreachable" . > ~/tmp/esxi.network.err.txt
