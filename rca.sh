@@ -92,7 +92,7 @@ echo "#############################################"
 echo "4. Stargate health check"
 echo "#############################################"
 sleep 2
-rg -z "Couldn't lookup metadata for extent group" .
+rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" .
 rg -z "kUnexpectedIntentSequence" .
 rg -z "Inserted HA route on host" .
 rg -z "Stargate exited" .
@@ -116,9 +116,14 @@ echo "#############################################"
 sleep 2
 rg -z "Could not start repair on the node" .
 rg -z "Attempting repair of local node due to health warning" .
+rg -z "as degraded after analyzing" .
+echo "# ENG-149005,ENG-230635 Heap Memory issue #"
+rg -z "Paxos Leader Writer timeout waiting for replica leader" . 
 
 echo "#############################################"
 echo "8. Hades Disk service check"
 echo "#############################################"
 sleep 2
 rg -z "Failed to start DiskService. Fix the problem and start again" .
+rg -z "is not in disk inventory" .
+
