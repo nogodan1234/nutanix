@@ -119,6 +119,7 @@ rg -z "Attempting repair of local node due to health warning" .
 rg -z "as degraded after analyzing" .
 echo "# ENG-149005,ENG-230635 Heap Memory issue #"
 rg -z "Paxos Leader Writer timeout waiting for replica leader" . 
+rg -z "SSTableDeletingTask.java" .
 
 echo "#############################################"
 echo "8. Hades Disk service check"
