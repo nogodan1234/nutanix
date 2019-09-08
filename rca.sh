@@ -44,11 +44,11 @@ sleep 2
 echo "#############################################"
 echo " Cluster ID"
 echo "#############################################"
- ls | grep NCC | cut -d '-' -f 6 > ~/tmp/cluster_id.txt
+find . -name alert_manager.* -exec grep "cluster_id" {} | grep int64_value \; > ~/tmp/cluster_id.txt
 sleep 2
 
 echo "#############################################"
-echo " Hard Ware Model Check"
+echo " Hardware Model Check"
 echo "#############################################"
  rg "Product Part Number" . | grep hardware_logs > ~/tmp/HW.txt
 sleep 2
@@ -64,6 +64,19 @@ echo " ESXi hypervisor network error check "
 echo "#############################################"
 rg -z "Network unreachable" . > ~/tmp/esxi.network.err.txt
 sleep 2
+
+echo "#############################################"
+echo " NCC version check "
+echo "#############################################"
+find . -name log_collector.out* -exec grep "Ncc Version number" {} \;> ~/tmp/NCC_Ver.txt
+sleep 2
+
+echo "#############################################"
+echo " Disk failure check"
+echo "#############################################"
+rg "ATA Error Count" .
+sleep 2
+
 
 echo "#############################################"
 echo "1. ENG-177414 - Cassandra Too many SSTables "
@@ -120,6 +133,14 @@ rg -z "as degraded after analyzing" .
 echo "# ENG-149005,ENG-230635 Heap Memory issue #"
 rg -z "Paxos Leader Writer timeout waiting for replica leader" . 
 rg -z "SSTableDeletingTask.java" .
+echo "# ISB-102-2019 #"
+#https://confluence.eng.nutanix.com:8443/display/STK/ISB-102-2019%3A+Data+inconsistency+on+2-node+clusters
+rg -z "has been found dead" .
+rg -z "does not exist when extent oid=" .
+rg -z "Leadership acquired for token:" .
+rg -z "RegisterForLeadership for token:" .
+rg -z "with transformation type kCompressionLZ4 and transformed length" .
+rg -z "Failing GetEgroupStateOp as the extent group does not exist on disk" .
 
 echo "#############################################"
 echo "8. Hades Disk service check"
@@ -127,4 +148,20 @@ echo "#############################################"
 sleep 2
 rg -z "Failed to start DiskService. Fix the problem and start again" .
 rg -z "is not in disk inventory" .
+
+echo "#############################################"
+echo "9. Curator Scan Failure due to network issue"
+echo "#############################################"
+sleep 2
+find . -name curator.INFO -exec grep "Http request timed out" {} \;
+
+echo "#############################################"
+echo "10. Acropolis service crash"
+echo "#############################################"
+sleep 2
+rg -z "Acquired master leadership" .
+rg -z "Failed to re-register with Pithos after 60 seconds" .
+rg -z "Time to fire reconcilliation callback took" .
+
+
 
