@@ -163,5 +163,10 @@ rg -z "Acquired master leadership" .
 rg -z "Failed to re-register with Pithos after 60 seconds" .
 rg -z "Time to fire reconcilliation callback took" .
 
+echo "#############################################"
+echo "11. Pithos service crash - ENG-137628"
+echo "#############################################"
+sleep 2
+rg -z "GetRangeSlices RPC failed (kTimeout: TimedOutException())" .
 
 
