@@ -44,7 +44,7 @@ sleep 2
 echo "#############################################"
 echo " Cluster ID"
 echo "#############################################"
-find . -name alert_manager.* -exec grep "cluster_id" {} | grep int64_value \; > ~/tmp/cluster_id.txt
+find . -name alert_manager.* -exec grep "cluster_id" {} \; | grep int64_value > ~/tmp/cluster_id.txt
 sleep 2
 
 echo "#############################################"
