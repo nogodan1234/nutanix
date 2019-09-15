@@ -170,3 +170,11 @@ sleep 2
 rg -z "GetRangeSlices RPC failed (kTimeout: TimedOutException())" .
 
 
+echo "#############################################"
+echo "12. File Descriptior Check - KB 3857 ENG-119268"
+echo "#############################################"
+sleep 2
+rg -z "Resource temporarily unavailable" .
+rg -z "[ssh] <defunct>" . | wc -l
+
+
