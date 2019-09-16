@@ -141,6 +141,8 @@ rg -z "Leadership acquired for token:" .
 rg -z "RegisterForLeadership for token:" .
 rg -z "with transformation type kCompressionLZ4 and transformed length" .
 rg -z "Failing GetEgroupStateOp as the extent group does not exist on disk" .
+echo "Cassandra heap memory congestion check"
+rg -z "GCInspector.java" .
 
 echo "#############################################"
 echo "8. Hades Disk service check"
