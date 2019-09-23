@@ -26,6 +26,7 @@ This script will ask Prism Element IP to congfigure various information by one c
 
 Prerequistes
 - Updated `auto_script.sh` base on your environment and located in same directory
+  	
   	ex) Network pool/vlan configuration,ntp,data service ip etc
 
 - nutanix user ssh public key must exist with Prism Element via API or Prism Console
