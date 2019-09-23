@@ -24,15 +24,13 @@ ex) $sh int_auto_script.sh
 
 This script will ask Prism Element IP to congfigure various information by one command. 
 
-	Prerequistes
-	- Updated `auto_script.sh` base on your environment and located in same directory
-  		ex) Network pool/vlan configuration,ntp,data service ip etc
+Prerequistes
+- Updated `auto_script.sh` base on your environment and located in same directory
+  	ex) Network pool/vlan configuration,ntp,data service ip etc
 
-	- nutanix user ssh public key must exist with Prism Element via API or Prism Console
-
-  			API: https://www.nutanix.dev/reference/prism_element/v2/api/cluster/post-cluster-public-keys-addpublickey
-
-  			Prism Console: https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Security-Guide-v511:wc-security-cluster-lockdown-wc-t.html
+- nutanix user ssh public key must exist with Prism Element via API or Prism Console
+  	API: https://www.nutanix.dev/reference/prism_element/v2/api/cluster/post-cluster-public-keys-addpublickey
+  	Prism Console: https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Security-Guide-v511:wc-security-cluster-lockdown-wc-t.html
 
 # 
 2. nutanix_home_clean.sh
