@@ -38,7 +38,7 @@ Prerequistes
 # 
 2. nutanix_home_clean.sh
 
-	This is for `/home/nutanix` gaubage clean up which is addressed on Nutanix KB 1540
+	This is for `/home/nutanix` garbage files clean up which is addressed on Nutanix KB 1540
 
 	You can just download this script to cvm which complains about /home/nutanix space then run it will clean up delet-safe files and directories
 
