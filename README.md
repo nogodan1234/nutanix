@@ -1,7 +1,5 @@
 # Nutanix script repo by Taeho choi
 
-
-
 ## Getting Started
 
 These scripts are created with intention to help  Nutanix SRE(Site Reliabilty Engineer), SE(System Engineer) and administrator to manage/deploy/config/troubleshoot Nutanix HCI environment.
@@ -23,10 +21,10 @@ ex) $sh int_auto_script.sh
 ### Detail on each script
 
 1. init_auto_script.sh
-This script will ask Prism Element IP to configure cluster setting, 
+This script will ask Prism Element IP to congfigure various information by one command. 
 
 	Prerequistes
-	- Updated auto_script.sh base on your environment and located in same directory
+	- Updated `auto_script.sh` base on your environment and located in same directory
   		ex) Network pool/vlan configuration,ntp,data service ip etc
 
 	- nutanix user ssh public key must exist with Prism Element via API or Prism Console
@@ -35,8 +33,8 @@ This script will ask Prism Element IP to configure cluster setting,
 
 
 2. nutanix_home_clean.sh
-	This is for /home/nutanix gaubage clean up which is addressed on KB 1540
-	You can just download this script to cvm which complains about /home/nutanix space then run it will clean up delet safe files and directories
+	This is for `/home/nutanix` gaubage clean up which is addressed on Nutanix KB 1540
+	You can just download this script to cvm which complains about /home/nutanix space then run it will clean up delet-safe files and directories
 	http://portal.nutanix.com/kb/1540
 	Please see more detail on readme_nutanix_home_clean.doc in this repo, how to use
 
