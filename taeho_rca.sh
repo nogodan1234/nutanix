@@ -103,7 +103,6 @@ echo "#############################################"
 rg "attempting task abort! scmd" . 										
 sleep 2
 
-
 echo "#############################################"  					
 echo "1. ENG-177414 - Cassandra Too many SSTables "  					
 echo "#############################################"  					
@@ -130,7 +129,6 @@ rg -z -B 1 -A 1 "Out of memory: Kill process" . | egrep -i "ServiceVM_Centos.0.o
 echo "#############################################"  					
 echo "3. ENG-218803 , ISB-096-2019 Corrupt sstables"  					
 echo "#############################################"  					
-
 sleep 2
 rg -z -B 1 -A 1 "Corrupt sstables" . 									
 rg -z -B 1 -A 1 "kCorruptSSTable" . 									
@@ -152,23 +150,23 @@ rg -z "Created iSCSI session for leading connection" .
 rg -z "SMB-SESSION-SETUP request got for connection" . 					
 #echo "ENG-30397 ext4 file corruption" 									
 #rg -z "kSliceChecksumMismatch" . 										
-echo "Disk IO ms check > 100ms" 										
+echo "Checking ... Disk IO ms check > 100ms" 										
 find . -name stargate.INFO* -exec grep "AIO disk" {} \; 				
 rg -z "Starting Stargate" . 											
 rg -z "Becoming NFS namespace master" . 								
 #rg -z "Requested deletion of egroup" . 									
 rg -z "completed with error kRetry for vdisk" . 						
-echo "Tier running out of space" 										
+echo "Checking ... SSD tier running out of space" 										
 rg -z "Unable to pick a suitable replica" . 							
-echo "Unfixable egroup corruption" 										
+echo "Checking ... Unfixable egroup corruption" 										
 rg -z "are either unavailable or corrupt" . 							
 echo "NFS server requested client to retry" 							
-rg -z "NFS3ERR_JUKEBOX" . 												
-echo "Oplog corrupt detection" 											
+rg -z "Checking ... NFS3ERR_JUKEBOX error" . 												
+echo "Checking ... Oplog corrupt detection" 											
 rg -z "is missing on all the replicas" . 								
-echo "RSS memory dump" 													
+echo "Checking ... RSS memory dump/crash" 													
 rg -z "Exceeded resident memory limit: Aborting" . 						
-echo "Checking Stargate FATAL"
+echo "Checking ... Stargate FATAL"
 rg '^F[0-9]{4}' -g 'stargate*'											
 
 echo "#############################################"  					
