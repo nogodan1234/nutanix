@@ -44,43 +44,50 @@ echo "#############################################"
 echo " AOS Version check"
 echo " Output file will be generated in ~/tmp folder"
 echo "#############################################"
- find . -name release_* -exec cat {} \; > ~/tmp/AOS_ver.txt
+ rg -z "release" -g release_version > ~/tmp/AOS_ver.txt
 sleep 2
 
 echo "#############################################"
 echo " Hypervisor Version check"
 echo " Output file will be generated in ~/tmp folder"
 echo "#############################################"
- find . -name sysctl_info.txt > ~/tmp/hyper_ver.txt
- find . -name sysctl_info.txt -exec cat {} \; | grep release  >> ~/tmp/hyper_ver.txt
+ rg -z "release" -g sysctl_info.txt > ~/tmp/hyper_ver.txt
 sleep 2
 
 echo "#############################################"
 echo " Log collector run time"
 echo " Output file will be generated in ~/tmp folder"
 echo "#############################################"
- find . -name sysctl_info.txt -exec head -1 {} \; > ~/tmp/ncc_run_time.txt
+rg -z "Log Collector Start time" -g sysctl_info.txt > ~/tmp/ncc_run_time.txt
 sleep 2
 
 echo "#############################################"
 echo " Cluster ID"
 echo " Output file will be generated in ~/tmp folder"
 echo "#############################################"
-find . -name zeus_config.* -exec grep -B1 "cluster_name" {} \; > ~/tmp/cluster_id.txt
+rg -z -B1 "cluster_name" -g "zeus_config.*" . | sort -u > ~/tmp/cluster_id.txt
+sleep 2
+
+echo "#############################################"
+echo " Upgrade history"
+echo " Output file will be generated in ~/tmp folder"
+echo "#############################################"
+rg -z release -g "upgrade.history" > ~/tmp/upgrade_history.txt
 sleep 2
 
 echo "#############################################"
 echo " Hardware Model Check"
 echo " Output file will be generated in ~/tmp folder"
 echo "#############################################"
- rg "Product Part Number" . | grep hardware_logs > ~/tmp/HW.txt
+ rg -z "FRU Device Description" -A14 -g "hardware_info" > ~/tmp/HW.txt
 sleep 2
 
 echo "#############################################"
 echo " BMC/BIOS version"
 echo " Output file will be generated in ~/tmp folder"
 echo "#############################################"
- find . -name hardware_info -exec grep -w -A 6 -e Info -e BIOS -e bmc {} \;> ~/tmp/BMC_BIOS.txt
+ rg -z "bmc info" -A5 -g "hardware_info" > ~/tmp/bmc_ver.txt
+ rg -z "BIOS Information" -A2 -g "hardware_info" > ~/tmp/bios_ver.txt
 sleep 2
 
 echo "#############################################"
@@ -90,11 +97,18 @@ echo "#############################################"
 rg -z "Network unreachable" . > ~/tmp/esxi.network.err.txt
 sleep 2
 
+echo "#############################################" 					
+echo "CVM/hypervisor reboot check " 								
+echo "#############################################" 					
+sleep 2
+rg -z "system boot" -g "config.txt" > ~/tmp/cvm_reboot.txt
+rg -z "system boot" -g "kvm_info.txt" > ~/tmp/ahv_reboot.txt				
+
 echo "#############################################"
 echo " NCC version check "
 echo " Output file will be generated in ~/tmp folder"
 echo "#############################################"
-find . -name log_collector.out* -exec grep "Ncc Version number" {} \;> ~/tmp/NCC_Ver.txt
+rg -z "Ncc Version number" -g "log_collector.out*" > ~/tmp/NCC_Ver.txt
 sleep 2
 
 echo "#############################################"  					
@@ -109,6 +123,7 @@ echo "#############################################"
 sleep 2
 rg -z -B 1 -A 1 "Too many SSTables found for Keyspace : medusa" . 		
 sleep 2
+
 echo "#############################################"  					
 echo "FA67 Metadata corruption due to skipped row"  					
 echo "#############################################" 
@@ -138,7 +153,7 @@ echo "#############################################"
 echo "4. Stargate health check"						  					
 echo "#############################################"  					
 sleep 2
-rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" . 
+rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" .
 rg -z "kUnexpectedIntentSequence" . 									
 rg -z "Inserted HA route on host" . 									
 rg -z "Stargate exited" . 												
@@ -199,22 +214,22 @@ rg -z "RegisterForLeadership for token:" .
 rg -z "with transformation type kCompressionLZ4 and transformed length" . 
 #rg -z "Failing GetEgroupStateOp as the extent group does not exist on disk" . 
 echo "Cassandra heap memory congestion check" 							
-rg -z "GCInspector.java" . 												
+rg -z "GCInspector.java" -g "system.log*"									
 echo "# Cassandra restart" 												
-rg -z "Logging initialized" . | grep -v health_server.log				
+rg -z "Logging initialized" -g "system.log*" 				
 
 echo "#############################################" 					
 echo "8. Hades Disk service check" 					 					
 echo "#############################################" 					
 sleep 2
-rg -z "Failed to start DiskService. Fix the problem and start again" . 	
-rg -z "is not in disk inventory" . 										
+rg -z "Failed to start DiskService. Fix the problem and start again" -g "hades*"
+rg -z "is not in disk inventory"  -g "hades*"									
 
 echo "#############################################" 					
 echo "9. Curator Scan Failure due to network issue"  					
 echo "#############################################" 					
 sleep 2
-find . -name curator.INFO -exec grep "Http request timed out" {} \; 	
+rg -z "Http request timed out" -g "curator.*"	
 
 echo "#############################################" 					
 echo "10. Acropolis service crash" 					 					
@@ -222,7 +237,7 @@ echo "#############################################"
 sleep 2
 rg -z "Acquired master leadership" .									
 rg -z "Failed to re-register with Pithos after 60 seconds" . 			
-rg -z "Time to fire reconcilliation callback took" . 					
+rg -z "Time to fire reconcilliation callback took" -g "acropolis.out*"				
 
 echo "#############################################" 					
 echo "11. Pithos service crash - ENG-137628" 		 					
@@ -256,8 +271,7 @@ echo "15. Missing egroup replica check ONCALL-4514"
 echo  "need to confirm with medusa_printer and egroup_collector.py " 	
 echo "#############################################" 					
 sleep 2
-find . -name curator.* -exec cat {} \; | egrep "changed from 1 to 0 due to egroup" 
-find . -name curator.* -exec cat {} \; | egrep "changed from 1 to 0 due to egroup" | awk '{print $18}' |sort -u 
+rg -z "changed from 1 to 0 due to egroup" -g "curator.*"
 # Run egroup_collector.py from diamond server
 echo "/users/eng/tools/egroup_corruption/egroup_collector.py --egroup_id $EID --output dir /users/taeho.choi/tmp" 
 echo "medusa_printer --lookup=egid --egroup_id=$EID" 					
@@ -266,41 +280,35 @@ echo "#############################################"
 echo "16. Failed disk check from hades log" 							
 echo "#############################################" 					
 sleep 2
-find . -name hades.out* -exec cat {} \; | egrep "Handling hot-remove event for disk" 
+rg -z "Handling hot-remove event for disk" -g "hades.out*"
 
 echo "#############################################" 					
-echo "17. cvm/hypervisor reboot check " 								
-echo "#############################################" 					
-sleep 2
-rg -z -i reboot . | grep -v ncc | grep "system boot" 					
-
-echo "#############################################" 					
-echo "18. Disk forcefully was pulled off " 								
+echo "17. Disk forcefully was pulled off " 								
 echo "#############################################" 					
 sleep 2
 rg -z "is not marked for removal and has been forcefully pulled" . 		
 #disk_operator accept_old_disk $DISK_SN
 
 echo "#############################################" 					
-echo "19. iscsi connection reset " 										
+echo "18. iscsi connection reset " 										
 echo "#############################################" 					
 sleep 2
-rg -z "Removing initiator iqn" . 										
+rg -z "Removing initiator iqn" -g "stargate*"										
 
 echo "#############################################" 					
-echo "20. HBA reset reset " 											
+echo "19. HBA reset reset " 											
 echo "#############################################" 					
 sleep 2
 rg -z "sending diag reset" . 											
 
 echo "#############################################" 					
-echo "21. Cerebro bug ENG-247313 " 										
+echo "20. Cerebro bug ENG-247313 " 										
 echo "#############################################" 					
 sleep 2
 rg -z "Cannot reincarnate a previously detached entity without an incarnation_id" . 	
 
 echo "#############################################" 					
-echo "22. FATAL log check $filter ." 											
+echo "21. FATAL log check $filter ." 											
 echo "#############################################" 					
 sleep 2
 #filter=F`(date '+%m%d')`
