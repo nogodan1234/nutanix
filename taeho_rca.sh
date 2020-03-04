@@ -121,7 +121,7 @@ echo "#############################################"
 echo "1. ENG-177414 - Cassandra Too many SSTables "  					
 echo "#############################################"  					
 sleep 2
-rg -z -B 1 -A 1 "Too many SSTables found for Keyspace : medusa" . 		
+rg -z -B 1 -A 1 "Too many SSTables found for Keyspace : medusa" -g "cassandra*"		
 sleep 2
 
 echo "#############################################"  					
