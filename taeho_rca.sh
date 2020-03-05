@@ -1,11 +1,12 @@
 #!/usr/bin/bash
 
-# Disclaimer: Usage of this tool must be under guidance of Nutanix Support or an authorised partner
-# Summary: This is clean up script for nutanix home directory - http://portal.nutanix.com/kb/1540
+# Disclaimer: Usage of this tool must be used only on nutanix diamond platform
+# You can review source code from https://github.com/nogodan1234/nutanix/blob/master/taeho_rca.sh
+# Downloadable from diamond : curl -OL https://raw.githubusercontent.com/nogodan1234/nutanix/master/taeho_rca.sh
 # Version of the script: Version 1
-# Compatible software version(s): ALL AOS version
-# Brief syntax usage: nutanix$sh nutanix_home_clean.sh
-# Caveats: This script does not delete old log files under ~/data/logs and +100M file under /home/nutanix/foundation/isos/, only displays them
+# Compatible software version(s): ALL AOS version - ncc/logbay logset
+# Brief syntax usage: diamond$sh taeho_rca.sh
+
 
 echo "#############################################"
 echo " What is the case number you want to analize? "
@@ -14,7 +15,13 @@ echo "#############################################"
 read CASE_NUM
 
 echo "#############################################"
-echo " Extracting log bundle from ncc "
+echo " Removing existing directory for the case if exists "
+echo " rm -rf ~/shared/$CASE_NUM "
+echo "#############################################"
+rm -rf ~/shared/$CASE_NUM
+
+echo "#############################################"
+echo " Extracting log bundle from ncc/logbay "
 echo "#############################################"
 carbon extract $CASE_NUM
 #carbon logbay $CASE_NUM
