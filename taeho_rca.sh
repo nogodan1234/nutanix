@@ -98,10 +98,11 @@ echo "#############################################"
 sleep 2
 
 echo "#############################################"
-echo " ESXi hypervisor network error check "
+echo " Hypervisor network error check "
 echo " Output file will be generated in ~/tmp folder"
 echo "#############################################"
 rg -z "Network unreachable" . > ~/tmp/esxi.network.err.txt
+rg -z "-z "NIC Link is Down  > ~/tmp/hyper_network.err.txt
 sleep 2
 
 echo "#############################################" 					
@@ -152,9 +153,9 @@ echo "#############################################"
 echo "3. ENG-218803 , ISB-096-2019 Corrupt sstables"  					
 echo "#############################################"  					
 sleep 2
-rg -z -B 1 -A 1 "Corrupt sstables" . 									
-rg -z -B 1 -A 1 "kCorruptSSTable" . 									
-rg -z -B 1 -A 1 "java.lang.AssertionError" . 							
+rg -z -B 1 -A 1 "Corrupt sstables" -g "cassandra*"									
+rg -z -B 1 -A 1 "kCorruptSSTable" -g "cassandra*" 									
+rg -z -B 1 -A 1 "java.lang.AssertionError" -g "cassandra*" 							
 
 echo "#############################################"  					
 echo "4. Stargate health check"						  					
@@ -162,9 +163,9 @@ echo "#############################################"
 sleep 2
 rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" .
 rg -z "kUnexpectedIntentSequence" . 									
-rg -z "Inserted HA route on host" . 									
-rg -z "Stargate exited" . 												
-rg -z "QFATAL Timed out waiting for Zookeeper session establishment" . 	
+rg -z "Inserted HA route on host" -g "genesis*"									
+rg -z "Stargate exited" -g "stargate*"												
+rg -z "QFATAL Timed out waiting for Zookeeper session establishment" -g "stargate*" 	
 rg -z "Becoming NFS namespace master" . 								
 rg -z "Hosting of virtual IP " . 										
 #rg -z "nfs_remove_op.cc" . 												
@@ -314,9 +315,17 @@ echo "#############################################"
 sleep 2
 rg -z "Cannot reincarnate a previously detached entity without an incarnation_id" . 	
 
-echo "#############################################" 					
-echo "21. FATAL log check $filter ." 											
-echo "#############################################" 					
-sleep 2
+#echo "#############################################" 					
+#echo "21. FATAL log check $filter ." 											
+#echo "#############################################" 					
+#sleep 2
 #filter=F`(date '+%m%d')`
 #rg -z $filter .	
+
+echo "#############################################" 					
+echo "sharepath info for engineering" 											
+echo "#############################################"
+chmod 777 -R ~/shared/$CASE_NUM
+cd ~/shared/$CASE_NUM/*PE
+sharepath
+sleep 2
