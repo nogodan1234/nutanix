@@ -42,7 +42,7 @@ cd *PE
 
 echo "#############################################"
 echo " Network Status Check "
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 find . -name ping_hosts.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" > ~/tmp/$CASE_NUM/ping_hosts.txt
 find . -name ping_gateway.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" > ~/tmp/$CASE_NUM/ping_gw.txt
@@ -51,49 +51,49 @@ sleep 2
 
 echo "#############################################"
 echo " AOS Version check"
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
  rg -z "release" -g release_version > ~/tmp/$CASE_NUM/AOS_ver.txt
 sleep 2
 
 echo "#############################################"
 echo " Hypervisor Version check"
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
  rg -z "release" -g sysctl_info.txt > ~/tmp/$CASE_NUM/hyper_ver.txt
 sleep 2
 
 echo "#############################################"
 echo " Log collector run time"
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 rg -z "Log Collector Start time" -g sysctl_info.txt > ~/tmp/$CASE_NUM/ncc_run_time.txt
 sleep 2
 
 echo "#############################################"
 echo " Cluster ID"
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 rg -z -B1 "cluster_name" -g "zeus_config.*" . | sort -u > ~/tmp/$CASE_NUM/cluster_id.txt
 sleep 2
 
 echo "#############################################"
 echo " Upgrade history"
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 rg -z release -g "upgrade.history" > ~/tmp/$CASE_NUM/upgrade_history.txt
 sleep 2
 
 echo "#############################################"
 echo " Hardware Model Check"
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
  rg -z "FRU Device Description" -A14 -g "hardware_info" > ~/tmp/$CASE_NUM/HW.txt
 sleep 2
 
 echo "#############################################"
 echo " BMC/BIOS version"
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
  rg -z "bmc info" -A5 -g "hardware_info" > ~/tmp/$CASE_NUM/bmc_ver.txt
  rg -z "BIOS Information" -A2 -g "hardware_info" > ~/tmp/$CASE_NUM/bios_ver.txt
@@ -101,14 +101,15 @@ sleep 2
 
 echo "#############################################"
 echo " Hypervisor network error check "
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 rg -z "Network unreachable" . > ~/tmp/$CASE_NUM/esxi.network.err.txt
-rg -z "-z "NIC Link is Down  > ~/tmp/$CASE_NUM/hyper_network.err.txt
+rg -z "NIC Link is Down"  > ~/tmp/$CASE_NUM/hyper_network.err.txt
 sleep 2
 
 echo "#############################################" 					
-echo "CVM/hypervisor reboot check " 								
+echo "CVM/hypervisor reboot check "
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder" 								
 echo "#############################################" 					
 sleep 2
 rg -z "system boot" -g "config.txt" > ~/tmp/$CASE_NUM/cvm_reboot.txt
@@ -116,7 +117,7 @@ rg -z "system boot" -g "kvm_info.txt" > ~/tmp/$CASE_NUM/ahv_reboot.txt
 
 echo "#############################################"
 echo " NCC version check "
-echo " Output file will be generated in ~/tmp folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 rg -z "Ncc Version number" -g "log_collector.out*" > ~/tmp/$CASE_NUM/NCC_Ver.txt
 sleep 2
