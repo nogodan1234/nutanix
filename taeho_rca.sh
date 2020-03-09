@@ -104,7 +104,9 @@ echo " Hypervisor network error check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 rg -z "Network unreachable" . > ~/tmp/$CASE_NUM/esxi.network.err.txt
-rg -z "NIC Link is Down"  > ~/tmp/$CASE_NUM/hyper_network.err.txt
+rg -z "NIC Link is Down" -g "vmkernel.*" > ~/tmp/$CASE_NUM/hyper_network.err.txt
+rg -z "NIC Link is Down" -g "message*" >> ~/tmp/$CASE_NUM/hyper_network.err.txt
+rg -z "NIC Link is Down" -g "dmesg*" >> ~/tmp/$CASE_NUM/hyper_network.err.txt
 sleep 2
 
 echo "#############################################" 					
@@ -288,10 +290,11 @@ echo "/users/eng/tools/egroup_corruption/egroup_collector.py --egroup_id $EID --
 echo "medusa_printer --lookup=egid --egroup_id=$EID" 					
 
 echo "#############################################" 					
-echo "16. Failed disk check from hades log" 							
+echo "16. Check disk operation from hades log" 							
 echo "#############################################" 					
 sleep 2
 rg -z "Handling hot-remove event for disk" -g "hades.out*"
+rg -z "Handling hot-plug" -g "hades.out*"
 
 echo "#############################################" 					
 echo "17. Disk forcefully was pulled off " 								
