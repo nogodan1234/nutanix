@@ -12,7 +12,7 @@ export TERM=linux
 #NFS_SERVER=10.10.10.243
 #NFS_EXPORT=Shared/Software
 
-#export CENTOS_IMAGE='https://nutanixinc-my.sharepoint.com/:f:/g/personal/taeho_choi_nutanix_com/EnklqdXwjVpAu8wlzIdDkd4B3ZPjoHDwDrrYvQ2ogXF6og?e=pNxniF'
+export CENTOS_IMAGE=https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2
 export UBUNTU_IMAGE=https://cloud-images.ubuntu.com/releases/16.04/release/ubuntu-16.04-server-cloudimg-amd64-disk1.img
 #WINDOWS_ISO=$NFS_EXPORT/Microsoft/Windows_Server_2012_R2_Datacenter_Customer_VLK_2015.05.18/SW_DVD9_Windows_Svr_Std_and_DataCtr_2012_R2_64Bit_English_-4_MLF_X19-82891.ISO
 #export PRISM_CENTRAL_BOOT_ISO=http://download.nutanix.com/downloads/kvm/5.10.0.1/5.10.0.1-prism_central-boot.qcow2?Expires=1544690536&Signature=MvXAoEYcu~fnSycK39k5xTMQaO0gcU7qIgHLpl4o6p0TYVPrpZtF2xp0GIvl4tUB0msR0ENcAXw9-cKwmydIhCb4kUcNPAldOZhL76~6~gZecUAINu3l6QmZfdACKECOaRYc7ITVsvEW1rdPWKphS1XP0WBvAR~X0EA9QCKG~swjnQdiAzQNu~HO2hTJ-kslCo6-UvAff4yGjzl615NSDYsft430HbG3I6UOz7oue9KQZFnjeJtI5zNNV7V6GQf7ioBwCSZ3tC113dfuBIYF8SZ66SncoEg0W3TriyJMpkEelCUvr7Z6CPiHICb0f6rcoB2p5-Y2~jPkJ775C9TZOw__&Key-Pair-Id=APKAJTTNCWPEI42QKMSA;
@@ -22,8 +22,8 @@ export DHCP_VLAN=102
 export STATIC_NET=matrix
 export STATIC_VLAN=0
 export IP_CONFIG=10.2.124.1/22
-export IP_POOL_START=10.2.127.51
-export IP_POOL_END=10.2.127.54
+export IP_POOL_START=10.2.127.11
+export IP_POOL_END=10.2.127.14
 #VLAN_IP_CONFIG=10.10.10.253/24
 #DHCP_START=10.10.10.100
 #DHCP_END=10.10.10.200
