@@ -217,10 +217,14 @@ echo "#############################################" 											| tee   -a ~/tmp
 sleep 2
 rg -z "Could not start repair on the node"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt				
 #rg -z "Attempting repair of local node due to health warning"		
-rg -z "as degraded after analyzing"																| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt						
-echo "# ENG-149005,ENG-230635 Heap Memory issue #" 												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt						
-rg -z "Paxos Leader Writer timeout waiting for replica leader" -g "system.log*" | grep -v vdiskblockmap 	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt		
-echo "# ISB-102-2019 #" 																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt						
+rg -z "as degraded after analyzing"																| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
+echo "# ENG-149005,ENG-230635 Heap Memory issue #" 												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
+rg -z "Paxos Leader Writer timeout waiting for replica leader" -g "system.log*" | grep -v vdiskblockmap 	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt			
+echo "# ISB-102-2019 #" 																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt						
 #https://confluence.eng.nutanix.com:8443/display/STK/ISB-102-2019%3A+Data+inconsistency+on+2-node+clusters
 rg -z "has been found dead"																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt					
 rg -z "does not exist when extent oid="															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt					
@@ -246,11 +250,18 @@ echo "#############################################" 											| tee  -a ~/tmp/
 sleep 2
 rg -z "Http request timed out" -g "curator.*"													| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt	
 
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt				
+echo "Curator Scan Failure due to zk version mismatch - KB7058"  											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt				
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
+sleep 2
+rg -z "Write node finished with error kBadVersion for Zeus" -g "curator.*"						| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt		
+
+
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt				
 echo "10. Acropolis service crash" 					 											| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt				
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt				
 sleep 2
-rg -z "Acquired master leadership" .															| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt				
+rg -z "Acquired master leadership" -g "acropolis.*"												| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt				
 rg -z "Failed to re-register with Pithos after 60 seconds"										| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt			
 rg -z "Time to fire reconcilliation callback took" -g "acropolis.out*" 							| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "VM Delete log" 																			| tee  ~/tmp/$CASE_NUM/VM_delete.txt	
@@ -332,6 +343,13 @@ echo "#############################################" 					  						| tee  -a ~/tm
 sleep 2
 rg -z "Cache sync with DB failed" -g "ergon.*"							  						| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
 rg -z "Cache sync with DB failed" -g "minerva_ha_dispatcher.*"		      						| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
+
+echo "#############################################" 					  						| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt	
+echo "22. Segmentation Fault Check possiblely ovsd crash(ENG-279410)" 							| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt		
+echo "#############################################" 					  						| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
+sleep 2
+rg -z "Segmentation fault" -B1 -A1							  									| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
+
 
 #echo "#############################################" 					
 #echo "21. FATAL log check $filter ." 											
