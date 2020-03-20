@@ -186,29 +186,47 @@ rg -z "Created iSCSI session for leading connection" 											| tee  -a ~/tmp/
 rg -z "SMB-SESSION-SETUP request got for connection" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt 					
 #echo "ENG-30397 ext4 file corruption" 									
 #rg -z "kSliceChecksumMismatch"										
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... Disk IO ms check > 100ms"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "AIO disk" -g "stargate.INFO*" 															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt														
 rg -z "Starting Stargate"   		 															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt									
 rg -z "Becoming NFS namespace master"   														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt								
 #rg -z "Requested deletion of egroup"									
 rg -z "completed with error kRetry for vdisk"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... SSD tier running out of space" 												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt									
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Unable to pick a suitable replica"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... Unfixable egroup corruption" 												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt									
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "are either unavailable or corrupt"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "NFS server requested client to retry" 													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Checking ... NFS3ERR_JUKEBOX error"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt										
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... Oplog corrupt detection" 													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt									
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "is missing on all the replicas"															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... RSS memory dump/crash" 														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt										
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Exceeded resident memory limit: Aborting"												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Run out of storage space" 																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "failed with error kDiskSpaceUnavailable" -g "stargate.INFO*" 							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt																			
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... Stargate FATAL"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg '^F[0-9]{4}' -g 'stargate*'	  																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking peer service dead"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "has been found dead"																		| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-
+		
 echo "#############################################"  											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt				
 echo "5. Token revoke failure" 						  											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt				
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt			
@@ -242,9 +260,13 @@ rg -z "Leadership acquired for token:" -g "cassandra_monitor*"	 								| tee   
 rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*" 								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt									
 rg -z "with transformation type kCompressionLZ4 and transformed length" 						| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt	
 #rg -z "Failing GetEgroupStateOp as the extent group does not exist on disk"
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "Cassandra heap memory congestion check" 													| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "GCInspector.java" -g "system.log*"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt								
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "# Cassandra restart" 																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Logging initialized" -g "system.log*" 													| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt				
 
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
@@ -408,10 +430,6 @@ echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_chec
 rg -z  "failed with NFS3ERR_NOENT" -g "catalog.out*"  | tee -a ~/tmp/$CASE_NUM/acropolis_check.txt
 
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
-echo "Cassandra service check" 			| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
-echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
-
-echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "CASSANDRA_MON_HEALTH_WARNINING" 	| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z  "Attempting repair of local node due to health warnings received from cassandra"  -g "cassandra_monitor.*" | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
@@ -483,11 +501,6 @@ echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 echo "CLUSTER_NOT_REACHABLE"       		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 rg -z  "Failed to write Zeus data java.lang.IllegalStateException: cluster not reachable"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
-
-echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
-echo "Backups failing due to conflicting files"       | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
-echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
-rg -z  "Aborting the operation due to conflicting files"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 echo "Backups failing due to conflicting files"       | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
