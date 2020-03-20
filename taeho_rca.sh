@@ -171,7 +171,10 @@ echo "#############################################"  											| tee  -a ~/tmp
 sleep 2
 rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" 							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 #ISB-072-2018 
-rg -z "kUnexpectedIntentSequence" 					 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "kUnexpectedIntentSequence"
+echo "#############################################"  											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt	
+echo "Check Backend error, please check cassandra status"						  				| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"  											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					 											
 rg -z "ParseReturnCodes: Backend returns error 'Timeout Error' for extent group id:" -g "stargate.*" | tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Inserted HA route on host" -g "genesis*"		 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt							
 rg -z "Stargate exited" -g "stargate*"				 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt								
@@ -202,7 +205,9 @@ rg -z "Exceeded resident memory limit: Aborting"												| tee  -a ~/tmp/$CAS
 echo "Run out of storage space" 																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "failed with error kDiskSpaceUnavailable" -g "stargate.INFO*" 							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt																			
 echo "Checking ... Stargate FATAL"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg '^F[0-9]{4}' -g 'stargate*'	  																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt										
+rg '^F[0-9]{4}' -g 'stargate*'	  																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "Checking peer service dead"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "has been found dead"																		| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 
 echo "#############################################"  											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt				
 echo "5. Token revoke failure" 						  											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt				
@@ -228,10 +233,10 @@ echo "# ENG-149005,ENG-230635 Heap Memory issue #" 												| tee   -a ~/tmp/
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
 rg -z "Paxos Leader Writer timeout waiting for replica leader" -g "system.log*" | grep -v vdiskblockmap 	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt			
-echo "# ISB-102-2019 #" 																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "# 2 node cluster Cassandra issue ISB-102-2019 #" 															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt						
 #https://confluence.eng.nutanix.com:8443/display/STK/ISB-102-2019%3A+Data+inconsistency+on+2-node+clusters
-rg -z "has been found dead"																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt					
+rg -z "has been found dead"	-g "cassandra_monitor*"												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt					
 rg -z "does not exist when extent oid="															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt					
 rg -z "Leadership acquired for token:" -g "cassandra_monitor*"	 								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt								
 rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*" 								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt									
