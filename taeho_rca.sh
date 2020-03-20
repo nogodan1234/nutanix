@@ -386,12 +386,12 @@ rg -z  "AcropolisNotFoundError: Unknown VmGroup:" -g "acroplos.out*"   | tee  -a
 echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "Displays Acropolis crash due to abort migration events - ENG-232484, KB 7925, MTU check" | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
-rg -z  "Unable to find matching parcel for VM"-g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "Unable to find matching parcel for VM" -g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 
 echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "Displays Acropolis crash due to master initialization taking too long - ENG-269432, KB 8630" | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
-rg -z  "Master initialization took longer than"-g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "Master initialization took longer than" -g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 
 echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "Detecting if an image file is not present which is leading to image list failing in UI" | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
@@ -496,6 +496,6 @@ echo "#############################################"
 echo "sharepath info for engineering" 											
 echo "#############################################"
 chmod 777 -R ~/shared/$CASE_NUM
-cd ~/shared/$CASE_NUM/*PE
+cd ~/shared/$CASE_NUM/
 sharepath
 sleep 2
