@@ -45,9 +45,9 @@ echo "#############################################"
 echo " Network Status Check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-find . -name ping_hosts.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" | tee -a ~/tmp/$CASE_NUM/ping_hosts.txt
-find . -name ping_gateway.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" | tee -a ~/tmp/$CASE_NUM/ping_gw.txt
-find . -name ping_cvm_hosts.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" | tee -a  ~/tmp/$CASE_NUM/ping_cvm.txt
+find . -name ping_hosts.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" > ~/tmp/$CASE_NUM/ping_hosts.txt
+find . -name ping_gateway.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" > ~/tmp/$CASE_NUM/ping_gw.txt
+find . -name ping_cvm_hosts.INFO* -exec cat {} \; | egrep -v "IP : time" | awk '/^#TIMESTAMP/ || $3>13.00 || $3=unreachable' | egrep -B1 " ms|unreachable" | egrep -v "\-\-" > ~/tmp/$CASE_NUM/ping_cvm.txt
 sleep 2
 
 echo "#############################################"
@@ -171,9 +171,9 @@ echo "#############################################"  											| tee  -a ~/tmp
 echo "4. Stargate health check"						  											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"  											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 sleep 2
-rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" 							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" -g "stargate.*"			| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 #ISB-072-2018 
-rg -z "kUnexpectedIntentSequence"
+rg -z "kUnexpectedIntentSequence" -g "stargate.*"												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"  											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt	
 echo "Check Backend error, please check cassandra status"						  				| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"  											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					 											
@@ -384,7 +384,6 @@ echo "#############################################" 					  						| tee  -a ~/tm
 sleep 2
 rg -z "Segmentation fault" -B1 -A1							  									| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 
-
 #Adding more entry on 20 March 2020
 
 echo "###########################" 		| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
@@ -447,7 +446,6 @@ echo "Displays critical events" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z  "Skipping row DecoratedKey"  -g "system.log*"  | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z  "Fatal exception in thread"  -g "system.log*"  | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
-
 
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
 echo "Aplos LDAP login failure  "  		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
