@@ -28,7 +28,7 @@ echo "#############################################"
 carbon extract $CASE_NUM
 #carbon logbay $CASE_NUM
 cd ~/shared/$CASE_NUM
-cd *PE
+cd `ls -l | grep '^d' | grep -v meta | awk '{print $9}'`
 
 #echo "#############################################"
 #echo " Extracting log bundle from logbay "
