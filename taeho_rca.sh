@@ -17,6 +17,7 @@ read CASE_NUM
 echo "#############################################"
 echo " Removing existing directory for the case if exists "
 echo " rm -rf ~/shared/$CASE_NUM "
+echo " rm -rf ~/tmp/$CASE_NUM"
 echo "#############################################"
 rm -rf ~/shared/$CASE_NUM
 rm -rf ~/tmp/$CASE_NUM
