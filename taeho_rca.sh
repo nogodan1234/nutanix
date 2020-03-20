@@ -351,6 +351,139 @@ sleep 2
 rg -z "Segmentation fault" -B1 -A1							  									| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 
 
+#Adding more entry on 20 March 2020
+
+echo "###########################" 		| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Acropolis service check" 			| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################" 		| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################" 		| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Displays AHV master changes" 		| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################" 		| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z "Acquired master leadership"  -g "acropolis.out*"  | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Displays Acropolis crash events." | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "Could not find parcels for VM" -g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Displays Acropolis crash events." | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "ValueError: bytes is not a 16-char string" -g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Detecting multiple VM creation with same NIC UUID." | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "failed with error: virtual_nic with uuid" -g "acroplos.out*"    | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Acropolis crashes when there are VMs in the cluster with affinity and anti-affinity configured and enabling HA, to HA-RS(ENG-109729)" | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "AcropolisNotFoundError: Unknown VmGroup:" -g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Displays Acropolis crash due to abort migration events - ENG-232484, KB 7925, MTU check" | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "Unable to find matching parcel for VM"-g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Displays Acropolis crash due to master initialization taking too long - ENG-269432, KB 8630" | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "Master initialization took longer than"-g "acroplos.out*"   | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Detecting if an image file is not present which is leading to image list failing in UI" | tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################"     	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "failed with NFS3ERR_NOENT" -g "catalog.out*"  | tee -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "Cassandra service check" 			| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "CASSANDRA_MON_HEALTH_WARNINING" 	| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Attempting repair of local node due to health warnings received from cassandra"  -g "cassandra_monitor.*" | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "Detecting if cassandra skipped scans" | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Skipping scans for cf: "  -g "dynamic_ring_changer.*"  | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "Displays critical events" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Skipping row DecoratedKey"  -g "system.log*"  | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Fatal exception in thread"  -g "system.log*"  | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+echo "Aplos LDAP login failure  "  		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+rg -z  "This search operation has checked the maximum of 10000 entries for matches"  -g "aplos.out*"  | tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+rg -z  "'desc': 'Bad search filter'"  -g "aplos.out*"  | tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+echo "SSP_MIGRATION_FAILS - KB 5919 "  	| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+rg -z  "Directory service update failed kunden"  -g "aplos.out*"  | tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+echo "remote_cluster_uuid is not known or may be unregistered "  | tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+rg -z  "msecs, response status: 404"  -g "aplos.out*" | grep "remote_cluster_uuid="  | tee -a ~/tmp/$CASE_NUM/aplos_check.txt
+
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+echo "Aplos engine VM snapshot failure" | tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+rg -z  "Timed out waiting for the completion of task" -g "aplos_engine.out*"  | tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/kernel.txt
+echo "Kernel child process hung "  		| tee -a ~/tmp/$CASE_NUM/kernel.txt
+echo "CPU Unblock is hung.  See ENG-72597, ENG-258725 "  | tee -a ~/tmp/$CASE_NUM/kernel.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/kernel.txt
+rg -z "child is hung"  -g "messages*"  	| tee -a ~/tmp/$CASE_NUM/kernel.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/kernel.txt
+echo "Firmware PH16 Detect - KB-6937"   | tee -a ~/tmp/$CASE_NUM/kernel.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/kernel.txt
+rg -z "LSISAS3008: FWVersion(16.00.01.00)"  -g "messages*"  | tee -a ~/tmp/$CASE_NUM/kernel.txt
+rg -z "mpt3sas_cm0: Command Timeout"  -g "messages*"  | tee -a ~/tmp/$CASE_NUM/kernel.txt
+rg -z "mpt3sas_cm0: sending diag reset"  -g "messages*"  | tee -a ~/tmp/$CASE_NUM/kernel.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "Tracking Prism Gateway OutOfMemory Errors"       | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+rg -z  "Throwing exception from VMAdministration.getVMs"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "RPC_PROTOBUF_ERROR"       		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+rg -z  "InvalidProtocolBufferException: Protocol message was too large"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "APLOS_KEY_GENERATION_FAILED"      | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+rg -z  "Generate SSL Certificate failed. Error occurred while writing the private Key"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "CLUSTER_NOT_REACHABLE"       		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+rg -z  "Failed to write Zeus data java.lang.IllegalStateException: cluster not reachable"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "Backups failing due to conflicting files"       | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+rg -z  "Aborting the operation due to conflicting files"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "Backups failing due to conflicting files"       | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+rg -z  "Aborting the operation due to conflicting files"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+
+
 #echo "#############################################" 					
 #echo "21. FATAL log check $filter ." 											
 #echo "#############################################" 					
