@@ -62,6 +62,7 @@ echo " Hypervisor Version check"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
  rg -z "release" -g sysctl_info.txt 															> ~/tmp/$CASE_NUM/hyper_ver.txt
+ rg -z "esx_version:" -A3 -g esx_info															>> ~/tmp/$CASE_NUM/hyper_ver.txt
 sleep 2
 
 echo "#############################################"
@@ -69,6 +70,7 @@ echo " Log collector run time"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 rg -z "Log Collector Start time" -g sysctl_info.txt 											> ~/tmp/$CASE_NUM/ncc_run_time.txt
+rg -z "Log Collector Start time" -g ncc_info.txt 											    >> ~/tmp/$CASE_NUM/ncc_run_time.txt
 sleep 2
 
 echo "#############################################"
@@ -168,7 +170,9 @@ echo "4. Stargate health check"						  											| tee  -a ~/tmp/$CASE_NUM/Star
 echo "#############################################"  											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 sleep 2
 rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" 							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+#ISB-072-2018 
 rg -z "kUnexpectedIntentSequence" 					 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "ParseReturnCodes: Backend returns error 'Timeout Error' for extent group id:" -g "stargate.*" | tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Inserted HA route on host" -g "genesis*"		 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt							
 rg -z "Stargate exited" -g "stargate*"				 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt								
 rg -z "QFATAL Timed out waiting for Zookeeper session establishment" -g "stargate*" 			| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt	
@@ -406,6 +410,7 @@ echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.tx
 echo "CASSANDRA_MON_HEALTH_WARNINING" 	| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z  "Attempting repair of local node due to health warnings received from cassandra"  -g "cassandra_monitor.*" | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Caught Timeout exception while waiting for paxos write response"  -g "system.log*" | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "Detecting if cassandra skipped scans" | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
