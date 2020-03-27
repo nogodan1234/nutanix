@@ -29,17 +29,7 @@ echo "#############################################"
 carbon extract $CASE_NUM
 #carbon logbay $CASE_NUM
 cd ~/shared/$CASE_NUM
-cd `ls -l | grep '^d' | grep -v meta | awk '{print $9}'`
-
-#echo "#############################################"
-#echo " Extracting log bundle from logbay "
-#echo "#############################################"
-#unzip *.zip
-#rm *.zip
-#LOGSET2=`ls -al | grep -i NTNX| awk '{print $9}'`
-#cd $LOGSET2
-#for i in $(ls -l  | grep zip | awk -F" " '{print $9}'); do unzip $i ;done
-#rm *.zip
+#cd `ls -l | grep '^d' | grep -v meta | awk '{print $9}'`
 
 echo "#############################################"
 echo " Network Status Check "
@@ -468,6 +458,13 @@ echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
 echo "Aplos engine VM snapshot failure" | tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
 rg -z  "Timed out waiting for the completion of task" -g "aplos_engine.out*"  | tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+echo "PC/PE Malformed Certification failure - ENG-254057 " | tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+echo "https://opengrok.eng.nutanix.com/source/xref/euphrates-5.10.1-stable/aplos/py/aplos/lib/oauth/service_jwt_tokens.py#20" | tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+rg -z  "IAM token validation failed with" -g "aplos*"  | tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
+
 
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/kernel.txt
 echo "Kernel child process hung "  		| tee -a ~/tmp/$CASE_NUM/kernel.txt
