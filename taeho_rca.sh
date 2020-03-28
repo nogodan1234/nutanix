@@ -73,6 +73,20 @@ rg -z -B1 "cluster_name" -g "zeus_config.*"| sort -u 											| tee -a  ~/tmp/
 sleep 2
 
 echo "#############################################"
+echo " Foundation verion"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
+echo "#############################################"
+rg "4|3|2"  -g foundation_version																| tee -a  ~/tmp/$CASE_NUM/foundation_ver.txt
+sleep 2
+
+echo "#############################################"
+echo " Pheonix verion"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
+echo "#############################################"
+rg "4|3|2"  -g phoenix_version																	| tee -a  ~/tmp/$CASE_NUM/phoenix_ver.txt
+sleep 2
+
+echo "#############################################"
 echo " Upgrade history"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
