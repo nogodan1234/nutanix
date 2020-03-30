@@ -518,10 +518,16 @@ echo "Backups failing due to conflicting files"       | tee -a ~/tmp/$CASE_NUM/p
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 rg -z  "Aborting the operation due to conflicting files"  -g "prism_gateway*"  | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 
+echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
+echo "Checking for ENG-296333 AHV NIC FW issue on DELL HW"      | tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
+echo "version 2.9.21 might be trouble + N7K switch"    			| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
+echo "AHV .301 is fine since it has old FW"						| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
+echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
+rg -z "Network Driver - version" -g "dmesg" | grep i40e 		| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
 
 #echo "#############################################" 					
 #echo "21. FATAL log check $filter ." 											
-#echo "#############################################" 					
+#echo "#############################################"				
 #sleep 2
 #filter=F`(date '+%m%d')`
 #rg -z $filter .	
