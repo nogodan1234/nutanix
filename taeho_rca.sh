@@ -279,7 +279,7 @@ echo "#############################################" 											| tee  -a ~/tmp/
 echo "8. Hades Disk service check" 					 											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
 sleep 2
-rg -z "Failed to start DiskService. Fix the problem and start again" -g "hades*" 				| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
+rg -z "Failed to start DiskService. Fix the problem and start again" -g "genesis*" 				| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
 rg -z "is not in disk inventory"  -g "hades*"									 				| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
 
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt				
@@ -491,7 +491,7 @@ echo "Firmware PH16 Detect - KB-6937"   | tee -a ~/tmp/$CASE_NUM/kernel.txt
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/kernel.txt
 rg -z "LSISAS3008: FWVersion(16.00.01.00)"  -g "messages*"  | tee -a ~/tmp/$CASE_NUM/kernel.txt
 rg -z "mpt3sas_cm0: Command Timeout"  -g "messages*"  | tee -a ~/tmp/$CASE_NUM/kernel.txt
-rg -z "mpt3sas_cm0: sending diag reset"  -g "messages*"  | tee -a ~/tmp/$CASE_NUM/kernel.txt
+#rg -z "mpt3sas_cm0: sending diag reset"  -g "messages*"  | tee -a ~/tmp/$CASE_NUM/kernel.txt
 
 echo "###########################" 		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 echo "Tracking Prism Gateway OutOfMemory Errors"       | tee -a ~/tmp/$CASE_NUM/prism_gateway.txt

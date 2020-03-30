@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
-
 echo "#############################################"
 echo " What is the customer name for this issue? "
 echo "#############################################"
@@ -14,7 +13,7 @@ read CASE_NUM
 CLUSTER_ID=`ncli cluster info | grep "Cluster Id"| cut -d ':' -f4`
 
 echo "#############################################"
-echo " Is the production? YES or NO "
+echo " Is this cluster in the production? YES or NO "
 echo "#############################################"
 read PRODUCTION
 
