@@ -525,6 +525,12 @@ echo "AHV .301 is fine since it has old FW"						| tee -a ~/tmp/$CASE_NUM/DELL_N
 echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
 rg -z "Network Driver - version" -g "dmesg" | grep i40e 		| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
 
+echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+echo "AOS 5.11.2 local user delete issue"       				| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+echo "Checking for ENG-281158 all local accounts removed"       | tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+rg -z "DELETE" -g "client_tracking.log*" 						| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+
 #echo "#############################################" 					
 #echo "21. FATAL log check $filter ." 											
 #echo "#############################################"				
