@@ -531,6 +531,14 @@ echo "Checking for ENG-281158 all local accounts removed"       | tee -a ~/tmp/$
 echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
 rg -z "DELETE" -g "client_tracking.log*" 						| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
 
+echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+echo "Broadcom (LSI) SAS3008 Storage Controller Instability"    | tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+echo "version PH16.00.01.00 is problematic."    				| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+rg -z "LSISAS3008" -g "dmesg*" | grep "16.00.01.00" 			| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+rg -z "mpt3sas_cm0: Command Timeout" -g "dmesg*"			    | tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+
+
 #echo "#############################################" 					
 #echo "21. FATAL log check $filter ." 											
 #echo "#############################################"				
