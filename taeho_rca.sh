@@ -57,6 +57,13 @@ echo "#############################################"
 sleep 2
 
 echo "#############################################"
+echo " Network Segmentation Check"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
+echo "#############################################"
+ rg -z "enable" -g microseg_status_* 															| tee -a  ~/tmp/$CASE_NUM/net_seg.txt
+sleep 2
+
+echo "#############################################"
 echo " Log collector run time"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
@@ -66,10 +73,11 @@ rg -z "Log Collector Start time" -g "hardware_info.INFO*" | tail -1								| tee
 sleep 2
 
 echo "#############################################"
-echo " Cluster ID"
+echo " Cluster ID/Timezone"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg -z -B1 "cluster_name" -g "zeus_config.*"| sort -u 											| tee -a  ~/tmp/$CASE_NUM/cluster_id.txt
+rg -z -B1 "cluster_name" -g "zeus_config.txt"   | sort -u 										| tee -a  ~/tmp/$CASE_NUM/cluster_id_timezone.txt
+rg -z "timezone" -g "zeus_config.txt"	        | sort -u 									    | tee -a  ~/tmp/$CASE_NUM/cluster_id_timezone.txt
 sleep 2
 
 echo "#############################################"
@@ -97,15 +105,15 @@ echo "#############################################"
 echo " Hardware Model Check"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
- rg -z "FRU Device Description" -A14 -g "hardware_info" 										| tee -a  ~/tmp/$CASE_NUM/HW.txt
+ rg -z "FRU Device Description" -A14 -g "hardware_info*" 										| tee -a  ~/tmp/$CASE_NUM/HW.txt
 sleep 2
 
 echo "#############################################"
 echo " BMC/BIOS version"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
- rg -z "bmc info" -A5 -g "hardware_info" 														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
- rg -z "BIOS Information" -A2 -g "hardware_info" 												| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+ rg -z "bmc info" -A5 -g "hardware_info*" 														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
+ rg -z "BIOS Information" -A2 -g "hardware_info*" 												| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
 sleep 2
 
 echo "#############################################"
@@ -124,6 +132,7 @@ echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################" 					
 sleep 2
 rg -z "system boot" -g "config.txt" 															| tee -a  ~/tmp/$CASE_NUM/cvm_reboot.txt
+rg -z "system boot" -g "last_reboot.txt" 															| tee -a  ~/tmp/$CASE_NUM/cvm_reboot.txt
 rg -z "system boot" -g "kvm_info.txt" 															| tee -a ~/tmp/$CASE_NUM/ahv_reboot.txt				
 
 echo "#############################################"
@@ -203,7 +212,7 @@ rg -z "completed with error kRetry for vdisk"													| tee  -a ~/tmp/$CASE_
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... SSD tier running out of space" 												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt									
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Unable to pick a suitable replica"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					
+rg -z "Unable to pick a suitable replica" -g "stargate*"										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt					
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... Unfixable egroup corruption" 												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt									
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
@@ -537,7 +546,6 @@ echo "version PH16.00.01.00 is problematic."    				| tee -a ~/tmp/$CASE_NUM/ISB
 echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 rg -z "LSISAS3008" -g "dmesg*" | grep "16.00.01.00" 			| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 rg -z "mpt3sas_cm0: Command Timeout" -g "dmesg*"			    | tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
-
 
 #echo "#############################################" 					
 #echo "21. FATAL log check $filter ." 											
