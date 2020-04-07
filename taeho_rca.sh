@@ -258,9 +258,14 @@ echo "#############################################" 											| tee   -a ~/tmp
 echo "7. Cassandra Check" 							 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt	
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt	
 sleep 2
-rg -z "Could not start repair on the node"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt				
-#rg -z "Attempting repair of local node due to health warning"		
+rg -z "Could not start repair on the node"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "as degraded after analyzing"																| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt			
+echo "Cass SSD disk write latency high, please check SSD status" 							 	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt	
+echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt					
+rg -z "local write hasn't succeeded yet" -g "system.log.INFO.*"									| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt	
+
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
 echo "# ENG-149005,ENG-230635 Heap Memory issue #" 												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
@@ -280,7 +285,7 @@ echo "Cassandra heap memory congestion check" 													| tee   -a ~/tmp/$CAS
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "GCInspector.java" -g "system.log*"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt								
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-echo "# Cassandra restart" 																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
+echo "# Cassandra restart/crash" 																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Logging initialized" -g "system.log*" 													| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt				
 
@@ -288,8 +293,7 @@ echo "#############################################" 											| tee  -a ~/tmp/
 echo "8. Hades Disk service check" 					 											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
 sleep 2
-rg -z "Failed to start DiskService. Fix the problem and start again" -g "genesis*" 				| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
-rg -z "is not in disk inventory"  -g "hades*"									 				| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt	
+rg -z "Failed to start DiskService. Fix the problem and start again" -g "genesis*" 				| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt		
 
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt				
 echo "9. Curator Scan Failure due to network issue"  											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt				
@@ -349,8 +353,8 @@ echo "#############################################" 					  						| tee  -a ~/tm
 sleep 2
 rg -z "changed from 1 to 0 due to egroup" -g "curator.*"                  						| tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt	
 # Run egroup_collector.py from diamond server
-echo "/users/eng/tools/egroup_corruption/egroup_collector.py --egroup_id $EID --output dir /users/taeho.choi/tmp" | tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt	
-echo "medusa_printer --lookup=egid --egroup_id=$EID" 					  						| tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt	
+#echo "/users/eng/tools/egroup_corruption/egroup_collector.py --egroup_id $EID --output dir /users/taeho.choi/tmp" | tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt	
+#echo "medusa_printer --lookup=egid --egroup_id=$EID" 					  						| tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt	
 
 echo "#############################################" 					  						| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt	
 echo "16. Check disk operation from hades log" 							  						| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt	
@@ -376,7 +380,7 @@ echo "#############################################" 					  						| tee  -a ~/tm
 echo "19. HBA reset reset " 											  						| tee  -a ~/tmp/$CASE_NUM/HBA_reset.txt
 echo "#############################################" 					  						| tee  -a ~/tmp/$CASE_NUM/HBA_reset.txt
 sleep 2
-rg -z "sending diag reset"											      						| tee  -a ~/tmp/$CASE_NUM/HBA_reset.txt
+rg -z "mpt3sas_cm0: sending diag reset"	-g "messages*"										    | tee  -a ~/tmp/$CASE_NUM/HBA_reset.txt
 
 echo "#############################################" 					  						| tee  -a ~/tmp/$CASE_NUM/Cerebro_bug-ENG24713.txt
 echo "20. Cerebro bug ENG-247313 " 										  						| tee  -a ~/tmp/$CASE_NUM/Cerebro_bug-ENG24713.txt
@@ -534,11 +538,11 @@ echo "AHV .301 is fine since it has old FW"						| tee -a ~/tmp/$CASE_NUM/DELL_N
 echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
 rg -z "Network Driver - version" -g "dmesg" | grep i40e 		| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
 
-echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
-echo "AOS 5.11.2 local user delete issue"       				| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
-echo "Checking for ENG-281158 all local accounts removed"       | tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
-echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
-rg -z "DELETE" -g "client_tracking.log*" 						| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+#echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+#echo "AOS 5.11.2 local user delete issue"       				| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+#echo "Checking for ENG-281158 all local accounts removed"       | tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+#echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+#rg -z "DELETE" -g "client_tracking.log*" 						| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
 
 echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 echo "Broadcom (LSI) SAS3008 Storage Controller Instability"    | tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt

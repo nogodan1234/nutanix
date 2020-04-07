@@ -93,3 +93,6 @@ echo "												"
 echo "#############################################"
 echo "Clean Up script is finished !!!"
 echo "#############################################"
+
+#In case to delete more file than above then delete installer directory then recover later if necessary
+#rm -rf /home/nutanix/data/installer/*
