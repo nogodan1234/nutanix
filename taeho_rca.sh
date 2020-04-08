@@ -143,9 +143,10 @@ rg -z "Ncc Version number" -g "log_collector.out*" 												| tee -a  ~/tmp/$
 sleep 2
 
 echo "#############################################"  											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
-echo " Disk failure check"     						  											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt	
+echo " Smartctl/Disk failure check"     						  								| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt	
 echo "#############################################"  											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
-rg "attempting task abort! scmd"																| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt									
+rg "attempting task abort! scmd"																| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
+rg -z "SATA DOM|sudo smartctl | overall-health" -g "hardware_info"								| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt	
 sleep 2
 
 echo "#############################################"  											| tee -a ~/tmp/$CASE_NUM/Cass_Too_many_SStables-ENG-177414.txt	
@@ -202,9 +203,9 @@ rg -z "SMB-SESSION-SETUP request got for connection" 											| tee  -a ~/tmp/
 #echo "ENG-30397 ext4 file corruption" 									
 #rg -z "kSliceChecksumMismatch"										
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-echo "Checking ... Disk IO ms check > 100ms"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "Checking ... Disk IO latency check > 100ms"												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################" 											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "AIO disk" -g "stargate.INFO*" 															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt														
+rg -z "AIO disk" -g "stargate*"  | sort -k 11n | tail -30										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt														
 rg -z "Starting Stargate"   		 															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt									
 rg -z "Becoming NFS namespace master"   														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt								
 #rg -z "Requested deletion of egroup"									
