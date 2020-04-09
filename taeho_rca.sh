@@ -284,7 +284,8 @@ rg -z "with transformation type kCompressionLZ4 and transformed length" 						| 
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "Cassandra heap memory congestion check" 													| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "GCInspector.java" -g "system.log*"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt								
+#rg -z "GCInspector.java" -g "system.log*"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt	
+rg -z "over the critical alarm level" -g "system.log*"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt								
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "# Cassandra restart/crash" 																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt							
 echo "#############################################" 											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
