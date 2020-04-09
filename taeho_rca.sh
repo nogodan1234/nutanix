@@ -552,6 +552,13 @@ echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ISB-106-2020
 rg -z "LSISAS3008" -g "dmesg*" | grep "16.00.01.00" 			| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 rg -z "mpt3sas_cm0: Command Timeout" -g "dmesg*"			    | tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 
+echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+echo "Ergon task limit and its impact AOS"    					| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+echo "Memory limit ISB-108-2020"    							| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+echo "###########################" 								| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+rg -z "ergon_gen_task_tree_db failed with" -g "ergon.*"  		| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+rg -z "killed as a result of limit of" -g "messages*"			| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+
 #echo "#############################################" 					
 #echo "21. FATAL log check $filter ." 											
 #echo "#############################################"				
