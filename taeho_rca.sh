@@ -8,6 +8,11 @@
 # Compatible software version(s): ALL AOS version - ncc/logbay logset
 # Brief syntax usage: diamond$sh taeho_rca.sh
 
+# Check if a directory 'esx' exists
+function is_esx()
+{
+	find ~/shared/${CASE_NUM}/ -type d -name esx -print | wc -l
+}
 
 echo "#############################################"
 echo " What is the case number you want to analize? "
@@ -31,6 +36,8 @@ carbon extract $CASE_NUM
 #carbon logbay $CASE_NUM
 cd ~/shared/$CASE_NUM
 #cd `ls -l | grep '^d' | grep -v meta | awk '{print $9}'`
+
+ESX=`is_esx`
 
 echo "#############################################"
 echo " Network Status Check "
@@ -114,7 +121,12 @@ echo " BMC/BIOS version"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
  rg -z "bmc info" -A5 -g "hardware_info*"														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
- rg -z "BIOS Information" -A2 -g "hardware_info*"												| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+if [ "X${ESX}" == "X0" ]; then
+ rg -z "BIOS Information" -A2 -g "hardware_info*" 												| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+else
+ # ESX hardware_info...
+ rg -z "BIOS Info" -A3 -g "hardware_info*" | egrep "Version|Release"							| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+fi
 sleep 2
 
 echo "#############################################"
