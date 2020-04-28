@@ -122,10 +122,10 @@ echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
  rg -z "bmc info" -A5 -g "hardware_info*"														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
 if [ "X${ESX}" == "X0" ]; then
- rg -z "BIOS Information" -A2 -g "hardware_info*" 												| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+ rg -z "BIOS Information" -A2 -g "hardware_info*" | sort -u 									| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
 else
  # ESX hardware_info...
- rg -z "BIOS Info" -A3 -g "hardware_info*" | egrep "Version|Release"							| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+ rg -z "BIOS Info" -A3 -g "hardware_info*" | egrep "Version|Release" | sort -u					| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
 fi
 sleep 2
 
