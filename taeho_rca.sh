@@ -8,6 +8,31 @@
 # Compatible software version(s): ALL AOS version - ncc/logbay logset
 # Brief syntax usage: diamond$sh taeho_rca.sh
 
+# Check if a directory 'esx' exists
+function is_esx()
+{
+	find ~/shared/${CASE_NUM}/ -type d -name esx -print | wc -l
+}
+
+# Display any different version numbers and log entry if found
+# Not perfect as it will display the first entry found, followed by any changes:
+# One example..
+#NTNX-Log-2020-04-22-1350706189197693814-1587550616-PE-10.117.79.120/cvm_logs/log_collector.out.20200422-142540:I0422 14:25:55.686937 8175 cvmconfig.go:297] Ncc Version number 3.7.1.2
+#NTNX-Log-2020-04-22-1350706189197693814-1587550616-PE-10.117.79.120/cvm_logs/log_collector.out.20190618-225829:I0618 22:58:29.834937 14707 cvmconfig.go:230] Ncc Version number 3.6.2
+#NTNX-Log-2020-04-22-1350706189197693814-1587550616-PE-10.117.79.120/cvm_logs/log_collector.out.20190618-225829:I0629 09:42:55.052053 12512 cvmconfig.go:297] Ncc Version number 3.7.1.2
+
+function ncc_version_number()
+{
+VER=" "
+while IFS= read -r line
+do
+	A=`echo $line | sed -e 's/.*Ncc Version number //g'`
+	if [ "$A" != "$VER" ]; then
+		echo $line
+		VER=$A
+	fi
+done < <(rg -z "Ncc Version number" -g "log_collector.out*")
+}
 
 echo "#############################################"
 echo " What is the case number you want to analize? "
@@ -31,6 +56,8 @@ carbon extract $CASE_NUM
 #carbon logbay $CASE_NUM
 cd ~/shared/$CASE_NUM
 #cd `ls -l | grep '^d' | grep -v meta | awk '{print $9}'`
+
+ESX=`is_esx`
 
 echo "#############################################"
 echo " Network Status Check "
@@ -114,7 +141,12 @@ echo " BMC/BIOS version"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
  rg -z "bmc info" -A5 -g "hardware_info*"														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
- rg -z "BIOS Information" -A2 -g "hardware_info*"												| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+if [ "X${ESX}" == "X0" ]; then
+ rg -z "BIOS Information" -A2 -g "hardware_info*" | sort -u 									| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+else
+ # ESX hardware_info...
+ rg -z "BIOS Info" -A3 -g "hardware_info*" | egrep "Version|Release" | sort -u					| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
+fi
 sleep 2
 
 echo "#############################################"
@@ -140,7 +172,7 @@ echo "#############################################"
 echo " NCC version check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg -z "Ncc Version number" -g "log_collector.out*"												| tee -a  ~/tmp/$CASE_NUM/NCC_Ver.txt
+ncc_version_number																				| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
 sleep 2
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
