@@ -14,6 +14,26 @@ function is_esx()
 	find ~/shared/${CASE_NUM}/ -type d -name esx -print | wc -l
 }
 
+# Display any different version numbers and log entry if found
+# Not perfect as it will display the first entry found, followed by any changes:
+# One example..
+#NTNX-Log-2020-04-22-1350706189197693814-1587550616-PE-10.117.79.120/cvm_logs/log_collector.out.20200422-142540:I0422 14:25:55.686937 8175 cvmconfig.go:297] Ncc Version number 3.7.1.2
+#NTNX-Log-2020-04-22-1350706189197693814-1587550616-PE-10.117.79.120/cvm_logs/log_collector.out.20190618-225829:I0618 22:58:29.834937 14707 cvmconfig.go:230] Ncc Version number 3.6.2
+#NTNX-Log-2020-04-22-1350706189197693814-1587550616-PE-10.117.79.120/cvm_logs/log_collector.out.20190618-225829:I0629 09:42:55.052053 12512 cvmconfig.go:297] Ncc Version number 3.7.1.2
+
+function ncc_version_number()
+{
+VER=" "
+while IFS= read -r line
+do
+	A=`echo $line | sed -e 's/.*Ncc Version number //g'`
+	if [ "$A" != "$VER" ]; then
+		echo $line
+		VER=$A
+	fi
+done < <(rg -z "Ncc Version number" -g "log_collector.out*")
+}
+
 echo "#############################################"
 echo " What is the case number you want to analize? "
 echo " Log will be extracted on ~/shared/$CASE_NUM "
@@ -152,7 +172,7 @@ echo "#############################################"
 echo " NCC version check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg -z "Ncc Version number" -g "log_collector.out*"												| tee -a  ~/tmp/$CASE_NUM/NCC_Ver.txt
+ncc_version_number																				| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
 sleep 2
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
