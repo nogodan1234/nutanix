@@ -31,7 +31,7 @@ do
 		echo $line
 		VER=$A
 	fi
-done < <(rg -z "Ncc Version number" -g "log_collector.out*")
+done < <(rg -z "Ncc Version number" -g "log_collector.out*" | grep -v "stopped searching binary file")
 }
 
 echo "#############################################"
@@ -274,7 +274,7 @@ rg '^F[0-9]{4}' -g 'stargate*'																	| tee  -a ~/tmp/$CASE_NUM/Stargat
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking peer service dead"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "has been found dead"																		| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "has been found dead" | grep -v "stopped searching binary file"							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 echo "5. Token revoke failure"																	| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
