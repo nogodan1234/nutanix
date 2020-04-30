@@ -591,7 +591,7 @@ echo "Ergon task limit and its impact AOS"														| tee -a ~/tmp/$CASE_NUM
 echo "Memory limit ISB-108-2020"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 rg -z "ergon_gen_task_tree_db failed with" -g "ergon.*"											| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
-rg -z "killed as a result of limit of" -g "messages*"											| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+rg -z "killed as a result of limit of" -g "messages*"	| grep -v "stopped searching binary file"	| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 
 #echo "#############################################"
 #echo "21. FATAL log check $filter ."
