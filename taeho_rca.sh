@@ -298,13 +298,9 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "Check Backend error, please check cassandra status"										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "ParseReturnCodes: Backend returns error 'Timeout Error' for extent group id:" -g "stargate.*" | tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Inserted HA route on host" -g "genesis*"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Stargate exited" -g "stargate*"															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "QFATAL Timed out waiting for Zookeeper session establishment" -g "stargate*"				| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Becoming NFS namespace master"															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Hosting of virtual IP "																	| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-#rg -z "nfs_remove_op.cc"
-rg -z "Created iSCSI session for leading connection"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "SMB-SESSION-SETUP request got for connection"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 #echo "ENG-30397 ext4 file corruption"
 #rg -z "kSliceChecksumMismatch"
@@ -313,7 +309,6 @@ echo "Checking ... Disk IO latency check > 100ms"												| tee  -a ~/tmp/$CA
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "AIO disk" -g "stargate*"  | sort -k 11n | tail -30										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Starting Stargate"																		| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Becoming NFS namespace master"															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 #rg -z "Requested deletion of egroup"
 rg -z "completed with error kRetry for vdisk"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
@@ -408,6 +403,16 @@ echo "#############################################"											| tee  -a ~/tmp/$
 sleep 2
 rg -z "Failed to start DiskService. Fix the problem and start again" -g "genesis*"				| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt
 
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+echo "Token grant log for AOS upgrade					"										| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+rg -z "Successfully granted token to" -g "genesis*"												| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+echo "GenesisEventType.HA_EVENT			      	   "											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+rg -z "Inserted HA route on host" -g "genesis*"													| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
 echo "9. Curator Scan Failure due to network issue"												| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
@@ -487,7 +492,10 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "18. iscsi connection reset "																| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
 sleep 2
+rg -z "Becoming NFS namespace master" -g "stargate*"											| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
 rg -z "Removing initiator iqn" -g "stargate*"													| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
+#rg -z "nfs_remove_op.cc"
+rg -z "Adding initiator iqn" -g "stargate*"														| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/HBA_reset.txt
 echo "19. HBA reset reset "																		| tee  -a ~/tmp/$CASE_NUM/HBA_reset.txt
@@ -513,6 +521,13 @@ echo "22. Segmentation Fault Check possiblely ovsd crash(ENG-279410)"							| te
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 sleep 2
 rg -z "Segmentation fault" -B1 -A1																| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
+
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
+echo "23. ovsd segmenation fault - ENG-300126, ENG-279410"										| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
+sleep 2
+rg -z "Segmentation fault" -B1 -A1 -g "messages.*" | grep -i ovs-vswitchd						| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
+rg -z "Watchdog detected" -B1 -A1 -g "messages.*" 												| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 
 #Adding more entry on 20 March 2020
 
