@@ -23,16 +23,24 @@ function is_esx()
 
 function ncc_version_number()
 {
-VER=" "
-while IFS= read -r line
-do
-	A=`echo $line | sed -e 's/.*Ncc Version number //g'`
-	if [ "$A" != "$VER" ]; then
-		echo $line
-		VER=$A
-	fi
-done < <(rg -z "Ncc Version number" -g "log_collector.out*")
+	VER=" "
+
+	# runtime not using 'bash' - use tmp file
+	# done < <(rg -z "Ncc Version number" -g "log_collector.out*" | grep -v "stopped searching binary file") - doesn't work if "sh ./taeho_rca.sh"
+	rg -z "Ncc Version number" -g "log_collector.out*" | grep -v "stopped searching binary file" > /tmp/ncc_vers.$$
+	while IFS= read -r line
+	do
+		A=`echo $line | sed -e 's/.*Ncc Version number //g'`
+		if [ "$A" != "$VER" ]; then
+			echo $line
+			VER=$A
+		fi
+	done < /tmp/ncc_vers.$$
+
+	rm -f /tmp/ncc_vers.$$
 }
+
+# ######### main(): execution starts here #########
 
 echo "#############################################"
 echo " What is the case number you want to analize? "
@@ -270,7 +278,7 @@ rg '^F[0-9]{4}' -g 'stargate*'																	| tee  -a ~/tmp/$CASE_NUM/Stargat
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking peer service dead"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "has been found dead"																		| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "has been found dead" | grep -v "stopped searching binary file"							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 echo "5. Token revoke failure"																	| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
@@ -612,7 +620,7 @@ echo "Ergon task limit and its impact AOS"														| tee -a ~/tmp/$CASE_NUM
 echo "Memory limit ISB-108-2020"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 rg -z "ergon_gen_task_tree_db failed with" -g "ergon.*"											| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
-rg -z "killed as a result of limit of" -g "messages*"											| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+rg -z "killed as a result of limit of" -g "messages*"	| grep -v "stopped searching binary file"	| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 
 #echo "#############################################"
 #echo "21. FATAL log check $filter ."
