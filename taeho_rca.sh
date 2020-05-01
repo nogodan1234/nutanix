@@ -104,6 +104,61 @@ function unique_FRU()
 	rm -f /tmp/unique_fru.$$
 }
 
+# unique_BMC: Reduce frequency of static record
+# bmc info:
+# /ipmitool bmc info:
+# Device ID                 : 32
+# Device Revision           : 1
+# Firmware Revision         : 3.35
+# IPMI Version              : 2.0
+# Manufacturer ID           : 10876
+function unique_BMC()
+{
+	VER=""
+	STARTBLOCK=""
+	OK2PRINT=""
+
+	rg -z "bmc info" -A5 -g "hardware_info*" > /tmp/uniq_ipmi.$$
+
+	while IFS= read -r line
+	do
+
+		# start with 'ipmitool bmc info'
+		if [[ $line == *"ipmitool bmc info"* ]] && [ -z $STARTBLOCK ]; then
+			STARTBLOCK="Y"
+		fi
+
+		# We're OK to spit out the line
+		if [ ! -z $OK2PRINT ] && [ ! -z $STARTBLOCK ]; then
+			echo "$line"
+		fi
+
+		# Find Firmware first, set OK to print
+		if [[ $line == *"Firmware Revision"* ]] && [ ! -z $STARTBLOCK ]; then
+			A=`echo $line | sed -e 's/.*Firmware Revision.*: //g'`
+			# if a different serial number, reset the 'start block' flag
+			if [ "$A" != "$VER" ]; then
+				VER=$A
+				STARTBLOCK=""
+				OK2PRINT="Y"
+			fi
+		fi
+		# If 'start block' is set, and we encounter last line in block
+		# clear the OK2PRINT flag
+		if [ ! -z "$VER" ] && [ ! -z ${STARTBLOCK} ]; then
+			if [[ $line == *"Manufacturer ID"* ]]; then   # Found end of block
+				OK2PRINT=""
+			fi
+		fi
+
+	done < /tmp/uniq_ipmi.$$
+
+	# Add space in output
+	echo ""
+
+	rm -f /tmp/uniq_ipmi.$$
+}
+
 # ######### main(): execution starts here #########
 
 echo "#############################################"
@@ -213,7 +268,8 @@ echo "#############################################"
 echo " BMC/BIOS version"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
- rg -z "bmc info" -A5 -g "hardware_info*"														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
+# rg -z "bmc info" -A5 -g "hardware_info*"														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
+unique_BMC																						| tee -a ~/tmp/$CASE_NUM/bmc_ver.txt
 if [ "X${ESX}" == "X0" ]; then
  rg -z "BIOS Information" -A2 -g "hardware_info*" | sort -u 									| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
 else
