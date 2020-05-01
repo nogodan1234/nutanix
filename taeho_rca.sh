@@ -40,6 +40,70 @@ function ncc_version_number()
 	rm -f /tmp/ncc_vers.$$
 }
 
+# unique_FRU: Reduce number of duplicate entries of:
+# ------
+# FRU Device Description : Builtin FRU Device (ID 0)
+# Chassis Type          : Other
+# Chassis Part Number   : CSE-819UTS-R1K02P-T
+# Chassis Serial        : C819UAG51CC0045
+# Board Mfg Date        : Mon Jan  1 00:00:00 1996
+# Board Mfg             : Supermicro
+# Board Product         : NONE
+# Board Serial          : OM17BS001736
+# Board Part Number     : X10DRU-I+-G5-NI22
+# Product Manufacturer  : Nutanix
+# Product Name          : NONE
+# Product Part Number   : NX-3175-G5
+# Product Version       : NONE
+# Product Serial        : 18FM76030112
+# Product Asset Tag     : 8374351283058692927
+# ------
+# but if the Product Serial changes, print the 'new' record
+
+function unique_FRU()
+{
+	VER=""
+	STARTBLOCK=""
+	OK2PRINT=""
+
+	rg -z "FRU Device Description" -A14 -g "hardware_info*" > /tmp/unique_fru.$$
+
+	while IFS= read -r line
+	do
+
+		# start with 'FRU Device Description'
+		if [[ $line == *"FRU Device Description"* ]] && [ -z $STARTBLOCK ]; then
+			STARTBLOCK="Y"
+		fi
+
+		# We're OK to spit out the line
+		if [ ! -z $OK2PRINT ] && [ ! -z $STARTBLOCK ]; then
+			echo "$line"
+		fi
+
+		# Find serial number first, set OK to print
+		if [[ $line == *"Product Serial"* ]] && [ ! -z $STARTBLOCK ]; then
+			A=`echo $line | sed -e 's/.*Product Serial //g'`
+			# if a different serial number, reset the 'start block' flag
+			if [ "$A" != "$VER" ]; then
+				VER=$A
+				STARTBLOCK=""
+				OK2PRINT="Y"
+			fi
+		fi
+		# If 'start block' is set, and we encounter last line in block
+		# clear the OK2PRINT flag
+		if [ ! -z "$VER" ] && [ ! -z ${STARTBLOCK} ]; then
+			if [[ $line == *"Product Asset Tag"* ]]; then   # Found end of block
+				OK2PRINT=""
+			fi
+		fi
+
+	done < /tmp/unique_fru.$$
+
+	rm -f /tmp/unique_fru.$$
+}
+
 # ######### main(): execution starts here #########
 
 echo "#############################################"
@@ -139,9 +203,9 @@ sleep 2
 
 echo "#############################################"
 echo " Hardware Model Check"
-echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM/HW.txt"
 echo "#############################################"
- rg -z "FRU Device Description" -A14 -g "hardware_info*"										| tee -a  ~/tmp/$CASE_NUM/HW.txt
+unique_FRU																						| tee -a ~/tmp/$CASE_NUM/HW.txt
 sleep 2
 
 echo "#############################################"
