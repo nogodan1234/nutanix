@@ -23,16 +23,24 @@ function is_esx()
 
 function ncc_version_number()
 {
-VER=" "
-while IFS= read -r line
-do
-	A=`echo $line | sed -e 's/.*Ncc Version number //g'`
-	if [ "$A" != "$VER" ]; then
-		echo $line
-		VER=$A
-	fi
-done < <(rg -z "Ncc Version number" -g "log_collector.out*" | grep -v "stopped searching binary file")
+	VER=" "
+
+	# runtime not using 'bash' - use tmp file
+	# done < <(rg -z "Ncc Version number" -g "log_collector.out*" | grep -v "stopped searching binary file") - doesn't work if "sh ./taeho_rca.sh"
+	rg -z "Ncc Version number" -g "log_collector.out*" | grep -v "stopped searching binary file" > /tmp/ncc_vers.$$
+	while IFS= read -r line
+	do
+		A=`echo $line | sed -e 's/.*Ncc Version number //g'`
+		if [ "$A" != "$VER" ]; then
+			echo $line
+			VER=$A
+		fi
+	done < /tmp/ncc_vers.$$
+
+	rm -f /tmp/ncc_vers.$$
 }
+
+# ######### main(): execution starts here #########
 
 echo "#############################################"
 echo " What is the case number you want to analize? "
