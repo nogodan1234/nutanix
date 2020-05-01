@@ -434,8 +434,8 @@ echo "#############################################"											| tee   -a ~/tmp/
 #https://confluence.eng.nutanix.com:8443/display/STK/ISB-102-2019%3A+Data+inconsistency+on+2-node+clusters
 rg -z "has been found dead"	-g "cassandra_monitor*"												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "does not exist when extent oid="															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "Leadership acquired for token:" -g "cassandra_monitor*"									| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*"								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Leadership acquired for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "with transformation type kCompressionLZ4 and transformed length"							| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 #rg -z "Failing GetEgroupStateOp as the extent group does not exist on disk"
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
