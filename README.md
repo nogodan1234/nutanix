@@ -1,4 +1,4 @@
-# Some useful Nutanix scripts by Taeho choi
+# Some useful Nutanix scripts 
 
 ## Getting Started
 
