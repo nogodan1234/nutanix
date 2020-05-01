@@ -63,6 +63,7 @@ This project is licensed under the MIT License
 
 ## Acknowledgments
 
-* Nutanix is not officially tested on these scripts nor provide supports on these.
+* Nutanix does not provide support for these scripts.
+* Nutanix has not officially tested these scripts.
 * All responsibilies to use this scripts are on each individual.
 
