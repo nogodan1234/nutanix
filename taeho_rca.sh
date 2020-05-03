@@ -40,6 +40,125 @@ function ncc_version_number()
 	rm -f /tmp/ncc_vers.$$
 }
 
+# unique_FRU: Reduce number of duplicate entries of:
+# ------
+# FRU Device Description : Builtin FRU Device (ID 0)
+# Chassis Type          : Other
+# Chassis Part Number   : CSE-819UTS-R1K02P-T
+# Chassis Serial        : C819UAG51CC0045
+# Board Mfg Date        : Mon Jan  1 00:00:00 1996
+# Board Mfg             : Supermicro
+# Board Product         : NONE
+# Board Serial          : OM17BS001736
+# Board Part Number     : X10DRU-I+-G5-NI22
+# Product Manufacturer  : Nutanix
+# Product Name          : NONE
+# Product Part Number   : NX-3175-G5
+# Product Version       : NONE
+# Product Serial        : 18FM76030112
+# Product Asset Tag     : 8374351283058692927
+# ------
+# but if the Product Serial changes, print the 'new' record
+
+function unique_FRU()
+{
+	VER=""
+	STARTBLOCK=""
+	OK2PRINT=""
+
+	rg -z "FRU Device Description" -A14 -g "hardware_info*" > /tmp/unique_fru.$$
+
+	while IFS= read -r line
+	do
+
+		# start with 'FRU Device Description'
+		if [[ $line == *"FRU Device Description"* ]] && [ -z $STARTBLOCK ]; then
+			STARTBLOCK="Y"
+		fi
+
+		# We're OK to spit out the line
+		if [ ! -z $OK2PRINT ] && [ ! -z $STARTBLOCK ]; then
+			echo "$line"
+		fi
+
+		# Find serial number first, set OK to print
+		if [[ $line == *"Product Serial"* ]] && [ ! -z $STARTBLOCK ]; then
+			A=`echo $line | sed -e 's/.*Product Serial //g'`
+			# if a different serial number, reset the 'start block' flag
+			if [ "$A" != "$VER" ]; then
+				VER=$A
+				STARTBLOCK=""
+				OK2PRINT="Y"
+			fi
+		fi
+		# If 'start block' is set, and we encounter last line in block
+		# clear the OK2PRINT flag
+		if [ ! -z "$VER" ] && [ ! -z ${STARTBLOCK} ]; then
+			if [[ $line == *"Product Asset Tag"* ]]; then   # Found end of block
+				OK2PRINT=""
+			fi
+		fi
+
+	done < /tmp/unique_fru.$$
+
+	rm -f /tmp/unique_fru.$$
+}
+
+# unique_BMC: Reduce frequency of static record
+# bmc info:
+# /ipmitool bmc info:
+# Device ID                 : 32
+# Device Revision           : 1
+# Firmware Revision         : 3.35
+# IPMI Version              : 2.0
+# Manufacturer ID           : 10876
+function unique_BMC()
+{
+	VER=""
+	STARTBLOCK=""
+	OK2PRINT=""
+
+	rg -z "bmc info" -A5 -g "hardware_info*" > /tmp/uniq_ipmi.$$
+
+	while IFS= read -r line
+	do
+
+		# start with 'ipmitool bmc info'
+		if [[ $line == *"ipmitool bmc info"* ]] && [ -z $STARTBLOCK ]; then
+			STARTBLOCK="Y"
+		fi
+
+		# We're OK to spit out the line
+		if [ ! -z $OK2PRINT ] && [ ! -z $STARTBLOCK ]; then
+			echo "$line"
+		fi
+
+		# Find Firmware first, set OK to print
+		if [[ $line == *"Firmware Revision"* ]] && [ ! -z $STARTBLOCK ]; then
+			A=`echo $line | sed -e 's/.*Firmware Revision.*: //g'`
+			# if a different serial number, reset the 'start block' flag
+			if [ "$A" != "$VER" ]; then
+				VER=$A
+				STARTBLOCK=""
+				OK2PRINT="Y"
+			fi
+		fi
+		# If 'start block' is set, and we encounter last line in block
+		# clear the OK2PRINT flag
+		if [ ! -z "$VER" ] && [ ! -z ${STARTBLOCK} ]; then
+			if [[ $line == *"Manufacturer ID"* ]]; then   # Found end of block
+				OK2PRINT=""
+			fi
+		fi
+
+	done < /tmp/uniq_ipmi.$$
+
+	# Add space in output
+	echo ""
+
+	rm -f /tmp/uniq_ipmi.$$
+}
+
 # ######### main(): execution starts here #########
 
 echo "#############################################"
@@ -140,16 +259,17 @@ sleep 2
 
 echo "#############################################"
 echo " Hardware Model Check"
-echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
+echo " Output file will be generated in ~/tmp/$CASE_NUM/HW.txt"
 echo "#############################################"
- rg -z "FRU Device Description" -A14 -g "hardware_info*"										| tee -a  ~/tmp/$CASE_NUM/HW.txt
+unique_FRU																						| tee -a ~/tmp/$CASE_NUM/HW.txt
 sleep 2
 
 echo "#############################################"
 echo " BMC/BIOS version"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
- rg -z "bmc info" -A5 -g "hardware_info*"														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
+# rg -z "bmc info" -A5 -g "hardware_info*"														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
+unique_BMC																						| tee -a ~/tmp/$CASE_NUM/bmc_ver.txt
 if [ "X${ESX}" == "X0" ]; then
  rg -z "BIOS Information" -A2 -g "hardware_info*" | sort -u 									| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
 else
@@ -314,8 +434,8 @@ echo "#############################################"											| tee   -a ~/tmp/
 #https://confluence.eng.nutanix.com:8443/display/STK/ISB-102-2019%3A+Data+inconsistency+on+2-node+clusters
 rg -z "has been found dead"	-g "cassandra_monitor*"												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "does not exist when extent oid="															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "Leadership acquired for token:" -g "cassandra_monitor*"									| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*"								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Leadership acquired for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "with transformation type kCompressionLZ4 and transformed length"							| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 #rg -z "Failing GetEgroupStateOp as the extent group does not exist on disk"
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
