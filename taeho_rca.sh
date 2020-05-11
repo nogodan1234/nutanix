@@ -585,6 +585,12 @@ sleep 2
 rg -z "Segmentation fault" -B1 -A1 -g "messages.*" | grep -i ovs-vswitchd						| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 rg -z "Watchdog detected" -B1 -A1 -g "messages.*" 												| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/ovs-vswitchd_mem_usage.txt
+echo "24. ovs-vswitchd memory bloating issue - Oncall-8716"										| tee  -a ~/tmp/$CASE_NUM/ovs-vswitchd_mem_usage.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/ovs-vswitchd_mem_usage.txt
+sleep 2
+rg -z "peak resident set size"  -g "ovs-vswitchd.log" 											| tee  -a ~/tmp/$CASE_NUM/ovs-vswitchd_mem_usage.txt
+
 #Adding more entry on 20 March 2020
 
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
