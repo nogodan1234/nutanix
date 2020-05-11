@@ -1,4 +1,4 @@
-#
+
 import pprint
 import sys
 import inspect
@@ -27,7 +27,6 @@ def select_cluster():
     else:
       print ("You typed wrong ip format")
       print ("Existing")
-      exit
 
     lab1="https://" + VIP
     print(lab1)
@@ -82,4 +81,3 @@ if __name__ == '__main__':
             vmops.listdisk()
         else:
             print("Good Bye")
-            exit
