@@ -328,6 +328,12 @@ echo "ONCALL-8062 fix in 5.10.9 Wrong CVM became degraded "										| tee -a ~/
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/node_degraded.txt
 rg -z "notification=NodeDegraded service_vm_id="												| tee -a ~/tmp/$CASE_NUM/node_degraded.txt
 
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/hera_service.txt
+echo "TH-3430,Oncall-8764 Hera service crash "													| tee -a ~/tmp/$CASE_NUM/hera_service.txt
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/hera_service.txt
+rg -z "panic" -g "hera.out*"																	| tee -a ~/tmp/$CASE_NUM/hera_service.txt
+rg -z "exited with signal: 11" -g "hera.FATAL*"													| tee -a ~/tmp/$CASE_NUM/hera_service.txt
+
 #rg -z -B 1 -A 1 "Stargate on node"| rg "is down" .
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/OOM.txt
 echo "2. ISB-101-2019: Increasing the CVM Common Memory Pool "									| tee -a ~/tmp/$CASE_NUM/OOM.txt
