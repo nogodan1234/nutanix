@@ -8,6 +8,29 @@
 # Compatible software version(s): ALL AOS version - ncc/logbay logset
 # Brief syntax usage: diamond$sh taeho_rca.sh
 
+# CVM Console messages
+# filter out console messages post 'cvm login:' prompt to capture any stderr to console
+function cvm_console_messages()
+{
+	CON_MSG="/tmp/ncc_console_msgs_$$.txt"
+
+	touch ${CON_MSG}
+
+	for con in `find . -name "NTNX.serial.out.0" -exec ls {} \;`; do
+		echo "" >> ${CON_MSG}
+		echo "*** Filename: ${con} ***"  >> ${CON_MSG}
+		echo "" >> ${CON_MSG}
+		# Up to 200 lines post 'cvm login:' - but filter out anything with a [    0.xxxxx] timestamp
+		grep -A200 "cvm login: \[" ${con} | grep -v "\[    [01]\.[0-9]*\]" >> ${CON_MSG}
+	done
+
+	echo "" >> ${CON_MSG}
+
+	grep -v "\-\-" ${CON_MSG}
+
+	rm -f ${CON_MSG}
+}
+
 # Check if a directory 'esx' exists
 function is_esx()
 {
@@ -263,6 +286,12 @@ echo " Output file will be generated in ~/tmp/$CASE_NUM/HW.txt"
 echo "#############################################"
 unique_FRU																						| tee -a ~/tmp/$CASE_NUM/HW.txt
 sleep 2
+
+echo "#############################################"
+echo " CVM Console Errors"
+echo " Output file will be generated in ~/tmp/$CASE_NUM/cvm_console.txt"
+echo "#############################################"
+cvm_console_messages																			| tee -a ~/tmp/${CASE_NUM}/cvm_console.txt
 
 echo "#############################################"
 echo " BMC/BIOS version"
