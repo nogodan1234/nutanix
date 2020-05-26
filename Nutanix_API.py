@@ -1,3 +1,4 @@
+import sys
 import requests
 import urllib.request
 import pandas as pd
@@ -5,6 +6,7 @@ import ipaddress
 import urllib3
 from requests.auth import HTTPBasicAuth
 import json
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def GetCluster():
     print("What's Prism VIP address? ")
@@ -23,8 +25,9 @@ def GetCluster():
 def PrismMenu(VIP):
     #baseUrl=str()
     baseUrl = "https://"+VIP+":9440/PrismGateway/services/rest/v2.0/"
+    print("###############################################")
     print("What kind of information do you want to collect?")
-    print("########## MENU ########## ")
+    print("#################### MENU #################### ")
     print("Type 1: cluster info")
     print("Type 2: disk info")
     seLection = input()
@@ -53,16 +56,24 @@ def PrismClusterInfo(VIP,username,password):
     subpath = '/cluster'
     Cluster_detail = requests.get(baseUrl+subpath, headers={'Accept': 'application/json'}, verify=False, auth=HTTPBasicAuth(username, password))
     Cluster_detail_dict = json.loads(Cluster_detail.text)
-    #Cluster detail is saved as dictionary, printing key and value 
-    for k,v in Cluster_detail_dict.items():
-        print(k,":",v)
-        print("#############")
-
+    print(json.dumps(Cluster_detail_dict, indent=4))
+    
 if __name__ == '__main__':
-    cluster = GetCluster()
-    VIP = cluster[0]
-    username = cluster[1]
-    password = cluster[2]
+
+    print("###############################################")
+    print("You can also use $python3 %s Prism_VIP username password without interaction" %sys.argv[0])
+
+    if len(sys.argv) == 4:
+        # Get VIP username password from command line 
+        VIP = sys.argv[1]
+        username = sys.argv[2]
+        password = sys.argv[3]
+    else:
+        cluster = GetCluster()
+        VIP = cluster[0]
+        username = cluster[1]
+        password = cluster[2]
+
     select = PrismMenu(VIP)
     if select == str(1):
         PrismClusterInfo(VIP,username,password)
