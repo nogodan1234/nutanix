@@ -431,6 +431,10 @@ echo "Checking ... Stargate FATAL"																| tee  -a ~/tmp/$CASE_NUM/Star
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg '^F[0-9]{4}' -g 'stargate*'																	| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "Checksum error most likely due to network issue"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "Expected and received checksums do not match" -g 'stargate*'								| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking peer service dead"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "has been found dead" | grep -v "stopped searching binary file"							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
