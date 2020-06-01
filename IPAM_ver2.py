@@ -1,3 +1,9 @@
+import getpass
+import requests
+import json
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 def ipRange(start_ip, end_ip):
     start = list(map(int, start_ip.split(".")))
     end = list(map(int, end_ip.split(".")))
@@ -15,12 +21,6 @@ def ipRange(start_ip, end_ip):
 
     return ip_range
 
-
-
-
-import getpass
-import requests
-import json
 #from colorama import Fore
 print("***************************************************************************************************************")
 print("This script will help you in Discovering your IPAM IP address allocations on your AHV Cluster")
@@ -29,12 +29,7 @@ print('\n\n\n')
 cluster_IP = input("Please enter the cluster management IP: ")
 userName = input("Username: ")
 passWord = input("Password: ")
-#passWord = getpass.getpass('password: ')
-#cluster_IP = "10.0.0.110"
-#userName = "admin"
-#passWord = "NTNX/4u2019"
-requests.packages.urllib3.disable_warnings()
-#UUID = "c07e16e4-7ccc-4cd3-a23a-7546299878b3"
+
 network_list_url = ("https://" + str(cluster_IP)+":9440/PrismGateway/services/rest/v2.0/networks")
 
 s = requests.Session()
@@ -64,8 +59,8 @@ else :
     print("Network Address:  " + Specific_network_details["ip_config"]["network_address"] + "\n")
     print("Prefix Length:  " + str(Specific_network_details["ip_config"]["prefix_length"]) + "\n")
     print("Default Gateway:  " + Specific_network_details["ip_config"]["default_gateway"] + "\n")
-    print("DNS Server:  " + Specific_network_details["ip_config"]["dhcp_options"]["domain_name_servers"] + "\n")
-    print("Domain Name:  " + Specific_network_details["ip_config"]["dhcp_options"]["domain_name"] + "\n")
+    #print("DNS Server:  " + Specific_network_details["ip_config"]["dhcp_options"]["domain_name_servers"] + "\n")
+    #print("Domain Name:  " + Specific_network_details["ip_config"]["dhcp_options"]["domain_name"] + "\n")
     print("The number of configured IP Pools: " + str(len(Specific_network_details["ip_config"]["pool"])))
     IPRANGE=[]
     for i in range(1,len(Specific_network_details["ip_config"]["pool"])+1):
@@ -79,12 +74,19 @@ else :
     print("The total number of IPs configured in the pool(s): "+str(len(IPRANGE)))
     print("Total number of allocated IPs: "+ str(Network_IPs_details["metadata"]["total_entities"]))
     print("Total available IPs in the pool(s): "+ str(len(IPRANGE)-Network_IPs_details["metadata"]["total_entities"]))
+    print("\n")
+
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^") 
+    print("Detail usage of the ip")
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^") 
+    for n in Network_IPs_details["entities"]:
+        vm_list_url = ("https://" + str(cluster_IP)+":9440/api/nutanix/v2.0/vms/"+str(n["entity_uuid"]))
+        vm_Data= s.get(vm_list_url, verify=False).json()
+        print("VM name %s" %vm_Data["name"] + " is using ip address " + str(n["ip_address"])+ " with mac_address " + str(n["mac_address"]) + " from this pool" )
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    print("\n")
+
     if len(IPRANGE)-Network_IPs_details["metadata"]["total_entities"] > 0:
         print("You still have available IPs in the Pool(s). Don't worry.")
     else:
         print("You ran out of IPs. You need to expand the pool")
-
-
-
-
-

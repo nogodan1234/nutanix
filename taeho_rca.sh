@@ -739,6 +739,10 @@ echo "###########################"																| tee -a ~/tmp/$CASE_NUM/prism
 echo "Tracking Prism Gateway OutOfMemory Errors"												| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 rg -z  "Throwing exception from VMAdministration.getVMs"  -g "prism_gateway*"					| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "###########################"																| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "ENG-290893 Prism OOM issue"																| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+echo "###########################"																| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
+rg -z  "java.lang.OutOfMemoryError"  -g "prism_gateway*"										| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
 echo "RPC_PROTOBUF_ERROR"																		| tee -a ~/tmp/$CASE_NUM/prism_gateway.txt
