@@ -498,6 +498,12 @@ echo "#############################################"											| tee  -a ~/tmp/$
 sleep 2
 rg -z "Failed to start DiskService. Fix the problem and start again" -g "genesis*"				| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt
 
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt
+echo "Hades wrong HDD partition - ENG 212224"													| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt
+sleep 2
+rg -z "unsupported Minix file system type" -g "hades.out*"										| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt
+
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
 echo "Token grant log for AOS upgrade					"										| tee  -a ~/tmp/$CASE_NUM/genesis.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
