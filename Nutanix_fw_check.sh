@@ -22,7 +22,7 @@ then
 	echo "########################################################"
 	echo "BIOS version is"
 	echo "########################################################"
-	for i in `hostips` ; do echo "==== $i ====" ; ssh -q root@$i "dmidecode | egrep 'Version: 3|Version: 4'" | cut -d ' ' -f2 ;done
+	for i in `hostips` ; do echo "==== $i ====" ; ssh -q root@$i "dmidecode | grep 'Version: '" | head -1 | cut -d ' ' -f2 ;done
 
 elif [ $HYPERVISOR = "2" ]
 then
