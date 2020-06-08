@@ -19,6 +19,7 @@ from urllib.parse import quote
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import ipaddress
+import getpass
 
 # Time period is one hour (3600 seconds).
 period=3600
@@ -117,7 +118,7 @@ class my_api():
 # ========== DO NOT CHANGE ANYTHING ABOVE THIS LINE =====
 
 def GetClusterDetail():
-    if len(sys.argv) == 4:
+    if len(sys.argv) >= int(4):
         # Get Prism VIP username password from command line 
         ip = sys.argv[1]
         username = sys.argv[2]
@@ -134,8 +135,7 @@ def GetClusterDetail():
             print ("Existing")   
         print("What is the Prism UI User which has admin role? ex)admin")
         username = input()
-        print("What is the password for the Prism UI User? ")
-        password = input()
+        password = getpass.getpass(prompt="What is the password for the Prism UI User?\n" , stream=None)
     return(ip,username,password)
 
 def GetUUid():

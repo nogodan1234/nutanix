@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.7
+#!/usr/bin/env python3
 
 #Script Name : getent_stats.py
 #Script Purpose or Overview 
@@ -46,6 +46,7 @@ if __name__ == "__main__":
             # 1. Get the UUID of all hosts.
             print("You've selected host detail....\n")
             status, all_hosts = mycluster.get_all_host_info()
+            #pprint.pprint(all_hosts["entities"][0])
 
             # 2. Check the longest host name size to align print format
             hostName=[]
@@ -105,6 +106,7 @@ if __name__ == "__main__":
             print("You've selected VM detail....\n")
             # 1. Get the UUID of all VMs.
             status, all_vms = mycluster.get_all_vm_info()
+            #pprint.pprint(all_vms["entities"][0])
 
             # 2. Check the longest VM name size to align print format
             vmName=[]
@@ -114,7 +116,7 @@ if __name__ == "__main__":
 
             # 3. Display all vm name and uuid for user to select VM by uuid
             for n in all_vms["entities"]:
-                print("VM name: " + n["vmName"].ljust(maxfield)+'\t'+" uuid: " + n["uuid"].ljust(40))
+                print("VM name: " + n["vmName"].ljust(maxfield)+" uuid: " + n["uuid"].ljust(40)+ "power:"+n["powerState"])
             print("\n")
             # 4. Get VM UUID for specific VM from standard input
             vm_uuid = C.GetUUid()
