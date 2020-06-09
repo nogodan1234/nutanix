@@ -492,6 +492,11 @@ echo "metadata node detach task start/end"   													| tee -a ~/tmp/$CASE_N
 echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 rg -z  "Marking"  -g "dynamic_ring_changer.INFO*"  												| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 
+echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
+echo "Cassandra Invalid size ENG-234260"   														| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
+echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
+rg -z  "java.lang.AssertionError: Invalid size"  -g "system.*"  								| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
+
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt
 echo "8. Hades Disk service check"																| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Hades_disksvc_error.txt

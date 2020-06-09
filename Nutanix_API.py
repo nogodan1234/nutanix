@@ -1,11 +1,32 @@
+#!/usr/bin/env python3
+
+#Script Name : nutanix_api_cli.py
+#Script Purpose or Overview 
+# - this script can show cluster detail as json format in clustet menu
+# - this script can show all disks in the cluster - mount point 
+# - this script will show cluster detail info if cluster is selected
+# This file is developed by Taeho Choi(taeho.choi@nutanix.com) by referring below resources
+# For reference look at:
+# https://www.digitalformula.net/2018/api/vm-performance-stats-with-nutanix-rest-api/
+# https://github.com/nelsonad77/acropolis-api-examples
+# https://github.com/sandeep-car/perfmon/
+
+#   disclaimer
+#	This code is intended as a standalone example.  Subject to licensing restrictions defined on nutanix.dev, this can be downloaded, copied and/or modified in any way you see fit.
+#	Please be aware that all public code samples provided by Nutanix are unofficial in nature, are provided as examples only, are unsupported and will need to be heavily scrutinized and potentially modified before they can be used in a production environment.  
+#   All such code samples are provided on an as-is basis, and Nutanix expressly disclaims all warranties, express or implied.
+#	All code samples are © Nutanix, Inc., and are provided as-is under the MIT license. (https://opensource.org/licenses/MIT)
+
 import sys
 import requests
 import urllib.request
 import pandas as pd
 import ipaddress
 import urllib3
+import getpass
 from requests.auth import HTTPBasicAuth
 import json
+import pprint
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def GetCluster():
@@ -18,8 +39,7 @@ def GetCluster():
       print ("Existing")
     print("What is the Prism UI User which has admin role? ")
     username = input()
-    print("What is the password for the Prism UI User? ")
-    password = input()
+    password = getpass.getpass(prompt="What is the password for the Prism UI User?\n" , stream=None)
     return(VIP,username,password)
 
 def PrismMenu(VIP):
@@ -36,20 +56,34 @@ def PrismMenu(VIP):
 
 def PrismDiskInfo(VIP,username,password):
     baseUrl = "https://"+VIP+":9440/PrismGateway/services/rest/v2.0/"
-    print("########## Listing Disks.... ########## in %s" %baseUrl)
+    print("#### Listing Disks.... #### in %s" %VIP)
     subpath = '/disks'
     ResPonse = requests.get(baseUrl+subpath, headers={'Accept': 'application/json'}, verify=False, auth=HTTPBasicAuth(username, password))
     ResPonse_json = json.loads(ResPonse.text)
     disk_count=len(ResPonse_json['entities'])
-    print("########## The number of disks is ########## %s" %disk_count)
-    diskinfo={}
-    for i in range(disk_count):
-        mount_path = ResPonse_json['entities'][i]['disk_hardware_config']['mount_path']
-        disk_sn = ResPonse_json['entities'][i]['disk_hardware_config']['serial_number']
-        print ("%s || disk mountpath & serial number: " %i)
-        print(mount_path)
-        print(disk_sn)
-        print("........")
+
+    #Create temp list to count SSD disk/HDD disk no.
+    sto_tier=[]
+    for n in ResPonse_json["entities"]:
+        sto_tier.append(n["storage_tier_name"])
+
+    #Printing total no of disks and SSD / HDD 
+    print("## Total no of disk is: {} SSD: {} HDD: {} ".format(disk_count,sto_tier.count("SSD"),sto_tier.count("HDD")))
+    print("############################### \n")
+
+    for n in ResPonse_json["entities"]:
+                print("Disk id: " + n["disk_hardware_config"]["disk_id"].split(':')[-1])
+                print("Disk SN: " + n["disk_hardware_config"]["serial_number"])
+                print("Model Number: "+n["disk_hardware_config"]["model"])
+                print("FW ver: " + n["disk_hardware_config"]["target_firmware_version"])
+                print("CVM_IP: " + n["cvm_ip_address"])
+                print("Slot location: "+ str(n["location"]))
+                print("Is bad?: "+ str(n["disk_hardware_config"]["bad"]))
+                print("Is mounted?: "+str(n["disk_hardware_config"]["mounted"]))
+                print("Is online?: "+str(n["online"]))
+                print("Storage Tier: "+ n["storage_tier_name"])
+                print("Disk Size: %5.2f GB " % (float(n["disk_size"])/1024/1024/1024))
+                print("###############################")
 
 def PrismHosts(VIP,username,password):
     baseUrl = "https://"+VIP+":9440/PrismGateway/services/rest/v2.0/"
@@ -60,7 +94,7 @@ def PrismHosts(VIP,username,password):
     hosts_count=len(ResPonse_json['entities'])
     print("########## There is(are) %s host(s), below is the detail ##########" %hosts_count)
     hostinfo={}
-    hostStatsDict = []
+    #hostStatsDict = []
     for i in range(hosts_count):
         host_uuid = ResPonse_json['entities'][i]['uuid']
         host_name = ResPonse_json['entities'][i]['name']
