@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 #Script Name : nutanix_api_cli.py
-#Script Purpose or Overview 
+#Script Purpose or Overview
 # - this script can show cluster detail as json format in clustet menu
-# - this script can show all disks in the cluster - mount point 
+# - this script can show all disks in the cluster - mount point
 # - this script will show cluster detail info if cluster is selected
 # This file is developed by Taeho Choi(taeho.choi@nutanix.com) by referring below resources
 # For reference look at:
@@ -13,7 +13,7 @@
 
 #   disclaimer
 #	This code is intended as a standalone example.  Subject to licensing restrictions defined on nutanix.dev, this can be downloaded, copied and/or modified in any way you see fit.
-#	Please be aware that all public code samples provided by Nutanix are unofficial in nature, are provided as examples only, are unsupported and will need to be heavily scrutinized and potentially modified before they can be used in a production environment.  
+#	Please be aware that all public code samples provided by Nutanix are unofficial in nature, are provided as examples only, are unsupported and will need to be heavily scrutinized and potentially modified before they can be used in a production environment.
 #   All such code samples are provided on an as-is basis, and Nutanix expressly disclaims all warranties, express or implied.
 #	All code samples are © Nutanix, Inc., and are provided as-is under the MIT license. (https://opensource.org/licenses/MIT)
 
@@ -67,7 +67,7 @@ def PrismDiskInfo(VIP,username,password):
     for n in ResPonse_json["entities"]:
         sto_tier.append(n["storage_tier_name"])
 
-    #Printing total no of disks and SSD / HDD 
+    #Printing total no of disks and SSD / HDD
     print("## Total no of disk is: {} SSD: {} HDD: {} ".format(disk_count,sto_tier.count("SSD"),sto_tier.count("HDD")))
     print("############################### \n")
 
@@ -132,14 +132,14 @@ def PrismClusterInfo(VIP,username,password):
     Cluster_detail = requests.get(baseUrl+subpath, headers={'Accept': 'application/json'}, verify=False, auth=HTTPBasicAuth(username, password))
     Cluster_detail_dict = json.loads(Cluster_detail.text)
     print(json.dumps(Cluster_detail_dict, indent=4))
-    
+
 if __name__ == '__main__':
 
     print("###############################################")
     print("You can also use $python3 %s Prism_VIP username password without interaction" %sys.argv[0])
 
     if len(sys.argv) == 4:
-        # Get VIP username password from command line 
+        # Get VIP username password from command line
         VIP = sys.argv[1]
         username = sys.argv[2]
         password = sys.argv[3]
