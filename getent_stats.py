@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #Script Name : getent_stats.py
-#Script Purpose or Overview 
+#Script Purpose or Overview
 # - this script will show last 1 hr entity(cpu/mem) performance data - host, vm with interactive option as well as argv option.
 # - this script will show cluster detail info if cluster is selected
 # This file is developed by Taeho Choi(taeho.choi@nutanix.com) by referring below resources
@@ -12,7 +12,7 @@
 
 #   disclaimer
 #	This code is intended as a standalone example.  Subject to licensing restrictions defined on nutanix.dev, this can be downloaded, copied and/or modified in any way you see fit.
-#	Please be aware that all public code samples provided by Nutanix are unofficial in nature, are provided as examples only, are unsupported and will need to be heavily scrutinized and potentially modified before they can be used in a production environment.  
+#	Please be aware that all public code samples provided by Nutanix are unofficial in nature, are provided as examples only, are unsupported and will need to be heavily scrutinized and potentially modified before they can be used in a production environment.
 #   All such code samples are provided on an as-is basis, and Nutanix expressly disclaims all warranties, express or implied.
 #	All code samples are © Nutanix, Inc., and are provided as-is under the MIT license. (https://opensource.org/licenses/MIT)
 
@@ -25,11 +25,11 @@ import pprint
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 if __name__ == "__main__":
-        
+
         cluster = C.GetClusterDetail()
         ip = cluster[0]
         username = cluster[1]
-        password = cluster[2]  
+        password = cluster[2]
 
         mycluster = C.my_api(ip,username,password)
         seLection = mycluster.EntityMenu()
@@ -120,7 +120,7 @@ if __name__ == "__main__":
             print("\n")
             # 4. Get VM UUID for specific VM from standard input
             vm_uuid = C.GetUUid()
-            
+
             # 5. Get CPU stats from arithmos base interval 30 secs
             status, resp = mycluster.get_resource_stats("vm",vm_uuid,"cpu")
             stats = resp['statsSpecificResponses'][0]
