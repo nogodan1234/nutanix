@@ -105,6 +105,27 @@ class my_api():
         server_response = self.sessionv1.get(cluster_url)
         return server_response.status_code ,json.loads(server_response.text)
 
+    # Get storage container information.
+    def get_ctr_info(self):
+
+        cluster_url = self.base_urlv2 + "storage_containers/"
+        server_response = self.sessionv2.get(cluster_url)
+        return server_response.status_code ,json.loads(server_response.text)
+    
+    # Get cluster network information.
+    def get_net_info(self):
+
+        cluster_url = self.base_urlv2 + "networks/"
+        server_response = self.sessionv2.get(cluster_url)
+        return server_response.status_code ,json.loads(server_response.text)
+    
+    # Get cluster image information.
+    def get_img_info(self):
+
+        cluster_url = self.base_urlv2 + "images/"
+        server_response = self.sessionv2.get(cluster_url)
+        return server_response.status_code ,json.loads(server_response.text)
+
     def EntityMenu(self):
         print("###############################################")
         print("What kind of information do you want to collect?")
@@ -112,6 +133,10 @@ class my_api():
         print("Type 1: cluster info")
         print("Type 2: Host info")
         print("Type 3: Vm info")
+        print("Type 4: Image info")
+        print("Type 5: Container info")
+        print("Type 6: Network info")
+        print("\n")
         seLection = input()
         return seLection
     

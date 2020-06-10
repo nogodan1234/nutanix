@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#Script Name : getent_stats.py
+#Script Name : nutanix_cli.py
 #Script Purpose or Overview 
 # - this script will show last 1 hr entity(cpu/mem) performance data - host, vm with interactive option as well as argv option.
 # - this script will show cluster detail info if cluster is selected
@@ -161,6 +161,56 @@ if __name__ == "__main__":
                 i=i+1
             print ("Percentage utilization last 1hr: MEM_MAX: %5.2f MEM_MIN: %5.2f MEM_AVG %5.2f" % (mem_max/10000,mem_min/10000,(running_total/10000)/i))
             sys.exit(0)
+
+        elif seLection == str(4):
+            print("You've selected Image detail....\n")
+            # 1. Get the UUID of all imgs.
+            status, all_imgs = mycluster.get_img_info()
+
+            # 2. Check the longest img name size to align print format
+            imgName=[]
+            for i in all_imgs["entities"]:
+                imgName.append(i["name"])
+            maxfield = len(max(imgName,key=len))
+
+            # 3. Display all img name, uuid, img_type: ISO or disk
+            for n in all_imgs["entities"]:
+                #n["image_type"] = n.get(n["image_type"], 0)
+                #print(n["image_type"])
+                print("Image name: " + n["name"].ljust(maxfield)+" uuid: " + n["uuid"] + "  image_type:"+n["image_type"])
+            print("\n")
+
+        elif seLection == str(5):
+            print("You've selected container info detail....\n")
+            # 1. Get the UUID of container 
+            status, all_ctrs = mycluster.get_ctr_info()
+
+            # 2. Check the longest ctr name size to align print format
+            ctrName=[]
+            for i in all_ctrs["entities"]:
+                ctrName.append(i["name"])
+            maxfield = len(max(ctrName,key=len))
+
+            # 3. Display all ctr name, uuid, img_type: ISO or disk
+            for n in all_ctrs["entities"]:
+                print("Container name: " + n["name"].ljust(maxfield)+" storage_container_uuid: " + n["storage_container_uuid"].ljust(40))
+            print("\n")
+
+        elif seLection == str(6):
+            print("You've selected network info detail....\n")
+            # 1. Get the UUID of network 
+            status, all_nets = mycluster.get_net_info()
+
+            # 2. Check the longest ctr name size to align print format
+            netName=[]
+            for i in all_nets["entities"]:
+                netName.append(i["name"])
+            maxfield = len(max(netName,key=len))
+
+            # 3. Display all ctr name, uuid, img_type: ISO or disk
+            for n in all_nets["entities"]:
+                print("Network name: " + n["name"].ljust(maxfield)+" network uuid: " + n["uuid"] + "  vlan: "+ str(n["vlan_id"]).ljust(6)+"  dhcp option:" + str(n["ip_config"]["dhcp_options"]))
+            print("\n")        
 
         else :
             print("You've selected wrong option")
