@@ -165,6 +165,6 @@ def GetClusterDetail():
     return(ip,username,password)
 
 def GetUUid():
-    print("What's the entity(vm,host) uuid to check?")
+    print("What's the entity(vm,host) uuid to check last 1 hr CPU/MEM performance?")
     uuid = input()
     return(uuid)
