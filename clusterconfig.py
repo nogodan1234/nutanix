@@ -127,6 +127,7 @@ class my_api():
         return server_response.status_code ,json.loads(server_response.text)
 
     def EntityMenu(self):
+        print("\n\n")
         print("###############################################")
         print("What kind of information do you want to collect?")
         print("#################### MENU #################### ")

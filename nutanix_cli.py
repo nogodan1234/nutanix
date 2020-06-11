@@ -25,8 +25,8 @@ import pprint
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 if __name__ == "__main__":
-        
-        cluster = C.GetClusterDetail()
+    cluster = C.GetClusterDetail()
+    while True:    
         ip = cluster[0]
         username = cluster[1]
         password = cluster[2]  
@@ -100,7 +100,6 @@ if __name__ == "__main__":
                 running_total += int(mem)
                 i=i+1
             print ("Percentage utilization last 1hr: MEM_MAX: %5.2f MEM_MIN: %5.2f MEM_AVG %5.2f" % (mem_max/10000,mem_min/10000,(running_total/10000)/i))
-            sys.exit(0)
 
         elif seLection == str(3):
             print("You've selected VM detail....\n")
@@ -160,7 +159,6 @@ if __name__ == "__main__":
                 running_total += int(mem)
                 i=i+1
             print ("Percentage utilization last 1hr: MEM_MAX: %5.2f MEM_MIN: %5.2f MEM_AVG %5.2f" % (mem_max/10000,mem_min/10000,(running_total/10000)/i))
-            sys.exit(0)
 
         elif seLection == str(4):
             print("You've selected Image detail....\n")
@@ -175,9 +173,7 @@ if __name__ == "__main__":
 
             # 3. Display all img name, uuid, img_type: ISO or disk
             for n in all_imgs["entities"]:
-                #n["image_type"] = n.get(n["image_type"], 0)
-                #print(n["image_type"])
-                print("Image name: " + n["name"].ljust(maxfield)+" uuid: " + n["uuid"] + "  image_type:"+n["image_type"])
+                print("Image name: " + n["name"].ljust(maxfield)+" uuid: " + n["uuid"] + "  image_type: "+ str(n.get("image_type")))
             print("\n")
 
         elif seLection == str(5):
@@ -215,4 +211,4 @@ if __name__ == "__main__":
         else :
             print("You've selected wrong option")
             print("Exiting...")
-            sys.exit()
+            
