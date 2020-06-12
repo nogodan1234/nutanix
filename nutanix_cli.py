@@ -47,7 +47,6 @@ if __name__ == "__main__":
             # 1. Get the UUID of all hosts.
             print("You've selected host detail....\n")
             status, all_hosts = mycluster.get_all_host_info()
-            #pprint.pprint(all_hosts["entities"][0])
 
             # 2. Check the longest host name size to align print format
             hostName=[]
@@ -106,7 +105,6 @@ if __name__ == "__main__":
             print("You've selected VM detail....\n")
             # 1. Get the UUID of all VMs.
             status, all_vms = mycluster.get_all_vm_info()
-            #pprint.pprint(all_vms["entities"][0])
 
             # 2. Check the longest VM name size to align print format
             vmName=[]
@@ -212,9 +210,9 @@ if __name__ == "__main__":
         elif seLection == str(7):
             print("You've selected to publish new image from url..\n")
             name        = input("Enter the image_name: ")
-            annotation  = input("Enther image annotation - optional: ")
+            annotation  = input("Enther image annotation (optional): ")
 
-            #Limiting image_type input only 2 available options with itertool
+            #Limiting input for image_type only 2 available options with itertool
             img_type    = {'DISK_IMAGE','ISO_IMAGE'}
             image_input = chain(["Enter image type - DISK_IMAGE or ISO_IMAGE: "], repeat("Please type correct image type again: "))
             replies     = map(input, image_input)
