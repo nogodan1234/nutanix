@@ -22,6 +22,7 @@ import urllib.request
 import clusterconfig as C
 import urllib3
 import pprint
+from itertools import chain, repeat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 if __name__ == "__main__":
@@ -206,7 +207,26 @@ if __name__ == "__main__":
             # 3. Display all ctr name, uuid, img_type: ISO or disk
             for n in all_nets["entities"]:
                 print("Network name: " + n["name"].ljust(maxfield)+" network uuid: " + n["uuid"] + "  vlan: "+ str(n["vlan_id"]).ljust(6)+"  dhcp option:" + str(n["ip_config"]["dhcp_options"]))
-            print("\n")        
+            print("\n") 
+
+        elif seLection == str(7):
+            print("You've selected to publish new image from url..\n")
+            name        = input("Enter the image_name: ")
+            annotation  = input("Enther image annotation - optional: ")
+
+            #Limiting image_type input only 2 available options with itertool
+            img_type    = {'DISK_IMAGE','ISO_IMAGE'}
+            image_input = chain(["Enter image type - DISK_IMAGE or ISO_IMAGE: "], repeat("Please type correct image type again: "))
+            replies     = map(input, image_input)
+            valid_image = next(filter(img_type.__contains__, replies))
+            
+            ctrUuid     = input("Enter container uuid where you upload this: ")
+            url         = input("Enter URL where the image is located: ")
+            body = {"name":name,"annotation":annotation,"imageType":valid_image,"imageImportSpec":{"containerUuid":ctrUuid,"url":url}}
+            #body = {"name":"cirros_disk2","annotation":"cirros","imageType":"DISK_IMAGE","imageImportSpec":{"containerUuid":"f8943a0e-83de-41c7-9627-08d2b25c72fb","url":"https://download.cirros-cloud.net/0.5.1/cirros-0.5.1-x86_64-disk.img"}}
+            status,task_uuid = mycluster.post_new_img(body)
+            print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["taskUuid"]))
+            print("\n")                
 
         else :
             print("You've selected wrong option")

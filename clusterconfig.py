@@ -17,9 +17,10 @@ import time
 import requests
 from urllib.parse import quote
 import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import ipaddress
 import getpass
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 # Time period is one hour (3600 seconds).
 period=3600
@@ -39,7 +40,11 @@ class my_api():
         # Base URL at which v2 REST services are hosted in Prism Gateway.
         base_urlv2 = 'https://%s:9440/PrismGateway/services/rest/v2.0/'
         self.base_urlv2 = base_urlv2 % self.ip_addr
-        self.sessionv2 = self.get_server_session(self.username, self.password)  
+        self.sessionv2 = self.get_server_session(self.username, self.password)
+        # Base URL at which v0.8 REST services are hosted in Prism Gateway.
+        base_urlv08 = 'https://%s:9440/PrismGateway/services/rest/v0.8/'
+        self.base_urlv08 = base_urlv08 % self.ip_addr
+        self.sessionv08 = self.get_server_session(self.username, self.password)    
 
     def get_server_session(self, username, password):
 
@@ -126,6 +131,12 @@ class my_api():
         server_response = self.sessionv2.get(cluster_url)
         return server_response.status_code ,json.loads(server_response.text)
 
+    # Post new image.
+    def post_new_img(self,body):
+        cluster_url = self.base_urlv08 + "images"
+        server_response = self.sessionv08.post(cluster_url,data = json.dumps(body))
+        return server_response.status_code ,json.loads(server_response.text)
+
     def EntityMenu(self):
         print("\n\n")
         print("###############################################")
@@ -137,6 +148,7 @@ class my_api():
         print("Type 4: Image info")
         print("Type 5: Container info")
         print("Type 6: Network info")
+        print("Type 7: Upload new image from URL")
         print("\n")
         seLection = input()
         return seLection
