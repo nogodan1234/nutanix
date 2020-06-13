@@ -24,6 +24,7 @@ import urllib3
 import pprint
 from itertools import chain, repeat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+import json
 
 if __name__ == "__main__":
     cluster = C.GetClusterDetail()
@@ -172,7 +173,7 @@ if __name__ == "__main__":
 
             # 3. Display all img name, uuid, img_type: ISO or disk
             for n in all_imgs["entities"]:
-                print("Image name: " + n["name"].ljust(maxfield)+" uuid: " + n["uuid"] + "  image_type: "+ str(n.get("image_type")))
+                print("Image name: " + n["name"].ljust(maxfield)+" uuid: " + n["uuid"] +" vm_disk_id: " + n["vm_disk_id"] + "  image_type: "+ str(n.get("image_type")))
             print("\n")
 
         elif seLection == str(5):
@@ -218,13 +219,54 @@ if __name__ == "__main__":
             replies     = map(input, image_input)
             valid_image = next(filter(img_type.__contains__, replies))
             
-            ctrUuid     = input("Enter container uuid where you upload this: ")
+            ctrUuid     = input("Enter container uuid where you want to store this: ")
             url         = input("Enter URL where the image is located: ")
             body = {"name":name,"annotation":annotation,"imageType":valid_image,"imageImportSpec":{"containerUuid":ctrUuid,"url":url}}
             #body = {"name":"cirros_disk2","annotation":"cirros","imageType":"DISK_IMAGE","imageImportSpec":{"containerUuid":"f8943a0e-83de-41c7-9627-08d2b25c72fb","url":"https://download.cirros-cloud.net/0.5.1/cirros-0.5.1-x86_64-disk.img"}}
             status,task_uuid = mycluster.post_new_img(body)
             print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["taskUuid"]))
-            print("\n")                
+            print("\n")
+
+        elif seLection == str(8):
+            print("You've selected to create new VM..\n")
+            print("This task will create ONLY vm without disks\n")
+            print("Please attach disk to the VM once it is created\n")
+            body={"name":"no_disk_no_cdrom","memory_mb":4096,"num_vcpus":2,"description":"no_disk_no_cdrom","num_cores_per_vcpu":1,"timezone":"UTC","boot":{"uefi_boot":"false","boot_device_order":["CDROM","DISK","NIC"]},"vm_nics":[{"network_uuid":"71108a10-5eaa-4abc-b512-37fbb99f1f24","is_connected":"true"}],"hypervisor_type":"ACROPOLIS","vm_features":{"AGENT_VM":"false"}}
+            
+            body["name"]                                                        = input("Enter VM name: ")
+            body["num_vcpus"]                                                   = int(input("Enter num of vcpus: "))
+            body["num_cores_per_vcpu"]                                          = int(input("Enter num of vcpu per sockets: "))
+            body["memory_mb"]                                                   = int(input("Enter VM memory size(mb): "))
+            body["description"]                                                 = input("Enter VM description: ")
+            body["vm_nics"][0]["network_uuid"]                                  = input("Enter network uuid: ")
+            
+            status,task_uuid = mycluster.create_vm(body)
+            print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
+            print("\n")
+
+        elif seLection == str(9):
+            print("You've selected to attach disk to VM..\n")
+            vm_uuid = input("Enter VM uuid: ")
+            body = {"vm_disks":[{"is_cdrom":"false","disk_address":{"device_bus":"scsi"},"vm_disk_clone":{"disk_address":{"vmdisk_uuid":"7e37f613-41c3-4cbf-aebc-7178bcb99330"},"minimum_size":10737418240}}]}  
+            body["vm_disks"][0]["vm_disk_clone"]["disk_address"]["vmdisk_uuid"] = input("Enter vmdisk_uuid for disk image: ")
+            body["vm_disks"][0]["vm_disk_clone"]["minimum_size"]                = 1024*1024*1024*int(input("Enter minimum disk size to expand(GB): "))
+            status,task_uuid = mycluster.attach_disk(body,vm_uuid)
+            print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
+            print("\n")  
+
+        elif seLection == str(10):
+            print("You've selected to VM power operation\n")
+            body = {"transition": "ON","uuid": "f6beec0d-4803-4840-90a7-0b60de0f59b6"}
+            body["uuid"] = input("Enter vm uuid for power operation: ")
+
+            #Limiting input for power status only 2 available options with itertool
+            pwr_stat    = {'ON','OFF'}
+            stat_input  = chain(["Enter the new power status of the vm - ON or OFF: "], repeat("Please type correct power status again: "))
+            replies     = map(input, stat_input)
+            body["transition"] = next(filter(pwr_stat.__contains__, replies))
+            status,task_uuid = mycluster.vm_powerop(body,body["uuid"])
+            print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
+            print("\n")                    
 
         else :
             print("You've selected wrong option")

@@ -33,6 +33,12 @@ class my_api():
         self.ip_addr = ip
         self.username = username
         self.password = password
+
+        # Base URL at which v0.8 REST services are hosted in Prism Gateway.
+        base_urlv08 = 'https://%s:9440/PrismGateway/services/rest/v0.8/'
+        self.base_urlv08 = base_urlv08 % self.ip_addr
+        self.sessionv08 = self.get_server_session(self.username, self.password) 
+
         # Base URL at which v1 REST services are hosted in Prism Gateway.
         base_urlv1 = 'https://%s:9440/PrismGateway/services/rest/v1/'
         self.base_urlv1 = base_urlv1 % self.ip_addr
@@ -40,11 +46,11 @@ class my_api():
         # Base URL at which v2 REST services are hosted in Prism Gateway.
         base_urlv2 = 'https://%s:9440/PrismGateway/services/rest/v2.0/'
         self.base_urlv2 = base_urlv2 % self.ip_addr
-        self.sessionv2 = self.get_server_session(self.username, self.password)
-        # Base URL at which v0.8 REST services are hosted in Prism Gateway.
-        base_urlv08 = 'https://%s:9440/PrismGateway/services/rest/v0.8/'
-        self.base_urlv08 = base_urlv08 % self.ip_addr
-        self.sessionv08 = self.get_server_session(self.username, self.password)    
+        self.sessionv2 = self.get_server_session(self.username, self.password)       
+        # Base URL at which v3 REST services are hosted in Prism Gateway.
+        base_urlv3 = 'https://%s:9440/PrismGateway/services/rest/v3/'
+        self.base_urlv3 = base_urlv3 % self.ip_addr
+        self.sessionv3 = self.get_server_session(self.username, self.password)    
 
     def get_server_session(self, username, password):
 
@@ -137,10 +143,31 @@ class my_api():
         server_response = self.sessionv08.post(cluster_url,data = json.dumps(body))
         return server_response.status_code ,json.loads(server_response.text)
 
+    # Create new VM from image.
+    def create_vm(self,body):
+        cluster_url = self.base_urlv2 + "vms?include_vm_disk_config=true&include_vm_nic_config=true"
+        print(json.dumps(body))
+        server_response = self.sessionv2.post(cluster_url,data = json.dumps(body))
+        return server_response.status_code ,json.loads(server_response.text)
+    
+    # Attach disk to VM.
+    def attach_disk(self,body,vm_uuid):
+        cluster_url = self.base_urlv2 + "vms/" + vm_uuid + "/disks/attach"
+        print(json.dumps(body))
+        server_response = self.sessionv2.post(cluster_url,data = json.dumps(body))
+        return server_response.status_code ,json.loads(server_response.text)
+    
+    # VM power operataion
+    def vm_powerop(self,body,vm_uuid):
+        cluster_url = self.base_urlv2 + "vms/" + vm_uuid + "/set_power_state/"
+        print(json.dumps(body))
+        server_response = self.sessionv2.post(cluster_url,data = json.dumps(body))
+        return server_response.status_code ,json.loads(server_response.text)
+
     def EntityMenu(self):
         print("\n\n")
         print("###############################################")
-        print("What kind of information do you want to collect?")
+        print("What kind of operation do you want?")
         print("#################### MENU #################### ")
         print("Type 1: cluster info")
         print("Type 2: Host info")
@@ -149,6 +176,9 @@ class my_api():
         print("Type 5: Container info")
         print("Type 6: Network info")
         print("Type 7: Upload new image from URL")
+        print("Type 8: Create new VM without disk")
+        print("Type 9: Attach disk to VM from disk Image")
+        print("Type 10: VM Power on/off operation")
         print("\n")
         seLection = input()
         return seLection
