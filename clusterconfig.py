@@ -21,7 +21,6 @@ import ipaddress
 import getpass
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-
 # Time period is one hour (3600 seconds).
 period=3600
 
@@ -43,10 +42,12 @@ class my_api():
         base_urlv1 = 'https://%s:9440/PrismGateway/services/rest/v1/'
         self.base_urlv1 = base_urlv1 % self.ip_addr
         self.sessionv1 = self.get_server_session(self.username, self.password)
+
         # Base URL at which v2 REST services are hosted in Prism Gateway.
         base_urlv2 = 'https://%s:9440/PrismGateway/services/rest/v2.0/'
         self.base_urlv2 = base_urlv2 % self.ip_addr
-        self.sessionv2 = self.get_server_session(self.username, self.password)       
+        self.sessionv2 = self.get_server_session(self.username, self.password)   
+
         # Base URL at which v3 REST services are hosted in Prism Gateway.
         base_urlv3 = 'https://%s:9440/PrismGateway/services/rest/v3/'
         self.base_urlv3 = base_urlv3 % self.ip_addr
@@ -62,26 +63,46 @@ class my_api():
         session.headers.update({'Content-Type': 'application/json; charset=utf-8'})
         return session
 
-    # Get cluster information.
-    def get_cluster_information(self):
+    # Get all entity uuid table first except cluster 
+    def get_all_entity_info(self,ent):
+        if (ent == "hosts"):
+            cluster_url = self.base_urlv2 + "hosts/"
+        elif (ent == 'vms'):
+            cluster_url = self.base_urlv1 + "vms/"
+        elif (ent == 'images'):
+            cluster_url = self.base_urlv2 + "images/"
+        elif (ent == 'ctr'):
+            cluster_url = self.base_urlv2 + "storage_containers/"
+        elif (ent == 'net'):
+            cluster_url = self.base_urlv2 + "networks/"
+        elif (ent == 'cluster'):
+            cluster_url = self.base_urlv1 + "cluster/"
+        else: 
+            print("wrong entiry parsed")
 
-        cluster_url = self.base_urlv1 + "cluster/"
-        print("Getting cluster information for cluster %s." % self.ip_addr)
-        server_response = self.sessionv1.get(cluster_url)
-        return server_response.status_code ,json.loads(server_response.text)
-
-        # Get host information.
-    def get_all_host_info(self):
-
-        cluster_url = self.base_urlv2 + "hosts/"
         server_response = self.sessionv2.get(cluster_url)
         return server_response.status_code ,json.loads(server_response.text)
 
-    # Get all VMs in the cluster.
-    def get_all_vm_info(self):
-
-        cluster_url = self.base_urlv1 + "vms/"
-        server_response = self.sessionv1.get(cluster_url)
+        # Get entity information.
+    def get_single_ent_info(self,ent,uuid):
+        if (ent == "hosts"):
+            cluster_url = self.base_urlv2 + "hosts/"+uuid
+        elif (ent == 'vms'):
+            cluster_url = self.base_urlv1 + "vms/"+uuid
+        elif (ent == 'images'):
+            cluster_url = self.base_urlv2 + "images/"+uuid
+        elif (ent == 'ctr'):
+            cluster_url = self.base_urlv2 + "storage_containers/"+uuid
+        elif (ent == 'net'):
+            cluster_url = self.base_urlv2 + "networks/"+uuid
+        elif (ent == 'net2'):
+            cluster_url = self.base_urlv2 + "networks/"+uuid+"/addresses"
+        elif (ent == 'tasks'):
+            cluster_url = self.base_urlv2 + "tasks/"+uuid
+        else: 
+            print("wrong entiry parsed")
+        print(cluster_url)
+        server_response = self.sessionv2.get(cluster_url)
         return server_response.status_code ,json.loads(server_response.text)
     
     # Get resource stats.
@@ -116,26 +137,6 @@ class my_api():
         server_response = self.sessionv1.get(cluster_url)
         return server_response.status_code ,json.loads(server_response.text)
 
-    # Get storage container information.
-    def get_ctr_info(self):
-
-        cluster_url = self.base_urlv2 + "storage_containers/"
-        server_response = self.sessionv2.get(cluster_url)
-        return server_response.status_code ,json.loads(server_response.text)
-    
-    # Get cluster network information.
-    def get_net_info(self):
-
-        cluster_url = self.base_urlv2 + "networks/"
-        server_response = self.sessionv2.get(cluster_url)
-        return server_response.status_code ,json.loads(server_response.text)
-    
-    # Get cluster image information.
-    def get_img_info(self):
-
-        cluster_url = self.base_urlv2 + "images/"
-        server_response = self.sessionv2.get(cluster_url)
-        return server_response.status_code ,json.loads(server_response.text)
 
     # Post new image.
     def post_new_img(self,body):
@@ -212,6 +213,6 @@ def GetClusterDetail():
     return(ip,username,password)
 
 def GetUUid():
-    print("What's the entity(vm,host) uuid to check last 1 hr CPU/MEM performance?")
+    print("What's the entity(ex.vm,host,image...) uuid to check the detail?")
     uuid = input()
     return(uuid)

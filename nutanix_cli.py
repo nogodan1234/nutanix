@@ -40,7 +40,7 @@ if __name__ == "__main__":
         if seLection == str(1):
             print("You've selected cluster detail....\n")
             # 1. Call cluster detail from get_cluster_information() method with api v1
-            status, all_cluster = mycluster.get_cluster_information()
+            status, all_cluster = mycluster.get_all_entity_info("cluster")
             print("Here is the cluster detail... \n")
             # 2. pprint cluter detail json format
             pprint.pprint(all_cluster)
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         elif seLection == str(2):
             # 1. Get the UUID of all hosts.
             print("You've selected host detail....\n")
-            status, all_hosts = mycluster.get_all_host_info()
+            status, all_hosts = mycluster.get_all_entity_info("hosts")
 
             # 2. Check the longest host name size to align print format
             hostName=[]
@@ -62,51 +62,55 @@ if __name__ == "__main__":
             print("\n")
             # 4. Get VM UUID for specific host from standard input
             host_uuid=C.GetUUid()
+            
+            # 5. Display host detail for the uuid
+            status, host_info = mycluster.get_single_ent_info("hosts",host_uuid)
+            pprint.pprint(host_info)
 
             # 5. Get CPU stats from arithmos base interval 30 secs
-            status, resp = mycluster.get_resource_stats("host",host_uuid,"cpu")
-            stats = resp['statsSpecificResponses'][0]
-            if (stats['successful'] != True):
-                print (">> CPU Stat call to", ip, "failed. Aborting... <<")
-                sys.exit(1)
-            cpu_stats = stats['values']
-            i=0
-            cpu_min = sys.maxsize
-            cpu_max=0
-            running_total=0
-            for cpu in cpu_stats:
-                if (cpu < cpu_min):
-                    cpu_min = int(cpu)
-                if (cpu > cpu_max):
-                    cpu_max = int(cpu)
-                running_total += int(cpu)
-                i=i+1
-            print ("Percentage utilization last 1hr: CPU_MAX: %5.2f CPU_MIN: %5.2f CPU_AVG %5.2f" % (cpu_max/10000,cpu_min/10000,(running_total/10000)/i))
+            #status, resp = mycluster.get_resource_stats("host",host_uuid,"cpu")
+            #stats = resp['statsSpecificResponses'][0]
+            #if (stats['successful'] != True):
+            #    print (">> CPU Stat call to", ip, "failed. Aborting... <<")
+            #    sys.exit(1)
+            #cpu_stats = stats['values']
+            #i=0
+            #cpu_min = sys.maxsize
+            #cpu_max=0
+            #running_total=0
+            #for cpu in cpu_stats:
+            #    if (cpu < cpu_min):
+            #        cpu_min = int(cpu)
+            #    if (cpu > cpu_max):
+            #        cpu_max = int(cpu)
+            #    running_total += int(cpu)
+            #    i=i+1
+            #print ("Percentage utilization last 1hr: CPU_MAX: %5.2f CPU_MIN: %5.2f CPU_AVG %5.2f" % (cpu_max/10000,cpu_min/10000,(running_total/10000)/i))
 
             # 6. Get MEM stats from arithmos base interval 30 secs
-            status, resp = mycluster.get_resource_stats("host",host_uuid,"memory")
-            stats = resp['statsSpecificResponses'][0]
-            if (stats['successful'] != True):
-                print (">> Memory Stat call to",ip, "failed. Aborting... <<")
-                sys.exit(1)
-            mem_stats = stats['values']
-            i=0
-            mem_min = sys.maxsize
-            mem_max=0
-            running_total=0
-            for mem in mem_stats:
-                if (mem < mem_min):
-                    mem_min = int(mem)
-                if (mem > mem_max):
-                    mem_max = int(mem)
-                running_total += int(mem)
-                i=i+1
-            print ("Percentage utilization last 1hr: MEM_MAX: %5.2f MEM_MIN: %5.2f MEM_AVG %5.2f" % (mem_max/10000,mem_min/10000,(running_total/10000)/i))
+            #status, resp = mycluster.get_resource_stats("host",host_uuid,"memory")
+            #stats = resp['statsSpecificResponses'][0]
+            #if (stats['successful'] != True):
+            #    print (">> Memory Stat call to",ip, "failed. Aborting... <<")
+            #    sys.exit(1)
+            #mem_stats = stats['values']
+            #i=0
+            #mem_min = sys.maxsize
+            #mem_max=0
+            #running_total=0
+            #for mem in mem_stats:
+            #    if (mem < mem_min):
+            #        mem_min = int(mem)
+            #    if (mem > mem_max):
+            #        mem_max = int(mem)
+            #    running_total += int(mem)
+            #    i=i+1
+            #print ("Percentage utilization last 1hr: MEM_MAX: %5.2f MEM_MIN: %5.2f MEM_AVG %5.2f" % (mem_max/10000,mem_min/10000,(running_total/10000)/i))
 
         elif seLection == str(3):
             print("You've selected VM detail....\n")
             # 1. Get the UUID of all VMs.
-            status, all_vms = mycluster.get_all_vm_info()
+            status, all_vms = mycluster.get_all_entity_info("vms")
 
             # 2. Check the longest VM name size to align print format
             vmName=[]
@@ -121,50 +125,54 @@ if __name__ == "__main__":
             # 4. Get VM UUID for specific VM from standard input
             vm_uuid = C.GetUUid()
 
+            # 5. Display host detail for the uuid
+            status, vm_info = mycluster.get_single_ent_info("vms",vm_uuid)
+            pprint.pprint(vm_info)
+
             # 5. Get CPU stats from arithmos base interval 30 secs
-            status, resp = mycluster.get_resource_stats("vm",vm_uuid,"cpu")
-            stats = resp['statsSpecificResponses'][0]
-            if (stats['successful'] != True):
-                print (">> CPU Stat call to", ip, "failed. Aborting... <<")
-                sys.exit(1)
-            cpu_stats = stats['values']
-            i=0
-            cpu_min = sys.maxsize
-            cpu_max=0
-            running_total=0
-            for cpu in cpu_stats:
-                if (cpu < cpu_min):
-                    cpu_min = int(cpu)
-                if (cpu > cpu_max):
-                    cpu_max = int(cpu)
-                running_total += int(cpu)
-                i=i+1
-            print ("Percentage utilization last 1hr: CPU_MAX: %5.2f CPU_MIN: %5.2f CPU_AVG %5.2f" % (cpu_max/10000,cpu_min/10000,(running_total/10000)/i))
+            #status, resp = mycluster.get_resource_stats("vm",vm_uuid,"cpu")
+            #stats = resp['statsSpecificResponses'][0]
+            #if (stats['successful'] != True):
+            #    print (">> CPU Stat call to", ip, "failed. Aborting... <<")
+            #    sys.exit(1)
+            #cpu_stats = stats['values']
+            #i=0
+            #cpu_min = sys.maxsize
+            #cpu_max=0
+            #running_total=0
+            #for cpu in cpu_stats:
+            #    if (cpu < cpu_min):
+            #        cpu_min = int(cpu)
+            #    if (cpu > cpu_max):
+            #        cpu_max = int(cpu)
+            #    running_total += int(cpu)
+            #    i=i+1
+            #print ("Percentage utilization last 1hr: CPU_MAX: %5.2f CPU_MIN: %5.2f CPU_AVG %5.2f" % (cpu_max/10000,cpu_min/10000,(running_total/10000)/i))
 
             # 6. Get MEM stats from arithmos base interval 30 secs
-            status, resp = mycluster.get_resource_stats("vm",vm_uuid,"memory")
-            stats = resp['statsSpecificResponses'][0]
-            if (stats['successful'] != True):
-                print (">> Memory Stat call to",ip, "failed. Aborting... <<")
-                sys.exit(1)
-            mem_stats = stats['values']
-            i=0
-            mem_min = sys.maxsize
-            mem_max=0
-            running_total=0
-            for mem in mem_stats:
-                if (mem < mem_min):
-                    mem_min = int(mem)
-                if (mem > mem_max):
-                    mem_max = int(mem)
-                running_total += int(mem)
-                i=i+1
-            print ("Percentage utilization last 1hr: MEM_MAX: %5.2f MEM_MIN: %5.2f MEM_AVG %5.2f" % (mem_max/10000,mem_min/10000,(running_total/10000)/i))
+            #status, resp = mycluster.get_resource_stats("vm",vm_uuid,"memory")
+            #stats = resp['statsSpecificResponses'][0]
+            #if (stats['successful'] != True):
+            #    print (">> Memory Stat call to",ip, "failed. Aborting... <<")
+            #    sys.exit(1)
+            #mem_stats = stats['values']
+            #i=0
+            #mem_min = sys.maxsize
+            #mem_max=0
+            #running_total=0
+            #for mem in mem_stats:
+            #    if (mem < mem_min):
+            #        mem_min = int(mem)
+            #    if (mem > mem_max):
+            #        mem_max = int(mem)
+            #    running_total += int(mem)
+            #    i=i+1
+            #print ("Percentage utilization last 1hr: MEM_MAX: %5.2f MEM_MIN: %5.2f MEM_AVG %5.2f" % (mem_max/10000,mem_min/10000,(running_total/10000)/i))
 
         elif seLection == str(4):
             print("You've selected Image detail....\n")
             # 1. Get the UUID of all imgs.
-            status, all_imgs = mycluster.get_img_info()
+            status, all_imgs = mycluster.get_all_entity_info("images")
 
             # 2. Check the longest img name size to align print format
             imgName=[]
@@ -176,11 +184,18 @@ if __name__ == "__main__":
             for n in all_imgs["entities"]:
                 print("Image name: " + n["name"].ljust(maxfield)+" uuid: " + n["uuid"] +" vm_disk_id: " + str(n.get("vm_disk_id")) + "  image_type: "+ str(n.get("image_type")))
             print("\n")
+            
+            # 4. Get image uuid from the list
+            img_uuid=C.GetUUid()
+            
+            # 5. Display host detail for the uuid
+            status, ent_info = mycluster.get_single_ent_info("images",img_uuid)
+            pprint.pprint(ent_info)
 
         elif seLection == str(5):
             print("You've selected container info detail....\n")
             # 1. Get the UUID of container 
-            status, all_ctrs = mycluster.get_ctr_info()
+            status, all_ctrs = mycluster.get_all_entity_info("ctr")
 
             # 2. Check the longest ctr name size to align print format
             ctrName=[]
@@ -192,11 +207,18 @@ if __name__ == "__main__":
             for n in all_ctrs["entities"]:
                 print("Container name: " + n["name"].ljust(maxfield)+" storage_container_uuid: " + n["storage_container_uuid"].ljust(40))
             print("\n")
+            
+            # 4. Get ctr UUID 
+            ctr_uuid=C.GetUUid()
+            
+            # 5. Display host detail for the uuid
+            status, ent_info = mycluster.get_single_ent_info("ctr",ctr_uuid)
+            pprint.pprint(ent_info)
 
         elif seLection == str(6):
             print("You've selected network info detail....\n")
             # 1. Get the UUID of network 
-            status, all_nets = mycluster.get_net_info()
+            status, all_nets = mycluster.get_all_entity_info("net")
 
             # 2. Check the longest ctr name size to align print format
             netName=[]
@@ -207,7 +229,19 @@ if __name__ == "__main__":
             # 3. Display all ctr name, uuid, img_type: ISO or disk
             for n in all_nets["entities"]:
                 print("Network name: " + n["name"].ljust(maxfield)+" network uuid: " + n["uuid"] + "  vlan: "+ str(n["vlan_id"]).ljust(6)+"  dhcp option:" + str(n["ip_config"]["dhcp_options"]))
-            print("\n") 
+            print("\n")
+
+            # 4. Get image uuid from the list
+            net_uuid=C.GetUUid()
+            
+            # 5. Display host detail for the uuid
+            status, ent_info = mycluster.get_single_ent_info("net",net_uuid)
+            pprint.pprint(ent_info) 
+
+            print("\nBelow is detail ip usage if it is managed network\n")
+            #6. Display subnet usage detail for the uuid
+            status, ent_info = mycluster.get_single_ent_info("net2",net_uuid)
+            pprint.pprint(ent_info) 
 
         elif seLection == str(7):
             print("You've selected to publish new image from url..\n")
@@ -227,6 +261,9 @@ if __name__ == "__main__":
             status,task_uuid = mycluster.post_new_img(body)
             print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["taskUuid"]))
             print("\n")
+            status, ent_info = mycluster.get_single_ent_info("tasks",task_uuid["taskUuid"])
+            pprint.pprint(ent_info)
+            print("\n")
 
         elif seLection == str(8):
             print("You've selected to create new VM with cloud-init..\n")
@@ -236,21 +273,30 @@ if __name__ == "__main__":
             body["name"]                                                        = input("Enter VM name: ")
             body["num_vcpus"]                                                   = int(input("Enter num of vcpus: "))
             body["num_cores_per_vcpu"]                                          = int(input("Enter num of vcpu per sockets: "))
-            body["memory_mb"]                                                   = int(input("Enter VM memory size(mb): "))
+            body["memory_mb"]                                                   = 1024*int(input("Enter VM memory size(GB): "))
             body["description"]                                                 = input("Enter VM description: ")
             body["timezone"]                                                    = input("Enter timezone ex) UTC: ")
             body["vm_nics"][0]["network_uuid"]                                  = input("Enter network uuid: ")
             body["vm_disks"][0]["vm_disk_clone"]["disk_address"]["vmdisk_uuid"] = input("Enter vmdisk_id for disk image: ")
             body["vm_disks"][0]["vm_disk_clone"]["minimum_size"]                = 1024*1024*1024*int(input("Enter vmdisk size(GB) : "))
 
-            print("Please copy your cloud-init configuration to your PC clipboard: ")  
-            if input("Type Y to copy clipboard content to cloud-init config, N to exit: ") == "Y":
-                body["vm_customization_config"]["userdata"] = pc.paste()
-                print("Your cloud-init config is %s" %body["vm_customization_config"]["userdata"])
-            else:
-                print("exit")            
+            print("Please place your cloud-init file in same dir with this script ... ")  
+
+            cl_int_f                                                            = input("Enter cloud-init filename ")
+            fd_cl_int_f = open(cl_int_f,"r")
+            body["vm_customization_config"]["userdata"]                         = fd_cl_int_f.read()
+            fd_cl_int_f.close()
+
+            #if input("Type Y to copy clipboard content to cloud-init config, N to exit: ") == "Y":
+            #    body["vm_customization_config"]["userdata"] = pc.paste()
+            #    print("Your cloud-init config is %s" %body["vm_customization_config"]["userdata"])
+            #else:
+            #    print("exit")            
             status,task_uuid = mycluster.create_vm(body)
             print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
+            print("\n")
+            status, ent_info = mycluster.get_single_ent_info("tasks",task_uuid["task_uuid"])
+            pprint.pprint(ent_info)
             print("\n") 
 
         elif seLection == str(9):
@@ -266,13 +312,16 @@ if __name__ == "__main__":
             status,task_uuid = mycluster.vm_powerop(body,body["uuid"])
             print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
             print("\n")
+            status, ent_info = mycluster.get_single_ent_info("tasks",task_uuid["task_uuid"])
+            pprint.pprint(ent_info)
+            print("\n")
 
         elif seLection == str(10):
             print("You've selected to VM delete operation\n")
             body = {"uuid": str}
             
             # 1. Collect all current vm uuids 
-            status, all_vms = mycluster.get_all_vm_info()
+            status, all_vms = mycluster.get_all_entity_info("vms")
 
             # 2. Check the longest VM name size to align print format
             vmName=[]
@@ -296,6 +345,9 @@ if __name__ == "__main__":
             body["uuid"] = next(filter(vmUUid.__contains__, replies))
             status,task_uuid = mycluster.delete_vm(body,body["uuid"])
             print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
+            print("\n")
+            status, ent_info = mycluster.get_single_ent_info("tasks",task_uuid["task_uuid"])
+            pprint.pprint(ent_info)
             print("\n") 
                    
         else :
