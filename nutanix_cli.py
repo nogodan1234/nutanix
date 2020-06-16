@@ -25,6 +25,7 @@ import pprint
 from itertools import chain, repeat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import json
+import pyperclip as pc
 
 if __name__ == "__main__":
     cluster = C.GetClusterDetail()
@@ -119,7 +120,7 @@ if __name__ == "__main__":
             print("\n")
             # 4. Get VM UUID for specific VM from standard input
             vm_uuid = C.GetUUid()
-            
+
             # 5. Get CPU stats from arithmos base interval 30 secs
             status, resp = mycluster.get_resource_stats("vm",vm_uuid,"cpu")
             stats = resp['statsSpecificResponses'][0]
@@ -173,7 +174,7 @@ if __name__ == "__main__":
 
             # 3. Display all img name, uuid, img_type: ISO or disk
             for n in all_imgs["entities"]:
-                print("Image name: " + n["name"].ljust(maxfield)+" uuid: " + n["uuid"] +" vm_disk_id: " + n["vm_disk_id"] + "  image_type: "+ str(n.get("image_type")))
+                print("Image name: " + n["name"].ljust(maxfield)+" uuid: " + n["uuid"] +" vm_disk_id: " + str(n.get("vm_disk_id")) + "  image_type: "+ str(n.get("image_type")))
             print("\n")
 
         elif seLection == str(5):
@@ -228,35 +229,33 @@ if __name__ == "__main__":
             print("\n")
 
         elif seLection == str(8):
-            print("You've selected to create new VM..\n")
-            print("This task will create ONLY vm without disks\n")
-            print("Please attach disk to the VM once it is created\n")
-            body={"name":"no_disk_no_cdrom","memory_mb":4096,"num_vcpus":2,"description":"no_disk_no_cdrom","num_cores_per_vcpu":1,"timezone":"UTC","boot":{"uefi_boot":"false","boot_device_order":["CDROM","DISK","NIC"]},"vm_nics":[{"network_uuid":"71108a10-5eaa-4abc-b512-37fbb99f1f24","is_connected":"true"}],"hypervisor_type":"ACROPOLIS","vm_features":{"AGENT_VM":"false"}}
+            print("You've selected to create new VM with cloud-init..\n")
+            print("This task will create ONLY from disk image in image list\n")
+            body={"name":str,"memory_mb":int,"num_vcpus":int,"description":str,"num_cores_per_vcpu":int,"timezone":str,"boot":{"uefi_boot":False,"boot_device_order":["CDROM","DISK","NIC"]},"vm_disks":[{"is_cdrom":False,"disk_address":{"device_bus":"scsi"},"vm_disk_clone":{"disk_address":{"vmdisk_uuid":str},"minimum_size":int}}],"vm_nics":[{"network_uuid":str,"is_connected":True}],"hypervisor_type":"ACROPOLIS","vm_customization_config":{"userdata":str,"files_to_inject_list":[]},"vm_features":{"AGENT_VM":False}}
             
             body["name"]                                                        = input("Enter VM name: ")
             body["num_vcpus"]                                                   = int(input("Enter num of vcpus: "))
             body["num_cores_per_vcpu"]                                          = int(input("Enter num of vcpu per sockets: "))
             body["memory_mb"]                                                   = int(input("Enter VM memory size(mb): "))
             body["description"]                                                 = input("Enter VM description: ")
+            body["timezone"]                                                    = input("Enter timezone ex) UTC: ")
             body["vm_nics"][0]["network_uuid"]                                  = input("Enter network uuid: ")
-            
+            body["vm_disks"][0]["vm_disk_clone"]["disk_address"]["vmdisk_uuid"] = input("Enter vmdisk_id for disk image: ")
+            body["vm_disks"][0]["vm_disk_clone"]["minimum_size"]                = 1024*1024*1024*int(input("Enter vmdisk size(GB) : "))
+
+            print("Please copy your cloud-init configuration to your PC clipboard: ")  
+            if input("Type Y to copy clipboard content to cloud-init config, N to exit: ") == "Y":
+                body["vm_customization_config"]["userdata"] = pc.paste()
+                print("Your cloud-init config is %s" %body["vm_customization_config"]["userdata"])
+            else:
+                print("exit")            
             status,task_uuid = mycluster.create_vm(body)
             print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
-            print("\n")
+            print("\n") 
 
         elif seLection == str(9):
-            print("You've selected to attach disk to VM..\n")
-            vm_uuid = input("Enter VM uuid: ")
-            body = {"vm_disks":[{"is_cdrom":"false","disk_address":{"device_bus":"scsi"},"vm_disk_clone":{"disk_address":{"vmdisk_uuid":"7e37f613-41c3-4cbf-aebc-7178bcb99330"},"minimum_size":10737418240}}]}  
-            body["vm_disks"][0]["vm_disk_clone"]["disk_address"]["vmdisk_uuid"] = input("Enter vmdisk_uuid for disk image: ")
-            body["vm_disks"][0]["vm_disk_clone"]["minimum_size"]                = 1024*1024*1024*int(input("Enter minimum disk size to expand(GB): "))
-            status,task_uuid = mycluster.attach_disk(body,vm_uuid)
-            print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
-            print("\n")  
-
-        elif seLection == str(10):
             print("You've selected to VM power operation\n")
-            body = {"transition": "ON","uuid": "f6beec0d-4803-4840-90a7-0b60de0f59b6"}
+            body = {"transition": str,"uuid": str}
             body["uuid"] = input("Enter vm uuid for power operation: ")
 
             #Limiting input for power status only 2 available options with itertool
@@ -266,8 +265,39 @@ if __name__ == "__main__":
             body["transition"] = next(filter(pwr_stat.__contains__, replies))
             status,task_uuid = mycluster.vm_powerop(body,body["uuid"])
             print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
-            print("\n")                    
+            print("\n")
 
+        elif seLection == str(10):
+            print("You've selected to VM delete operation\n")
+            body = {"uuid": str}
+            
+            # 1. Collect all current vm uuids 
+            status, all_vms = mycluster.get_all_vm_info()
+
+            # 2. Check the longest VM name size to align print format
+            vmName=[]
+            for i in all_vms["entities"]:
+                vmName.append(i["vmName"])
+            maxfield = len(max(vmName,key=len))
+            
+            # 3. Display all vm name and uuid for user to select VM by uuid
+            for n in all_vms["entities"]:
+                print("VM name: " + n["vmName"].ljust(maxfield)+" uuid: " + n["uuid"].ljust(40)+ "power:"+n["powerState"])
+            print("\n")
+
+            # 4. Creating valid UUid list and compare whether input is valid
+            vmUUid=[]
+            for i in all_vms["entities"]:
+                vmUUid.append(i["uuid"])
+
+            # 5. Get an uuid input as long as it is valid
+            stat_input  = chain(["Enter vm uuid to DELETE operation: "], repeat("Please type correct VM Uuid: "))
+            replies     = map(input, stat_input)
+            body["uuid"] = next(filter(vmUUid.__contains__, replies))
+            status,task_uuid = mycluster.delete_vm(body,body["uuid"])
+            print ("\n\nServer Response code is: {} and task uuid is {}".format(status,task_uuid["task_uuid"]))
+            print("\n") 
+                   
         else :
             print("You've selected wrong option")
             print("Exiting...")

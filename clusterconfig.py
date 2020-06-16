@@ -143,17 +143,22 @@ class my_api():
         server_response = self.sessionv08.post(cluster_url,data = json.dumps(body))
         return server_response.status_code ,json.loads(server_response.text)
 
-    # Create new VM from image.
+    # Create new VM with disk.
     def create_vm(self,body):
         cluster_url = self.base_urlv2 + "vms?include_vm_disk_config=true&include_vm_nic_config=true"
         print(json.dumps(body))
         server_response = self.sessionv2.post(cluster_url,data = json.dumps(body))
         return server_response.status_code ,json.loads(server_response.text)
     
+    # Delete VM.
+    def delete_vm(self,body,vm_uuid):
+        cluster_url = self.base_urlv2 + "vms/" + vm_uuid
+        server_response = self.sessionv2.delete(cluster_url,data = json.dumps(body))
+        return server_response.status_code ,json.loads(server_response.text)
+    
     # Attach disk to VM.
     def attach_disk(self,body,vm_uuid):
         cluster_url = self.base_urlv2 + "vms/" + vm_uuid + "/disks/attach"
-        print(json.dumps(body))
         server_response = self.sessionv2.post(cluster_url,data = json.dumps(body))
         return server_response.status_code ,json.loads(server_response.text)
     
@@ -176,9 +181,9 @@ class my_api():
         print("Type 5: Container info")
         print("Type 6: Network info")
         print("Type 7: Upload new image from URL")
-        print("Type 8: Create new VM without disk")
-        print("Type 9: Attach disk to VM from disk Image")
-        print("Type 10: VM Power on/off operation")
+        print("Type 8: Create new VM from disk image with cloud-init")
+        print("Type 9: VM Power on/off operation")
+        print("Type 10: Delete VM operation")
         print("\n")
         seLection = input()
         return seLection
