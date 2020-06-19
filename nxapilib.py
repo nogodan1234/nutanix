@@ -1,4 +1,4 @@
-#Script Name : clusterconfig.py
+#Script Name : nxapilibpy
 #Script Purpose or Overview : This python file contains basic nutanix api method and class to connect Nutanix cluster via api
 #This file is developed by Taeho Choi(taeho.choi@nutanix.com) by referring below resources
 # For reference look at:
@@ -77,6 +77,8 @@ class my_api():
             cluster_url = self.base_urlv2 + "networks/"
         elif (ent == 'cluster'):
             cluster_url = self.base_urlv1 + "cluster/"
+        elif (ent == 'disk'):
+            cluster_url = self.base_urlv2 + "disks/"
         else: 
             print("wrong entiry parsed")
 
@@ -106,11 +108,11 @@ class my_api():
         return server_response.status_code ,json.loads(server_response.text)
     
     # Get resource stats.
-    def get_resource_stats(self,ent_type,uuid,resource):
-
+    def get_resource_stats(self,ent_type,uuid,resource,period,interval):
+        period = 3600*period
         if (resource == "cpu"):
             metric = "hypervisor_cpu_usage_ppm"
-        elif (resource == "memory"):
+        elif (resource == "mem"):
             if (ent_type == "host"):
                 metric = "hypervisor_memory_usage_ppm"
             elif (ent_type == "vm"):
@@ -133,7 +135,7 @@ class my_api():
         # From: https://www.digitalformula.net/2018/api/vm-performance-stats-with-nutanix-rest-api/
         # https://10.133.16.50:9440/api/nutanix/v1/vms/3aa1699a-ec41-4037-aade-c73a9d14ed8c/stats/?metrics=hypervisor_cpu_usage_ppm&startTimeInUsecs=1524009660000000&endTimeInUsecs=1524096060000000&interval=30
  
-        cluster_url += str(start_time) + "&" + "endTimeInUsecs=" + str(cur_time) + "&interval=30"
+        cluster_url += str(start_time) + "&" + "endTimeInUsecs=" + str(cur_time) + "&interval="+str(interval)
         server_response = self.sessionv1.get(cluster_url)
         return server_response.status_code ,json.loads(server_response.text)
 
@@ -175,7 +177,7 @@ class my_api():
         print("###############################################")
         print("What kind of operation do you want?")
         print("#################### MENU #################### ")
-        print("Type 1: cluster info")
+        print("Type 1: Cluster info")
         print("Type 2: Host info")
         print("Type 3: Vm info")
         print("Type 4: Image info")
@@ -185,6 +187,8 @@ class my_api():
         print("Type 8: Create new VM from disk image with cloud-init")
         print("Type 9: VM Power on/off operation")
         print("Type 10: Delete VM operation")
+        print("Type 11: Collect performance data(cpu/mem) for VM or host")
+        print("Type 12: Disk detail info")
         print("\n")
         seLection = input()
         return seLection
@@ -199,7 +203,7 @@ def GetClusterDetail():
         password = sys.argv[3]
     else:
         print("###############################################")
-        print("You can also use '$python3 %s Prism_VIP username password' without interaction" %sys.argv[0])
+        print("You can also use '%s Prism_VIP username password' without interaction" %sys.argv[0])
         print("What's Prism VIP address? ")
         ip = input()
         if ipaddress.ip_address(ip):

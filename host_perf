@@ -19,14 +19,13 @@
 import sys
 import requests
 import urllib.request
-import clusterconfig as C
+import nxapilib as C
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import json
 import time
 from datetime import datetime
 import xlsxwriter
-
 
 def printHostStats(hostname,hostStatsDict):
     # Create a filename based on current timestamp and initialise worksheet
@@ -69,7 +68,7 @@ if __name__ == "__main__":
     mycluster = C.my_api(ip,username,password)
     #print all hosts and name to user
     print("This is list of hosts in your cluster...\n")
-    status, all_hosts = mycluster.get_all_host_info()
+    status, all_hosts = mycluster.get_all_entity_info("hosts")
 
     # 2. Check the longest host name size to align print format
     hostName=[]
