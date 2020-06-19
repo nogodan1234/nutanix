@@ -438,6 +438,7 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "Checking peer service dead"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "has been found dead" | grep -v "stopped searching binary file"							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "Starting fixer op on extent group" -g "stargate"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 echo "5. Token revoke failure"																	| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
@@ -457,6 +458,9 @@ echo "#############################################"											| tee   -a ~/tmp/
 sleep 2
 rg -z "Could not start repair on the node"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "as degraded after analyzing"																| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Reason: Put degraded node" -g "cassandra*"																	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Cassandra node is not in normal state. It will not  register for leadership for any range" -g "cassandra*"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Changing the Cassandra status for node with svm id" -g "dynamic_ring_change*"								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "Cass SSD disk write latency high, please check SSD status"								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
@@ -519,6 +523,11 @@ echo "GenesisEventType.HA_EVENT			      	   "											| tee  -a ~/tmp/$CASE_NU
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
 rg -z "Inserted HA route on host" -g "genesis*"													| tee  -a ~/tmp/$CASE_NUM/genesis.txt
 
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+echo "Maintenance mode check			      	   "											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+rg -z "Services are currently stopped on this node"	-g "genesis*"								| tee  -a ~/tmp/$CASE_NUM/genesis.txt
+
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
 echo "9. Curator Scan Failure due to network issue"												| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
@@ -580,12 +589,14 @@ rg -z "changed from 1 to 0 due to egroup" -g "curator.*"										| tee  -a ~/tm
 #echo "/users/eng/tools/egroup_corruption/egroup_collector.py --egroup_id $EID --output dir /users/taeho.choi/tmp" | tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt
 #echo "medusa_printer --lookup=egid --egroup_id=$EID"											| tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt
 
-echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
-echo "16. Check disk operation from hades log"													| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
-echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/hades_disk.txt
+echo "16. Check disk operation from hades log"													| tee  -a ~/tmp/$CASE_NUM/hades_disk.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/hades_disk.txt
 sleep 2
-rg -z "Handling hot-remove event for disk" -g "hades.out*"										| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
-rg -z "Handling hot-plug" -g "hades.out*"														| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
+rg -z "Handling hot-remove event for disk" -g "hades.out*"										| tee  -a ~/tmp/$CASE_NUM/hades_disk.txt
+rg -z "Handling hot-plug" -g "hades.out*"														| tee  -a ~/tmp/$CASE_NUM/hades_disk.txt
+rg -z "Failed to get disk diagnostics for disk" -g "hades.out*"									| tee  -a ~/tmp/$CASE_NUM/hades_disk.txt
+rg -z "Writing ASUP data for disk_serial" -g "hades.out*"										| tee  -a ~/tmp/$CASE_NUM/hades_disk.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
 echo "17. Disk forcefully was pulled off "														| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
