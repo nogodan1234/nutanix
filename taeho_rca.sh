@@ -337,7 +337,7 @@ echo "#############################################"											| tee -a ~/tmp/$C
 echo " Smartctl/Disk failure check"																| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
 rg "attempting task abort! scmd"																| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
-rg -z "SATA DOM|sudo smartctl | overall-health" -g "hardware_info"								| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
+#rg -z "SATA DOM|sudo smartctl | overall-health" -g "hardware_info"								| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
 sleep 2
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Cass_Too_many_SStables-ENG-177414.txt
@@ -472,7 +472,7 @@ echo "# ENG-149005,ENG-230635 Heap Memory issue #"												| tee   -a ~/tmp/$
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Paxos Leader Writer timeout waiting for replica leader" -g "system.log*" | grep -v vdiskblockmap		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-echo "# 2 node cluster Cassandra issue ISB-102-2019 #"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "# Potential ISB-102-2019   Cassandra issue #"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 #https://confluence.eng.nutanix.com:8443/display/STK/ISB-102-2019%3A+Data+inconsistency+on+2-node+clusters
 rg -z "has been found dead"	-g "cassandra_monitor*"												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
@@ -529,7 +529,7 @@ echo "#############################################"											| tee  -a ~/tmp/$
 rg -z "Services are currently stopped on this node"	-g "genesis*"								| tee  -a ~/tmp/$CASE_NUM/genesis.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
-echo "9. Curator Scan Failure due to network issue"												| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
+echo "9. Curator Scan Failure potentially network issue"										| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
 sleep 2
 rg -z "Http request timed out" -g "curator.*"													| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
@@ -548,7 +548,10 @@ sleep 2
 rg -z "Acquired master leadership" -g "acropolis.*"												| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 rg -z "Failed to re-register with Pithos after 60 seconds"										| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 rg -z "Time to fire reconcilliation callback took" -g "acropolis.out*"							| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
-echo "VM Delete log"																			| tee  ~/tmp/$CASE_NUM/VM_delete.txt
+
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/VM_delete.txt
+echo "VM Delete log"																			| tee  -a ~/tmp/$CASE_NUM/VM_delete.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/VM_delete.txt
 sleep 2
 rg -z "notification=VmDeleteAudit"	-g "acropolis.out*"											| tee  -a ~/tmp/$CASE_NUM/VM_delete.txt
 
@@ -632,6 +635,13 @@ echo "#############################################"											| tee  -a ~/tmp/$
 sleep 2
 rg -z "Cache sync with DB failed" -g "ergon.*"													| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
 rg -z "Cache sync with DB failed" -g "minerva_ha_dispatcher.*"									| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
+
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
+echo "ergon task issue potentially ENG-308614"													| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
+echo "WR: restart insight/ergon service if it confirmed"										| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
+sleep 2
+rg -z "ERROR insights_watch_client.py" -g "ergon.*"												| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 echo "22. Segmentation Fault Check possiblely ovsd crash(ENG-279410)"							| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
