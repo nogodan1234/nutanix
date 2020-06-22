@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - name: nutanix
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnWNa4I9QT8PkiuYtPmNNdtGmR6pYnLQgZ6tEG9+FzPBrNmn59leATGaFwis1/Up8qyqClSdSxJY10bNiAx8fLdK5x5T42I7h3JEwHo72wQx4tazeNRfeU9zrAuokKNMVklC6H2RUDryJ6BLWG/MPiNvtiLhg8oPSYeJk4RPhZPQQWU2p0NysUJyu8fgsGms/vq6r2fLLQxgXMtYv+AvrKnXL2jYO2oqb/KJOfY8DZeqdJPU6ZZVQ7IURT/1J00GNUNkVwTmbgEw7MCebDrFdsO2z9VwMl/YXJHDXlkI2/e3zTBElJBrlrtwMRyy9CZMyN5LHommNPmEJ0ydj2R/uL taeho@Taehos-MacBook-Pro.local
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bash
