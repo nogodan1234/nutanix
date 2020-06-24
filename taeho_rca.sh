@@ -491,6 +491,11 @@ echo "# Cassandra restart/crash"																| tee   -a ~/tmp/$CASE_NUM/cassa
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Logging initialized" -g "system.log*"													| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 
+echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+echo "# zk defect- ENG-160764"																	| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+rg -z "smaller than follower's election round" -g "zookeeper.*"									| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+
 echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 echo "metadata node detach task start/end"   													| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
