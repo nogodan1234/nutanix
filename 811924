@@ -1,0 +1,59 @@
+
+Detailed information for default_password_check:
+Node 172.16.4.121: 
+INFO: One or more CVMs are using the default password
+INFO: One or more hosts are using the default password
+INFO: One or more IPMI devices are still using the default password
+Refer to KB 6153 (http://portal.nutanix.com/kb/6153) for details on default_password_check or Recheck with: ncc health_checks system_checks default_password_check
+
+Detailed information for remote_support_status_check:
+Node 172.16.4.121: 
+INFO: Remote support tunnel to Nutanix HQ is enabled on this cluster.
+Refer to KB 2466 (http://portal.nutanix.com/kb/2466) for details on remote_support_status_check or Recheck with: ncc health_checks system_checks remote_support_status_check
+
+Detailed information for dedup_auto_disabled_check:
+Node 172.16.4.121: 
+WARN: Fingerprinting is disabled by stargate, but configured on Storage Container(s): [u'HDC-VMStorageContainer-Guest']
+Refer to KB 1730 (http://portal.nutanix.com/kb/1730) for details on dedup_auto_disabled_check or Recheck with: ncc health_checks stargate_checks dedup_auto_disabled_check
+
+Detailed information for bmc_bios_version_check:
+Node 172.16.4.123: 
+FAIL: Current BIOS build date 09/08/2018 before minimum BIOS build date 05/10/2019. BIOS should be upgraded to the latest version with build date equal to or after 05/10/2019. Update BMC and BIOS version. Perform inventory from Life Cycle Manager to check and update to the latest BMC/BIOS version. Check KB 2896 and 2905 for alternative update option.
+Node 172.16.4.125: 
+FAIL: Current BIOS build date 09/08/2018 before minimum BIOS build date 05/10/2019. BIOS should be upgraded to the latest version with build date equal to or after 05/10/2019. Update BMC and BIOS version. Perform inventory from Life Cycle Manager to check and update to the latest BMC/BIOS version. Check KB 2896 and 2905 for alternative update option.
+Node 172.16.4.126: 
+FAIL: Current BIOS build date 09/08/2018 before minimum BIOS build date 05/10/2019. BIOS should be upgraded to the latest version with build date equal to or after 05/10/2019. Update BMC and BIOS version. Perform inventory from Life Cycle Manager to check and update to the latest BMC/BIOS version. Check KB 2896 and 2905 for alternative update option.
+Node 172.16.4.122: 
+FAIL: Current BIOS build date 09/08/2018 before minimum BIOS build date 05/10/2019. BIOS should be upgraded to the latest version with build date equal to or after 05/10/2019. Update BMC and BIOS version. Perform inventory from Life Cycle Manager to check and update to the latest BMC/BIOS version. Check KB 2896 and 2905 for alternative update option.
+Node 172.16.4.121: 
+FAIL: Current BIOS build date 09/08/2018 before minimum BIOS build date 05/10/2019. BIOS should be upgraded to the latest version with build date equal to or after 05/10/2019. Update BMC and BIOS version. Perform inventory from Life Cycle Manager to check and update to the latest BMC/BIOS version. Check KB 2896 and 2905 for alternative update option.
+Node 172.16.4.124: 
+FAIL: Current BIOS build date 09/08/2018 before minimum BIOS build date 05/10/2019. BIOS should be upgraded to the latest version with build date equal to or after 05/10/2019. Update BMC and BIOS version. Perform inventory from Life Cycle Manager to check and update to the latest BMC/BIOS version. Check KB 2896 and 2905 for alternative update option.
+Refer to KB 3565 (http://portal.nutanix.com/kb/3565) for details on bmc_bios_version_check or Recheck with: ncc health_checks system_checks bmc_bios_version_check --cvm_list=172.16.4.123,172.16.4.125,172.16.4.126,172.16.4.122,172.16.4.121,172.16.4.124
+
+Detailed information for cvm_name_check:
+Node 172.16.4.121: 
+FAIL: CVM naming convention is incorrect on the following hosts: 172.16.4.141,172.16.4.142,172.16.4.143,172.16.4.145,172.16.4.146,172.16.4.144
+Refer to KB 5226 (http://portal.nutanix.com/kb/5226) for details on cvm_name_check or Recheck with: ncc health_checks system_checks cvm_name_check
+
+Detailed information for pds_share_vms_check:
+Node 172.16.4.121: 
+ERR : The plugin timed out.
+Refer to KB 3337 (http://portal.nutanix.com/kb/3337) for details on pds_share_vms_check or Recheck with: ncc health_checks data_protection_checks protection_domain_checks pds_share_vms_check
+
+Detailed information for snapshot_file_location_check:
+Node 172.16.4.121: 
+ERR : The plugin timed out.
+Refer to KB 4382 (http://portal.nutanix.com/kb/4382) for details on snapshot_file_location_check or Recheck with: ncc health_checks data_protection_checks protection_domain_checks snapshot_file_location_check
+
+Detailed information for conntrack_check:
+Node 172.16.4.121: 
+ERR : node (service_vm_id: 4) : Unable to get zeus config proto
+Refer to KB 5765 (http://portal.nutanix.com/kb/5765) for details on conntrack_check or Recheck with: ncc health_checks network_checks conntrack_check --cvm_list=172.16.4.121
+
+Detailed information for orphan_vm_snapshot_check:
+
+
+allssh 'zgrep "method NfsSnapshotGroup returned error kTimeout" ~/data/logs/cerebro.*'
+
+allssh 'zgrep "method NfsSnapshotGroup returned error kTimeout" ~/data/logs/stargate.*'

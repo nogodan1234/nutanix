@@ -494,7 +494,7 @@ rg -z "Logging initialized" -g "system.log*"													| tee   -a ~/tmp/$CASE_
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
 echo "# zk defect- ENG-160764"																	| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
-rg -z -A3 "Notification time out: 400" -g "zookeeper.out*" 										| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+rg -z "Notification time out: 400" -g "zookeeper.out"  											| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
 
 echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 echo "metadata node detach task start/end"   													| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
@@ -745,7 +745,6 @@ echo "###########################"																| tee -a ~/tmp/$CASE_NUM/aplos
 echo "remote_cluster_uuid is not known or may be unregistered "									| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
 rg -z  "msecs, response status: 404"  -g "aplos.out*" | grep "remote_cluster_uuid="				| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
-
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
 echo "Aplos engine VM snapshot failure"															| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
