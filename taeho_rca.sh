@@ -491,6 +491,11 @@ echo "# Cassandra restart/crash"																| tee   -a ~/tmp/$CASE_NUM/cassa
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Logging initialized" -g "system.log*"													| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 
+echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+echo "# zk defect possibley hitting ENG-160764"													| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+rg -z "Notification time out: 400" -g "zookeeper.out" | wc -l 									| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
+
 echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 echo "metadata node detach task start/end"   													| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
@@ -662,7 +667,11 @@ echo "#############################################"											| tee  -a ~/tmp/$
 sleep 2
 rg -z "peak resident set size"  -g "ovs-vswitchd.log" 											| tee  -a ~/tmp/$CASE_NUM/ovs-vswitchd_mem_usage.txt
 
-#Adding more entry on 20 March 2020
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/PC5.11_OOM.txt
+echo "25. PC 5.11  run out of memory - ENG 274825"												| tee  -a ~/tmp/$CASE_NUM/PC5.11_OOM.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/PC5.11_OOM.txt
+sleep 2
+rg -z "Cannot allocate memory"  -g "sys_stat_collector.out*" 									| tee  -a ~/tmp/$CASE_NUM/PC5.11_OOM.txt
 
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "Acropolis service check"																	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
@@ -741,7 +750,6 @@ echo "remote_cluster_uuid is not known or may be unregistered "									| tee -a
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
 rg -z  "msecs, response status: 404"  -g "aplos.out*" | grep "remote_cluster_uuid="				| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
 
-
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
 echo "Aplos engine VM snapshot failure"															| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
@@ -752,7 +760,6 @@ echo "PC/PE Malformed Certification failure - ENG-254057 "										| tee -a ~/t
 echo "https://opengrok.eng.nutanix.com/source/xref/euphrates-5.10.1-stable/aplos/py/aplos/lib/oauth/service_jwt_tokens.py#20"	| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
 rg -z  "IAM token validation failed with" -g "aplos*"											| tee -a ~/tmp/$CASE_NUM/aplos_engine.txt
-
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/kernel.txt
 echo "Kernel child process hung "																| tee -a ~/tmp/$CASE_NUM/kernel.txt
