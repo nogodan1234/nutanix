@@ -375,7 +375,14 @@ echo "#############################################"											| tee -a ~/tmp/$C
 echo "2. ISB-101-2019: Increasing the CVM Common Memory Pool "									| tee -a ~/tmp/$CASE_NUM/OOM.txt
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/OOM.txt
 sleep 2
-rg -z -B 1 -A 1 "Out of memory: Kill process"| egrep -i "ServiceVM_Centos.0.out|NTNX.serial.out.0"  | tee -a ~/tmp/$CASE_NUM/OOM.txt
+rg -z -B 1 -A 1 "Out of memory: Kill process" | egrep -i "ServiceVM_Centos.0.out|NTNX.serial.out.0"  | tee -a ~/tmp/$CASE_NUM/OOM.txt
+
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
+echo "ENG-266390: CVM kernel panic	 "															| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
+sleep 2
+rg -z "Kernel panic - not syncing: stack-protector: Kernel stack is corrupted" -g "ServiceVM_Centos.0.out*"  	| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
+rg -z "Kernel panic - not syncing: stack-protector: Kernel stack is corrupted" -g "NTNX.serial.out.0*"  		| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Cass_Corrupt_table.txt
 echo "3. ENG-218803 , ISB-096-2019 Corrupt sstables"											| tee -a ~/tmp/$CASE_NUM/Cass_Corrupt_table.txt
