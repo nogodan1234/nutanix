@@ -314,7 +314,7 @@ echo "#############################################"
 rg -z "Network unreachable"																		| tee -a ~/tmp/$CASE_NUM/esxi.network.err.txt
 rg -z "NIC Link is Down" -g "vmkernel.*"														| tee -a ~/tmp/$CASE_NUM/hyper_network.err.txt
 rg -z "NIC Link is Down" -g "message*"															| tee -a  ~/tmp/$CASE_NUM/hyper_network.err.txt
-rg -z "NIC Link is Down" -g "dmesg*"															| tee -a ~/tmp/$CASE_NUM/hyper_network.err.txt
+rg -z "NIC Link is Down" -g "dmesg"																| tee -a ~/tmp/$CASE_NUM/hyper_network.err.txt
 sleep 2
 
 echo "#############################################"
@@ -345,6 +345,13 @@ echo "1. ENG-177414 - Cassandra Too many SSTables "												| tee -a ~/tmp/$C
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Cass_Too_many_SStables-ENG-177414.txt
 sleep 2
 rg -z -B 1 -A 1 "Too many SSTables found for Keyspace : medusa" -g "cassandra*"					| tee -a ~/tmp/$CASE_NUM/Cass_Too_many_SStables-ENG-177414.txt
+sleep 2
+
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Cass_Medusa_20_chars-ENG-149581.txt
+echo "ENG-149581 - Cassandra Medusa 20 Chars "													| tee -a ~/tmp/$CASE_NUM/Cass_Medusa_20_chars-ENG-149581.txt
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Cass_Medusa_20_chars-ENG-149581.txt
+sleep 2
+rg -z "Thread name Medusa_Binary_Logger has 20 characters" -g "cassandra*"						| tee -a ~/tmp/$CASE_NUM/Cass_Medusa_20_chars-ENG-149581.txt
 sleep 2
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
@@ -840,8 +847,8 @@ echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-1
 echo "Broadcom (LSI) SAS3008 Storage Controller Instability"									| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 echo "version PH16.00.01.00 is problematic."													| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
-rg -z "LSISAS3008" -g "dmesg*" | grep "16.00.01.00"												| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
-rg -z "mpt3sas_cm0: Command Timeout" -g "dmesg*"												| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+rg -z "LSISAS3008" -g "dmesg" | grep "16.00.01.00"												| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+rg -z "mpt3sas_cm0: Command Timeout" -g "dmesg"													| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 echo "Ergon task limit and its impact AOS"														| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
