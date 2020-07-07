@@ -8,7 +8,7 @@
 
 #   disclaimer
 #	This code is intended as a standalone example.  Subject to licensing restrictions defined on nutanix.dev, this can be downloaded, copied and/or modified in any way you see fit.
-#	Please be aware that all public code samples provided by Nutanix are unofficial in nature, are provided as examples only, are unsupported and will need to be heavily scrutinized and potentially modified before they can be used in a production environment.  
+#	Please be aware that all public code samples provided by Nutanix are unofficial in nature, are provided as examples only, are unsupported and will need to be heavily scrutinized and potentially modified before they can be used in a production environment.
 #   All such code samples are provided on an as-is basis, and Nutanix expressly disclaims all warranties, express or implied.
 #	All code samples are © Nutanix, Inc., and are provided as-is under the MIT license. (https://opensource.org/licenses/MIT)
 
@@ -46,7 +46,7 @@ class my_api():
         # Base URL at which v2 REST services are hosted in Prism Gateway.
         base_urlv2 = 'https://%s:9440/PrismGateway/services/rest/v2.0/'
         self.base_urlv2 = base_urlv2 % self.ip_addr
-        self.sessionv2 = self.get_server_session(self.username, self.password)   
+        self.sessionv2 = self.get_server_session(self.username, self.password)
 
         # Base URL at which v3 REST services are hosted in Prism Gateway.
         base_urlv3 = 'https://%s:9440/PrismGateway/services/rest/v3/'
@@ -106,7 +106,7 @@ class my_api():
         print(cluster_url)
         server_response = self.sessionv2.get(cluster_url)
         return server_response.status_code ,json.loads(server_response.text)
-    
+
     # Get resource stats.
     def get_resource_stats(self,ent_type,uuid,resource,period,interval):
         period = 3600*period
@@ -122,7 +122,7 @@ class my_api():
             cluster_url = self.base_urlv1 + "vms/" + uuid + "/stats/?metrics=" + metric + "&startTimeInUsecs="
         elif ent_type == "host":
             cluster_url = self.base_urlv1 + "hosts/" + uuid + "/stats/?metrics=" + metric + "&startTimeInUsecs="
-        else: 
+        else:
             print("Selected wrong entity type...")
             print ("Existing")
 
@@ -192,12 +192,12 @@ class my_api():
         print("\n")
         seLection = input()
         return seLection
-    
+
 # ========== DO NOT CHANGE ANYTHING ABOVE THIS LINE =====
 
 def GetClusterDetail():
     if len(sys.argv) >= int(4):
-        # Get Prism VIP username password from command line 
+        # Get Prism VIP username password from command line
         ip = sys.argv[1]
         username = sys.argv[2]
         password = sys.argv[3]
@@ -210,7 +210,7 @@ def GetClusterDetail():
             print ("You typed right ip format")
         else:
             print ("You typed wrong ip format")
-            print ("Existing")   
+            print ("Existing")
         print("What is the Prism UI User which has admin role? ex)admin")
         username = input()
         password = getpass.getpass(prompt="What is the password for the Prism UI User?\n" , stream=None)
