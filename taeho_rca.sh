@@ -314,7 +314,7 @@ echo "#############################################"
 rg -z "Network unreachable"																		| tee -a ~/tmp/$CASE_NUM/esxi.network.err.txt
 rg -z "NIC Link is Down" -g "vmkernel.*"														| tee -a ~/tmp/$CASE_NUM/hyper_network.err.txt
 rg -z "NIC Link is Down" -g "message*"															| tee -a  ~/tmp/$CASE_NUM/hyper_network.err.txt
-rg -z "NIC Link is Down" -g "dmesg*"															| tee -a ~/tmp/$CASE_NUM/hyper_network.err.txt
+rg -z "NIC Link is Down" -g "dmesg"																| tee -a ~/tmp/$CASE_NUM/hyper_network.err.txt
 sleep 2
 
 echo "#############################################"
@@ -347,6 +347,13 @@ sleep 2
 rg -z -B 1 -A 1 "Too many SSTables found for Keyspace : medusa" -g "cassandra*"					| tee -a ~/tmp/$CASE_NUM/Cass_Too_many_SStables-ENG-177414.txt
 sleep 2
 
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Cass_Medusa_20_chars-ENG-149581.txt
+echo "ENG-149581 - Cassandra Medusa 20 Chars "													| tee -a ~/tmp/$CASE_NUM/Cass_Medusa_20_chars-ENG-149581.txt
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Cass_Medusa_20_chars-ENG-149581.txt
+sleep 2
+rg -z "Thread name Medusa_Binary_Logger has 20 characters" -g "cassandra*"						| tee -a ~/tmp/$CASE_NUM/Cass_Medusa_20_chars-ENG-149581.txt
+sleep 2
+
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
 echo "FA67 Metadata corruption due to skipped row"												| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
@@ -368,7 +375,14 @@ echo "#############################################"											| tee -a ~/tmp/$C
 echo "2. ISB-101-2019: Increasing the CVM Common Memory Pool "									| tee -a ~/tmp/$CASE_NUM/OOM.txt
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/OOM.txt
 sleep 2
-rg -z -B 1 -A 1 "Out of memory: Kill process"| egrep -i "ServiceVM_Centos.0.out|NTNX.serial.out.0"  | tee -a ~/tmp/$CASE_NUM/OOM.txt
+rg -z -B 1 -A 1 "Out of memory: Kill process" | egrep -i "ServiceVM_Centos.0.out|NTNX.serial.out.0"  | tee -a ~/tmp/$CASE_NUM/OOM.txt
+
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
+echo "ENG-266390: CVM kernel panic	 "															| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
+echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
+sleep 2
+rg -z "Kernel panic - not syncing: stack-protector: Kernel stack is corrupted" -g "ServiceVM_Centos.0.out*"  	| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
+rg -z "Kernel panic - not syncing: stack-protector: Kernel stack is corrupted" -g "NTNX.serial.out.0*"  		| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Cass_Corrupt_table.txt
 echo "3. ENG-218803 , ISB-096-2019 Corrupt sstables"											| tee -a ~/tmp/$CASE_NUM/Cass_Corrupt_table.txt
@@ -545,7 +559,6 @@ echo "#############################################"											| tee  -a ~/tmp/$
 sleep 2
 rg -z "Write node finished with error kBadVersion for Zeus" -g "curator.*"						| tee  -a ~/tmp/$CASE_NUM/curator_scan_failure.txt
 
-
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "10. Acropolis service crash"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
@@ -617,10 +630,10 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "18. iscsi connection reset "																| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
 sleep 2
-rg -z "Becoming NFS namespace master" -g "stargate*"											| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
-rg -z "Removing initiator iqn" -g "stargate*"													| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
+rg -z "Becoming NFS namespace master" -g "stargate*"											> ~/tmp/$CASE_NUM/iscsi_reset.txt
+rg -z "Removing initiator iqn" -g "stargate*"													> ~/tmp/$CASE_NUM/iscsi_reset.txt
 #rg -z "nfs_remove_op.cc"
-rg -z "Adding initiator iqn" -g "stargate*"														| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
+rg -z "Adding initiator iqn" -g "stargate*"														> ~/tmp/$CASE_NUM/iscsi_reset.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/HBA_reset.txt
 echo "19. HBA reset reset "																		| tee  -a ~/tmp/$CASE_NUM/HBA_reset.txt
@@ -687,6 +700,22 @@ echo "Displays Acropolis crash events."															| tee  -a ~/tmp/$CASE_NUM/
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 rg -z  "Could not find parcels for VM" -g "acroplos.out*"										| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 
+
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+echo "Acropolis HA start history."																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+rg -z  "Failed to restart one or more VMs that were running on failed host" -g "acroplos.out*"	| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+echo "Acropolis entity status change."															| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+rg -z  "state change k" -g "acroplos.out*"														| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+echo "Acropolis host out of maintenance."														| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+rg -z  "out of maintenance mode" -g "acroplos.out*"												| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "Displays Acropolis crash events."															| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
@@ -708,6 +737,11 @@ echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acro
 rg -z  "Unable to find matching parcel for VM" -g "acroplos.out*"								| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "Slow network might cause VM migration fail - KB 3810"										| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+rg -z  "Watchdog fired for task VmMigrate" -g "acroplos.out*"									| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
+
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "Displays Acropolis crash due to master initialization taking too long - ENG-269432, KB 8630"	| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 rg -z  "Master initialization took longer than" -g "acroplos.out*"								| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
@@ -720,8 +754,8 @@ rg -z  "failed with NFS3ERR_NOENT" -g "catalog.out*"											| tee  -a ~/tmp/$
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "CASSANDRA_MON_HEALTH_WARNINING"															| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z  "Attempting repair of local node due to health warnings received from cassandra"  -g "cassandra_monitor.*" | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z  "Caught Timeout exception while waiting for paxos write response"  -g "system.log*"		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Attempting repair of local node due to health warnings received from cassandra"  -g "cassandra_monitor.*" > ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Caught Timeout exception while waiting for paxos write response"  -g "system.log*"		> ~/tmp/$CASE_NUM/cassandra_check.txt
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "Detecting if cassandra skipped scans"														| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
@@ -820,8 +854,8 @@ echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-1
 echo "Broadcom (LSI) SAS3008 Storage Controller Instability"									| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 echo "version PH16.00.01.00 is problematic."													| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
-rg -z "LSISAS3008" -g "dmesg*" | grep "16.00.01.00"												| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
-rg -z "mpt3sas_cm0: Command Timeout" -g "dmesg*"												| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+rg -z "LSISAS3008" -g "dmesg" | grep "16.00.01.00"												| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
+rg -z "mpt3sas_cm0: Command Timeout" -g "dmesg"													| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 echo "Ergon task limit and its impact AOS"														| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
