@@ -7,24 +7,19 @@
 import re
 import os.path
 import sys
-sys.path.append(os.path.expanduser("~/bin"))
 import subprocess
+import time
+sys.path.append(os.path.expanduser("~/bin"))
 
 # Names of the ping stat(s) found inside the sysstats folder
 DEFAULT_PING_HOSTS_FILE_NAME = "ping_hosts"
 DEFAULT_PING_CVM_HOSTS_FILE_NAME = "ping_cvm_hosts"
 DEFAULT_PING_GATEWAY_FILE_NAME = "ping_gateway"
-#DEFAULT_PING_CVMS_FILE_NAME = "ping_cvms"
-# Define or gather the options and files to use
+DEFAULT_PING_CVMS_FILE_NAME = "ping_cvms"
 LOGDIR = '/home/nutanix/data/logs/sysstats/'
 TempDir = '/home/nutanix/tmp/'
 LOGFILES = os.listdir(os.path.abspath(LOGDIR))
-
-PING_RTT_THRESHOLD = 5.0
-UNREACHABLE_RTT = 1000.0
-
-def get_time_from_sysstats_file(line):
-      return str(line[24:47])
+regex = re.compile(".+unreachable|TIMESTAMP.*")
 
 def parse_log_file(filename):
     print(filename)
@@ -38,39 +33,40 @@ def parse_log_file(filename):
     else:
         None
     print(outputFile)
+    
     with open(outputFile, "w") as outp:     
         for i in filename:
-                with open(i) as stat_file:
-                        for line in stat_file:
-                                line = line.strip()
-                                if line.startswith("#TIMESTAMP"):
-                                        stats_time = get_time_from_sysstats_file(line)
-                                        outp.write(stats_time)
-                                        outp.write("\n")
-                                elif line.endswith("unreachable"):
-                                        outp.write(line)
-                                        outp.write("\n") 
+                textfile = open(i, 'r')
+                for line in textfile:
+                        selected_line = regex.findall(line)
+                        for item in selected_line:
+                                outp.write("%s\n" % item)                                       
+                textfile.close() 
 
 def filter_log_file(filename):
     os.chdir(LOGDIR)
     if filename == hostLog:
-        stat_file = TempDir+"host"+".txt"
+        filtered_file = TempDir+"host"+".txt"
         outputFile = TempDir+"host_unreachable"+".txt"
     elif filename == cvmHostLog:
-        stat_file = TempDir+"cvm_host"+".txt"
+        filtered_file = TempDir+"cvm_host"+".txt"
         outputFile = TempDir+"cvm_host_unreachable"+".txt"
     elif filename == gwLog:
-        stat_file = TempDir+"gw"+".txt"
+        filtered_file = TempDir+"gw"+".txt"
         outputFile = TempDir+"gw_unreachable"+".txt"
     else:
         None
     with open(outputFile, "w+") as f:
-        subprocess.Popen('grep -B1 unreachable %s' %stat_file, shell=True, universal_newlines = True, stderr=subprocess.STDOUT, stdout=f)
+        subprocess.Popen('grep -B1 unreachable %s' %filtered_file, shell=True, universal_newlines = True, stderr=subprocess.STDOUT, stdout=f)
+    time.sleep(2)
+    os.remove(filtered_file)
 
 if __name__ == "__main__":
     hostLog = []
     cvmHostLog = []
     gwLog = []
+    cvmLog = []
+    host = str
     # Iterate through the files.
     for file in LOGFILES:
         # If the file starts with ping", add it to each list
@@ -80,9 +76,10 @@ if __name__ == "__main__":
                 cvmHostLog.append(file)
         elif file.startswith(DEFAULT_PING_GATEWAY_FILE_NAME):
                 gwLog.append(file)
+        elif file.startswith(DEFAULT_PING_CVMS_FILE_NAME):
+                cvmLog.append(file)
         else: None
 
-    for i in [hostLog,cvmHostLog,gwLog]:
+for i in [hostLog,cvmHostLog,gwLog]:
         parse_log_file(i)
-        filter_log_file(i)
-            
+        filter_log_file(i)         
