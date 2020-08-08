@@ -844,11 +844,13 @@ echo "AHV .301 is fine since it has old FW"														| tee -a ~/tmp/$CASE_NU
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
 rg -z "Network Driver - version" -g "dmesg" | grep i40e											| tee -a ~/tmp/$CASE_NUM/DELL_NIC_FW_ENG296333.txt
 
-#echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
-#echo "AOS 5.11.2 local user delete issue"														| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
-#echo "Checking for ENG-281158 all local accounts removed"										| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
-#echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
-#rg -z "DELETE" -g "client_tracking.log*"														| tee -a ~/tmp/$CASE_NUM/ENG-281158.txt
+echo "###########################"																| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
+echo "Checking for ENG-166495 AHV host unschedulable	"										| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
+echo "Slow 1G network? stucked urgon tasks - vm migration/locality"								| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
+echo "ONCALL-8177, ONCALL-6918"																	| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
+echo "###########################"																| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
+rg -z "Could not find parcels" -g "acropolis.*" 												| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
+rg -z "locality_restored: false" -g "zeus_config.txt"											| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 echo "Broadcom (LSI) SAS3008 Storage Controller Instability"									| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt

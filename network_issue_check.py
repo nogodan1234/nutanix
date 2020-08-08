@@ -30,6 +30,8 @@ def parse_log_file(filename):
         outputFile = TempDir+"cvm_host"+".txt"
     elif filename == gwLog:
         outputFile = TempDir+"gw"+".txt"
+    elif filename == cvmLog:
+        outputFile = TempDir+"cvm"+".txt"
     else:
         None
     print(outputFile)
@@ -54,6 +56,9 @@ def filter_log_file(filename):
     elif filename == gwLog:
         filtered_file = TempDir+"gw"+".txt"
         outputFile = TempDir+"gw_unreachable"+".txt"
+    elif filename == cvmLog:
+        filtered_file = TempDir+"cvm"+".txt"
+        outputFile = TempDir+"cvm_unreachable"+".txt"
     else:
         None
     with open(outputFile, "w+") as f:
@@ -62,24 +67,11 @@ def filter_log_file(filename):
     os.remove(filtered_file)
 
 if __name__ == "__main__":
-    hostLog = []
-    cvmHostLog = []
-    gwLog = []
-    cvmLog = []
-    host = str
-    # Iterate through the files.
-    for file in LOGFILES:
-        # If the file starts with ping", add it to each list
-        if file.startswith(DEFAULT_PING_HOSTS_FILE_NAME):
-                hostLog.append(file)
-        elif file.startswith(DEFAULT_PING_CVM_HOSTS_FILE_NAME):
-                cvmHostLog.append(file)
-        elif file.startswith(DEFAULT_PING_GATEWAY_FILE_NAME):
-                gwLog.append(file)
-        elif file.startswith(DEFAULT_PING_CVMS_FILE_NAME):
-                cvmLog.append(file)
-        else: None
+    hostLog = [file for file in LOGFILES if file.startswith(DEFAULT_PING_HOSTS_FILE_NAME)]
+    cvmHostLog = [file for file in LOGFILES if file.startswith(DEFAULT_PING_CVM_HOSTS_FILE_NAME)]
+    gwLog = [file for file in LOGFILES if file.startswith(DEFAULT_PING_GATEWAY_FILE_NAME)]
+    cvmLog = [file for file in LOGFILES if file.startswith(DEFAULT_PING_CVMS_FILE_NAME)]
 
-for i in [hostLog,cvmHostLog,gwLog]:
+for i in [hostLog,cvmHostLog,gwLog,cvmLog]:
         parse_log_file(i)
         filter_log_file(i)         
