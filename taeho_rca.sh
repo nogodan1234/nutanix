@@ -866,6 +866,37 @@ echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-1
 rg -z "ergon_gen_task_tree_db failed with" -g "ergon.*"											| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 rg -z "killed as a result of limit of" -g "messages*"	| grep -v "stopped searching binary file"	| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#ENG-239751 ssl_terminator memory leak" 																		| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+rg -z "/usr/bin/python2.7 -B /home/nutanix/bin/ssl_terminator" -g "top.INFO*" | awk '{print $7}'| grep g | sort -ur | tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#ENG-119268 Reap all children created by health server(fix in ncc 3.10"										| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+rg -z "defunct" -g "top.INFO*" 																						| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#Stargate memory usage check" 																				| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+rg -z "/home/nutanix/bin/stargate -stargate_enable_self_monitoring=true" -g "top.INFO*" | awk '{print $7}' | grep g | sort -ur | tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#Curator memory usage check"																					| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+rg -z "/home/nutanix/bin/curator --curator_enable_self_monitoring=true" -g "top.INFO*" | awk '{print $7}' | grep g | sort -ur | tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#Cassandra memory usage check" 																				| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+rg -z "ErrorFile=/home/nutanix/data/cores/cassandra_hs_err_pid" -g "top.INFO*" | awk '{print $7}' | grep g | sort -ur  | tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+
+
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "ssh client memory leak https://jira.nutanix.com/browse/ENG-251443"											| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+rg -z "ssh -q -o CheckHostIp=no -o ConnectTimeout=15 -o StrictHostKeyChecking=no -o TCPKeepAlive=yes -o" -g "top.INFO*" | awk '{print $7}' | grep g | sort -ur | tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+
 #echo "#############################################"
 #echo "21. FATAL log check $filter ."
 #echo "#############################################"
