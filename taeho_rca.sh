@@ -897,6 +897,11 @@ echo "ssh client memory leak https://jira.nutanix.com/browse/ENG-251443"								
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 rg -z "ssh -q -o CheckHostIp=no -o ConnectTimeout=15 -o StrictHostKeyChecking=no -o TCPKeepAlive=yes -o" -g "top.INFO*" | awk '{print $7}' | grep g | sort -ur | tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
+echo "Curator scan log"																								| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
+rg -z "Scan\) started for reasons" -g "curator.*" 																	| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
+
 #echo "#############################################"
 #echo "21. FATAL log check $filter ."
 #echo "#############################################"
