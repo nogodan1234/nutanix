@@ -902,6 +902,11 @@ echo "Curator scan log"																								| tee  -a ~/tmp/$CASE_NUM/curator
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
 rg -z "Scan\) started for reasons" -g "curator.*" 																	| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
 
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
+echo "Thick provisioning/Reserved Capacity Container check"															| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
+rg -z "has the correct implicit reserved capacity of" -g "curator.*" 												| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
+
 #echo "#############################################"
 #echo "21. FATAL log check $filter ."
 #echo "#############################################"
