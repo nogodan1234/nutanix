@@ -874,7 +874,7 @@ rg -z "/usr/bin/python2.7 -B /home/nutanix/bin/ssl_terminator" -g "top.INFO*" | 
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 echo "#ENG-119268 Reap all children created by health server(fix in ncc 3.10"										| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
-rg -z "defunct" -g "top.INFO*" 																						| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+rg -z "defunct" -g "top.INFO*" 	| | cut -d ":" -f2,3 | awk '{print $1,$12,$13}'| sort -ur							| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 echo "#Stargate memory usage check" 																				| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
@@ -891,7 +891,6 @@ echo "#Cassandra memory usage check" 																				| tee  -a ~/tmp/$CASE_N
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 rg -z "ErrorFile=/home/nutanix/data/cores/cassandra_hs_err_pid" -g "top.INFO*" | awk '{print $7}' | grep g | sort -ur  | tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 
-
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 echo "ssh client memory leak https://jira.nutanix.com/browse/ENG-251443"											| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
@@ -907,12 +906,11 @@ echo "Thick provisioning/Reserved Capacity Container check"															| tee 
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
 rg -z "has the correct implicit reserved capacity of" -g "curator.*" | grep -v "reserved capacity of 0 bytes"		| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
 
-#echo "#############################################"
-#echo "21. FATAL log check $filter ."
-#echo "#############################################"
-#sleep 2
-#filter=F`(date '+%m%d')`
-#rg -z $filter .
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/Nullified_vblock_ENG280325.txt
+echo "ENG-280325 Found nullified vblock entry for vblock"															| tee  -a ~/tmp/$CASE_NUM/Nullified_vblock_ENG280325.txt
+echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/Nullified_vblock_ENG280325.txt
+rg -z "Found nullified vblock entry for vblock" -g "stargate.*"                                                     | tee  -a ~/tmp/$CASE_NUM/Nullified_vblock_ENG280325.txt
+rg -z "Inserted HA route on host" -g "genesis.*"																	| tee  -a ~/tmp/$CASE_NUM/Nullified_vblock_ENG280325.txt
 
 echo "#############################################"
 echo "sharepath info for engineering"
