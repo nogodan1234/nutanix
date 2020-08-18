@@ -874,7 +874,7 @@ rg -z "/usr/bin/python2.7 -B /home/nutanix/bin/ssl_terminator" -g "top.INFO*" | 
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 echo "#ENG-119268 Reap all children created by health server(fix in ncc 3.10"										| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
-rg -z "defunct" -g "top.INFO*" 	| | cut -d ":" -f2,3 | awk '{print $1,$12,$13}'| sort -ur							| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
+rg -z "defunct" -g "top.INFO*" 	| cut -d ":" -f2,3 | awk '{print $1,$12,$13}'| sort -ur								| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
 echo "#Stargate memory usage check" 																				| tee  -a ~/tmp/$CASE_NUM/memory_leak.txt
