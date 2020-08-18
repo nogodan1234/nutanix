@@ -954,7 +954,7 @@ ping_data=`date -d"${TOI}"  +'%m/%d/%Y %r'`
 echo $ping_data
 
 cd ~/tmp/$CASE_NUM/
-rg -z $acro_data 
-rg -z $dmesg_data
-rg -z $cvm_dmsg_data
-rg -z $ping_data -B3 -A4 -g "ping*"
+rg -z "$acro_data" 
+rg -z "$dmesg_data"
+rg -z "$cvm_dmsg_data"
+rg -z "$ping_data" -B3 -A4 -g "ping*"
