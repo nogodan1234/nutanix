@@ -573,6 +573,18 @@ echo "#############################################"											| tee  -a ~/tmp/$
 sleep 2
 rg -z "notification=VmDeleteAudit"	-g "acropolis.out*"											| tee  -a ~/tmp/$CASE_NUM/VM_delete.txt
 
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/VM_unexpected_shutdown.txt
+echo "Unexpected VM shutdown"																	| tee  -a ~/tmp/$CASE_NUM/VM_unexpected_shutdown.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/VM_unexpected_shutdown.txt
+sleep 2
+rg -z "has shutdown unexpectedly"	-g "acropolis.out*"											| tee  -a ~/tmp/$CASE_NUM/VM_unexpected_shutdown.txt
+
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/VM_powerstatus_change.txt
+echo "Unexpected VM power status change"														| tee  -a ~/tmp/$CASE_NUM/VM_powerstatus_change.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/VM_powerstatus_change.txt
+sleep 2
+rg -z "VmPowerStateReconcileAudit"	-g "acropolis.out*"											| tee  -a ~/tmp/$CASE_NUM/VM_powerstatus_change.txt
+
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/pithos_svc_crash.txt
 echo "11. Pithos service crash - ENG-137628"													| tee  -a ~/tmp/$CASE_NUM/pithos_svc_crash.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/pithos_svc_crash.txt
