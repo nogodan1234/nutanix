@@ -44,24 +44,6 @@ function is_esx()
 #NTNX-Log-2020-04-22-1350706189197693814-1587550616-PE-10.117.79.120/cvm_logs/log_collector.out.20190618-225829:I0618 22:58:29.834937 14707 cvmconfig.go:230] Ncc Version number 3.6.2
 #NTNX-Log-2020-04-22-1350706189197693814-1587550616-PE-10.117.79.120/cvm_logs/log_collector.out.20190618-225829:I0629 09:42:55.052053 12512 cvmconfig.go:297] Ncc Version number 3.7.1.2
 
-function ncc_version_number()
-{
-	VER=" "
-
-	# runtime not using 'bash' - use tmp file
-	# done < <(rg -z "Ncc Version number" -g "log_collector.out*" | grep -v "stopped searching binary file") - doesn't work if "sh ./taeho_rca.sh"
-	rg -z "Ncc Version number" -g "log_collector.out*" | grep -v "stopped searching binary file" > /tmp/ncc_vers.$$
-	while IFS= read -r line
-	do
-		A=`echo $line | sed -e 's/.*Ncc Version number //g'`
-		if [ "$A" != "$VER" ]; then
-			echo $line
-			VER=$A
-		fi
-	done < /tmp/ncc_vers.$$
-
-	rm -f /tmp/ncc_vers.$$
-}
 
 # unique_FRU: Reduce number of duplicate entries of:
 # ------
@@ -330,7 +312,7 @@ echo "#############################################"
 echo " NCC version check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-ncc_version_number																				| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
+rg -z "Ncc Version number" -g "zeus*"															 tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
 sleep 2
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
@@ -596,7 +578,7 @@ echo "12. File Descriptior Check - KB 3857 ENG-119268"											| tee  -a ~/tmp
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/file_desc.txt
 sleep 2
 rg -z "Resource temporarily unavailable"														| tee  -a ~/tmp/$CASE_NUM/file_desc.txt
-rg -z "[ssh] <defunct>"| wc -l																	| tee  -a ~/tmp/$CASE_NUM/file_desc.txt
+rg -z "[ssh] <defunct>" -g "top.*" | wc -l														| tee  -a ~/tmp/$CASE_NUM/file_desc.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/frodo_svc_crash.txt
 echo "13. Stargate crashing due to AHV frodo service failure ONCALL-7326"						| tee  -a ~/tmp/$CASE_NUM/frodo_svc_crash.txt
@@ -913,6 +895,13 @@ echo "Curator scan log"																								| tee  -a ~/tmp/$CASE_NUM/curator
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
 rg -z "Scan\) started for reasons" -g "curator.*" 																	| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
 
+echo "#############################################"																| tee -a  ~/tmp/$CASE_NUM/cvm_memsize.txt
+echo "CVM memsize "																									| tee -a  ~/tmp/$CASE_NUM/cvm_memsize.txt
+echo "#############################################"																| tee -a  ~/tmp/$CASE_NUM/cvm_memsize.txt
+sleep 2
+rg -z "controller_vm_backplane_ip" -A2 -g "zeus_config.txt"															| tee -a  ~/tmp/$CASE_NUM/cvm_memsize.txt
+
+
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
 echo "Thick provisioning/Reserved Capacity Container check"															| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/thick_provision.txt
@@ -931,42 +920,3 @@ chmod 777 -R ~/shared/$CASE_NUM
 cd ~/shared/$CASE_NUM/
 sharepath
 sleep 2
-
-### Timebase filtering part ###
-
-echo "#############################################"
-echo " What is the timeslot that you want to analize? "
-echo " Please type with Aug 17 23:48 2020 format"
-echo "#############################################"
-read TOI
-
-echo "#############################################"
-echo "This is acropolos log data format"
-acro_data=`date -d"${TOI}"  +'%Y-%m-%d %H:%M'`
-echo $acro_data
-
-echo "#############################################"
-echo "This is stargate log data format"
-star_data=`date -d"${TOI}"  +'%m%d %H:%M'`
-echo $star_data
-
-echo "#############################################"
-echo "This is dmesg log data format"
-dmesg_data=`date -d"${TOI}"  +'%b %d %H:%M'`
-echo $dmesg_data
-
-echo "#############################################"
-echo "This is cvm dmesg log data format"
-cvm_dmsg_data=`date -d"${TOI}"  +'%Y-%m-%dT%H:%M'`
-echo $cvm_dmsg_data
-
-echo "#############################################"
-echo "This is ping log data format"
-ping_data=`date -d"${TOI}"  +'%m/%d/%Y %r'`
-echo $ping_data
-
-cd ~/tmp/$CASE_NUM/
-rg -z "$acro_data" 
-rg -z "$dmesg_data"
-rg -z "$cvm_dmsg_data"
-rg -z "$ping_data" -B3 -A4 -g "ping*"
