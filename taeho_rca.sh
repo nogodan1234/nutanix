@@ -437,10 +437,11 @@ rg -z "has been found dead" | grep -v "stopped searching binary file"							| te
 rg -z "Starting fixer op on extent group" -g "stargate"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
-echo "5. Token revoke failure"																	| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
+echo "5. Token revoke failure/success"															| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 sleep 2
-rg -z "Failed to revoke token from"																| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
+rg -z "Failed to revoke token from"	 -g "genesis.*"												| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
+rg -z "revoking shutdown token" -g "genesis.*"													| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/scsi_controller.txt
 echo "6. scsi controller timeout"																| tee   -a ~/tmp/$CASE_NUM/scsi_controller.txt
