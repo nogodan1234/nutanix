@@ -493,6 +493,12 @@ echo "# zk defect possibley hitting ENG-160764"													| tee   -a ~/tmp/$CA
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
 rg -z "Notification time out: 400" -g "zookeeper.out" | wc -l 									| tee   -a ~/tmp/$CASE_NUM/zk_check.txt
 
+echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_mig_check.txt
+echo "# zk migration history check       "													    | tee   -a ~/tmp/$CASE_NUM/zk_mig_check.txt
+echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/zk_mig_check.txt
+rg -z "Zookeeper migration source obtained" -g "zookeeper_monitor.INFO*"						| tee   -a ~/tmp/$CASE_NUM/zk_mig_check.txt
+rg -z "Zookeeper migration target obtained" -g "zookeeper_monitor.INFO*"						| tee   -a ~/tmp/$CASE_NUM/zk_mig_check.txt
+
 echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 echo "metadata node detach task start/end"   													| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
 echo "###########################" 																| tee -a ~/tmp/$CASE_NUM/metadata_detach.txt
