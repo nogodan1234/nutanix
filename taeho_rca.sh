@@ -800,7 +800,9 @@ echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ESXi_
 echo "Checking for ENG-333729(ENG-172411) ESXi host hung with memory leak"						| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
 rg -z "Could not get one-time password" -g "hyperint.log*" 										| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
-rg -z "Failed to parse ESX one time ticket." -g "uhura.*"										| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
+rg -z "Failed to parse ESX one time ticket." -g "uhura.*" | wc -l								| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
+rg -z "Failed to parse ESX one time ticket." -g "uhura.*" | head -5								| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
+rg -z "Failed to parse ESX one time ticket." -g "uhura.*" | tail -5								| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
 echo "Broadcom (LSI) SAS3008 Storage Controller Instability"									| tee -a ~/tmp/$CASE_NUM/ISB-106-2020.txt
