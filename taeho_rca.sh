@@ -644,7 +644,6 @@ echo "Displays Acropolis crash events."															| tee  -a ~/tmp/$CASE_NUM/
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 rg -z  "Could not find parcels for VM" -g "acroplos.out*"										| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 
-
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
 echo "Acropolis HA start history."																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
@@ -659,6 +658,22 @@ echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acro
 echo "Acropolis host out of maintenance."														| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
 rg -z  "out of maintenance mode" -g "acroplos.out*"												| tee  -a ~/tmp/$CASE_NUM/acropolis_ha.txt
+
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+echo "Acropolis host failure event ."														    | tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+rg -z  "notification=NodeFailure service_vm_id=" -g "acroplos.out*"								| tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+echo "Acropolis host connect event ."														    | tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+rg -z  "Connecting to " -g "acroplos.out*"								                        | tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+rg -z  "Connected to " -g "acroplos.out*"								                        | tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+echo "Acropolis host Reconcillation finished ."												    | tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
+rg -z  "Time to fire reconcilliation for " -g "acroplos.out*"								    | tee  -a ~/tmp/$CASE_NUM/acropolis_node_failure.txt
 
 echo "###########################"																| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
 echo "Displays Acropolis crash events."															| tee  -a ~/tmp/$CASE_NUM/acropolis_check.txt
