@@ -244,6 +244,7 @@ sleep 2
 rg -z "system boot" -g "config.txt"																| tee -a  ~/tmp/$CASE_NUM/cvm_reboot.txt
 rg -z "system boot" -g "last_reboot.txt"														| tee -a  ~/tmp/$CASE_NUM/cvm_reboot.txt
 rg -z "system boot" -g "kvm_info.txt"															| tee -a ~/tmp/$CASE_NUM/ahv_reboot.txt
+rg -z "system boot" -g "ahv_info.txt"															| tee -a ~/tmp/$CASE_NUM/ahv_reboot.txt
 
 echo "#############################################"
 echo " NCC version check "
