@@ -187,6 +187,13 @@ rg -z "timezone" -g "zeus_config.txt"	        | sort -u										| tee -a  ~/tmp
 sleep 2
 
 echo "#############################################"
+echo " Container level enabled feature"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
+echo "#############################################"
+rg -z "container_name|fingerprint_on_write" -B4 -C4 -g "zeus_config.txt"						| tee -a  ~/tmp/$CASE_NUM/container_config.txt
+sleep 2
+
+echo "#############################################"
 echo " Foundation verion"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
@@ -829,7 +836,7 @@ rg -z "mpt3sas_cm0: Command Timeout" -g "dmesg"													| tee -a ~/tmp/$CASE
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 echo "Ergon task limit and its impact AOS"														| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
-echo "Memory limit ISB-108-2020"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
+echo "Memory limit ISB-108-2020 or possibly ENG-238473"											| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 rg -z "ergon_gen_task_tree_db failed with" -g "ergon.*"											| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
 rg -z "killed as a result of limit of" -g "messages*"	| grep -v "stopped searching binary file"	| tee -a ~/tmp/$CASE_NUM/ISB-108-2020.txt
