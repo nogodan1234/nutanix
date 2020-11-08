@@ -819,6 +819,12 @@ echo "###########################"																| tee -a ~/tmp/$CASE_NUM/AHV_u
 rg -z "Could not find parcels" -g "acropolis.*" 												| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
 rg -z "locality_restored: false" -g "zeus_config.txt"											| tee -a ~/tmp/$CASE_NUM/AHV_unschedulable_ENG-166495.txt
 
+echo "###########################"																| tee -a ~/tmp/$CASE_NUM/AHV_upgradefail_ENG-262991.txt
+echo "Checking for ENG-262991 AHV upgrade failure	"											| tee -a ~/tmp/$CASE_NUM/AHV_upgradefail_ENG-262991.txt
+echo "dbenv>open: DB_RUNRECOVERY: Fatal"								                    	| tee -a ~/tmp/$CASE_NUM/AHV_upgradefail_ENG-262991.txt
+echo "###########################"																| tee -a ~/tmp/$CASE_NUM/AHV_upgradefail_ENG-262991.txt
+rg -z "Fatal error, run database recovery" -g "ahv*" 											| tee -a ~/tmp/$CASE_NUM/AHV_upgradefail_ENG-262991.txt
+
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
 echo "Checking for ENG-333729(ENG-172411) ESXi host hung with memory leak"						| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/ESXi_onetime_pass_memleak.txt
