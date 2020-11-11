@@ -14,6 +14,7 @@ then
 	echo "########################################################"
 	echo "HW Model is  "
 	echo "########################################################"
+	#ncli host  ls | egrep "Controller VM Address|Block Serial" | awk '{print $5,$6}'
 	for i in `hostips` ; do echo "==== $i ====" ; ssh -q root@$i 'dmidecode | grep "Product Name" '| head -1 ;done
 	echo "########################################################"
 	echo "BMC version is "
@@ -30,6 +31,7 @@ then
 	echo "########################################################"
 	echo "HW Model is  "
 	echo "########################################################"
+	#ncli host  ls | egrep "Controller VM Address|Block Serial" | awk '{print $5,$6}'
 	for i in `hostips` ; do echo "==== $i ====" ; ssh -q root@$i  smbiosDump | grep -i product| head -1 | awk -F' ' '{print $2}'; done
 	echo "########################################################"
 	echo "BMC version is "
@@ -46,6 +48,7 @@ then
 	echo "########################################################"
 	echo "HW Model is  "
 	echo "########################################################"
+	#ncli host  ls | egrep "Controller VM Address|Block Serial" | awk '{print $5,$6}'
 	hostssh 'systeminfo| grep "System Model" '
 	echo "########################################################"	
 	echo "BMC version is "
