@@ -32,6 +32,11 @@ echo "Check master/worker node label during the upgrade"										              
 echo "#############################################"											                                                        | tee -a ~/tmp/upgrade_node_label.txt
 for i in $(kubectl get node  | grep -v NAME | awk '{print $1}'); do echo "## checking labels of all nodes ##"; echo "label of node $i" ; kubectl get node $i -o jsonpath='{.metadata.labels}' ;done                   | tee -a ~/tmp/upgrade_node_label.txt
 
+echo "#############################################"											                                                        | tee -a ~/tmp/krbn3519.txt
+echo "Multiple AZ Karbon core crash - KRBN-3519 "										                                                                | tee -a ~/tmp/krbn3519.txt
+echo "#############################################"											                                                        | tee -a ~/tmp/krbn3519.txt
+rg -z "Failed to authenticate GetVersions(): unknown error" -g "karbon_core.*"												                            | tee -a ~/tmp/krbn3519.txt
+
 echo "#############################################"											                                                        | tee -a ~/tmp/CSI_log.txt
 echo "CSI log collector sh"										                                                                                        | tee -a ~/tmp/CSI_log.txt
 echo "#############################################"											                                                        | tee -a ~/tmp/CSI_log.txt
@@ -46,6 +51,3 @@ for i in $(kubectl get pod -n ntnx-system | grep csi-node | awk '{print$1}') ; d
 #echo "KB 7616"
 #from wk "sudo systemctl status kubelet-worker.service"
 #from wk "sudo systemctl restart kubelet-worker.service | grep `docker pull`
-
-
-
