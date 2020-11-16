@@ -173,10 +173,10 @@ echo "#############################################"
 echo " Log collector run time"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg -z "Log Collector Start time" -g sysctl_info.txt												| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
-rg -z "Log Collector Start time" -g ncc_info.txt												| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
-rg -z "Log Collector Start time" -g "hardware_info.INFO*" | tail -1								| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
-sleep 2
+#rg -z "Log Collector Start time" -g sysctl_info.txt												| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
+#rg -z "Log Collector Start time" -g ncc_info.txt												| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
+#rg -z "Log Collector Start time" -g "hardware_info.INFO*" | tail -1								| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
+#sleep 2
 
 echo "#############################################"
 echo " Cluster ID/Timezone"
@@ -326,6 +326,7 @@ sleep 2
 rg -z "Corruption fixer op finished with errorkDataCorrupt on egroup" -g "stargate.*"			| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 #ISB-072-2018
 rg -z "kUnexpectedIntentSequence" -g "stargate.*"												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Check Backend error, please check cassandra status"										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
@@ -375,11 +376,22 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "Checksum error most likely due to network issue"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Expected and received checksums do not match" -g 'stargate*'								| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-echo "Checking peer service dead"																| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "has been found dead" | grep -v "stopped searching binary file"							| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Starting fixer op on extent group" -g "stargate"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "Stargate iscsi io/cassandra  issue related logging"										| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "Portal 192.168.5.254:3261 is down"  -g "iscsi_redirector*"                               | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "INFO - Redirecting target iqn"  -g "iscsi_redirector*" | grep -v 192.168.5.254:3261      | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "INFO - Redirecting target iqn"  -g "iscsi_redirector*" | grep  192.168.5.254:3261        | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "Watch dog fired: event timeout" -g "stargate.*"                                          | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "attempting task abort! scmd" -g "message*"                                               | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "ParseReturnCodes: Backend returns error kTimeoutError for extent group" -A2 -B2 -g "stargate*"   | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "from cassandra failed with error 4. Retrying after" -g "stargate*"                               | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "IscsiServer: Preparing to close connection" -g "stargate*"                                       | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "Marking disk path: /home/nutanix/data/stargate-storage/disks" -g "stargate*"                     | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "Forwarding needs to be set for" -A2 -B2 -g "genesis*"                                            | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "method GetEgroupState returned error kTimeout" -B2 -A2 -g "stargate*"                            | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "method NfsForward returned error kTimeout" -g "stargate*"										| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 echo "5. Token revoke failure/success"															| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
@@ -403,6 +415,14 @@ rg -z "as degraded after analyzing"																| tee   -a ~/tmp/$CASE_NUM/ca
 rg -z "Reason: Put degraded node" -g "cassandra*"																	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Cassandra node is not in normal state. It will not  register for leadership for any range" -g "cassandra*"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Changing the Cassandra status for node with svm id" -g "dynamic_ring_change*"								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "RPC timed out" -A2 -B2 -g "cassandra_monitor*"                                                               | tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Killing Cassandra using SIGKILL. Command:" -g "cassandra_monitor*"                                           | tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Number of unclean restarts in the last 300 seconds:" -g "cassandra_monitor*"                                 | tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z " Check failed: system" -B2 -A2 -g "cassandra_monitor*"                                                       | tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Local node's new status: kForwardingMode current_status: kForwardingMode" -g "cassandra*"                    | tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Started VolunteerLeadershipOp" -g "cassandra*"                                                               | tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Updating leader cache for " -g "cassandra*"                                                                  | tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Fatal exception in thread Thread" -B2 -A2 -g "cassandra*"                                                    | tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "Cass SSD disk write latency high, please check SSD status"								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
@@ -880,7 +900,8 @@ rg -z "ssh -q -o CheckHostIp=no -o ConnectTimeout=15 -o StrictHostKeyChecking=no
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
 echo "Curator scan log"																								| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
 echo "#############################################"																| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
-rg -z "Scan\) started for reasons" -g "curator.*" 																	| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
+rg -z "Scan\) started for reasons" -g "curator.*"																	| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
+rg -z "Scan\) done, executed in" -g "curator.*"																		| tee  -a ~/tmp/$CASE_NUM/curator_scan.txt
 
 echo "#############################################"																| tee -a  ~/tmp/$CASE_NUM/cvm_memsize.txt
 echo "CVM memsize "																									| tee -a  ~/tmp/$CASE_NUM/cvm_memsize.txt
