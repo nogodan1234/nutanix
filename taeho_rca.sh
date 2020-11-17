@@ -197,14 +197,14 @@ echo "#############################################"
 echo " Foundation verion"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg "4|3|2"  -g foundation_version																| tee -a  ~/tmp/$CASE_NUM/foundation_ver.txt
+rg "5|4|3|2"  -g foundation_version																| tee -a  ~/tmp/$CASE_NUM/foundation_ver.txt
 sleep 2
 
 echo "#############################################"
 echo " Pheonix verion"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg "4|3|2"  -g phoenix_version																	| tee -a  ~/tmp/$CASE_NUM/phoenix_ver.txt
+rg "5|4|3|2"  -g phoenix_version																	| tee -a  ~/tmp/$CASE_NUM/phoenix_ver.txt
 sleep 2
 
 echo "#############################################"
@@ -284,12 +284,12 @@ sleep 2
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
 echo "FA67 Metadata corruption due to skipped row"												| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
-rg -z -B 1 -A 1 "Skipping row DecoratedKey"														| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
+rg -z -B 1 -A 1 "Skipping row DecoratedKey"	-g "system.log*"									| tee -a ~/tmp/$CASE_NUM/FA67metadata_corrupt.txt
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/node_degraded.txt
-echo "ONCALL-8062 fix in 5.10.9 Wrong CVM became degraded "										| tee -a ~/tmp/$CASE_NUM/node_degraded.txt
+echo "ENG-168270  Wrong CVM becomes degraded "													| tee -a ~/tmp/$CASE_NUM/node_degraded.txt
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/node_degraded.txt
-rg -z "notification=NodeDegraded service_vm_id="												| tee -a ~/tmp/$CASE_NUM/node_degraded.txt
+rg -z "notification=NodeDegraded service_vm_id=" -g "zookeeper_monitor*"						| tee -a ~/tmp/$CASE_NUM/node_degraded.txt
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/hera_service.txt
 echo "TH-3430,Oncall-8764 Hera service crash "													| tee -a ~/tmp/$CASE_NUM/hera_service.txt
@@ -341,7 +341,7 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "Checking ... Disk IO latency check > 100ms"												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "AIO disk" -g "stargate*"  | sort -k 11n | tail -30										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Starting Stargate"																		| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "Starting Stargate" -g "stargate*"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 #rg -z "Requested deletion of egroup"
 rg -z "completed with error kRetry for vdisk"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
@@ -349,21 +349,21 @@ echo "Checking ... SSD tier running out of space"												| tee  -a ~/tmp/$CA
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Unable to pick a suitable replica" -g "stargate*"										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-echo "Checking ... Unfixable egroup corruption"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "Checking ... Unfixable egroup corruption" -g "stargate*"									| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "are either unavailable or corrupt"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "are either unavailable or corrupt"	-g "stargate*"										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-echo "NFS server requested client to retry"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "NFS server requested client to retry" -g "stargate*"										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Checking ... NFS3ERR_JUKEBOX error"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "Checking ... NFS3ERR_JUKEBOX error" -g "stargate*"										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... Oplog corrupt detection"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "is missing on all the replicas"															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "is missing on all the replicas" -g "stargate*"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... RSS memory dump/crash"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Exceeded resident memory limit: Aborting"												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "Exceeded resident memory limit: Aborting" -g "stargate*"									| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Run out of storage space"																	| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
@@ -400,18 +400,12 @@ sleep 2
 rg -z "Failed to revoke token from"	 -g "genesis.*"												| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 rg -z "revoking shutdown token" -g "genesis.*"													| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 
-echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/scsi_controller.txt
-echo "6. scsi controller timeout"																| tee   -a ~/tmp/$CASE_NUM/scsi_controller.txt
-echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/scsi_controller.txt
-sleep 2
-rg -z "mpt3sas_cm0: Command Timeout"															| tee   -a ~/tmp/$CASE_NUM/scsi_controller.txt
-
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-echo "7. Cassandra Check"																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+echo "6. Cassandra Check"																		| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 sleep 2
-rg -z "Could not start repair on the node"														| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "as degraded after analyzing"																| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "Could not start repair on the node"	-g "cassandra*"										| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "as degraded after analyzing"	-g "zookeeper_monitor*"															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Reason: Put degraded node" -g "cassandra*"																	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Cassandra node is not in normal state. It will not  register for leadership for any range" -g "cassandra*"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Changing the Cassandra status for node with svm id" -g "dynamic_ring_change*"								| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
@@ -438,10 +432,10 @@ echo "# Potential ISB-102-2019   Cassandra issue #"											| tee   -a ~/tmp/$
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 #https://confluence.eng.nutanix.com:8443/display/STK/ISB-102-2019%3A+Data+inconsistency+on+2-node+clusters
 rg -z "has been found dead"	-g "cassandra_monitor*"												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "does not exist when extent oid="															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "does not exist when extent " -g "curator*"															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Leadership acquired for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "with transformation type kCompressionLZ4 and transformed length"							| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z "with transformation type kCompressionLZ4 and transformed length"	-g "stargate*"						| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 #rg -z "Failing GetEgroupStateOp as the extent group does not exist on disk"
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "Cassandra heap memory congestion check"													| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
@@ -562,15 +556,15 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "13. Stargate crashing due to AHV frodo service failure ONCALL-7326"						| tee  -a ~/tmp/$CASE_NUM/frodo_svc_crash.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/frodo_svc_crash.txt
 sleep 2
-rg -z "Check failed: count_ == write_iobuf_->size()"											| tee  -a ~/tmp/$CASE_NUM/frodo_svc_crash.txt
+rg -z "Check failed: count_ == write_iobuf_->size()" -g "stargate*"								| tee  -a ~/tmp/$CASE_NUM/frodo_svc_crash.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/pithos_vdisk_update_failure.txt
 echo "14. Pithos vdisk update failure  ONCALL-7326 ENG-238450"									| tee  -a ~/tmp/$CASE_NUM/pithos_vdisk_update_failure.txt
 echo "maybe good to check with pithos_cli -exhaustive_validate"									| tee  -a ~/tmp/$CASE_NUM/pithos_vdisk_update_failure.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/pithos_vdisk_update_failure.txt
 sleep 2
-rg -z "Failed to modify and update all the given vdisks, only 0 were successfully updated"		| tee  -a ~/tmp/$CASE_NUM/pithos_vdisk_update_failure.txt
-rg -z "Not performing selective vdisk severing as no vdisks are selected for copy blockmap"		| tee  -a ~/tmp/$CASE_NUM/pithos_vdisk_update_failure.txt
+rg -z "Failed to modify and update all the given vdisks, only 0 were successfully updated" -g "curator*"	| tee  -a ~/tmp/$CASE_NUM/pithos_vdisk_update_failure.txt
+rg -z "Not performing selective vdisk severing as no vdisks are selected for copy blockmap"	-g "curator*"	| tee  -a ~/tmp/$CASE_NUM/pithos_vdisk_update_failure.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt
 echo "15. Missing egroup replica check ONCALL-4514"												| tee  -a ~/tmp/$CASE_NUM/missing_egroup_replica.txt
@@ -595,7 +589,7 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "17. Disk forcefully was pulled off "														| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
 sleep 2
-rg -z "is not marked for removal and has been forcefully pulled"								| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
+rg -z "is not marked for removal and has been forcefully pulled" -g "hades*"					| tee  -a ~/tmp/$CASE_NUM/physical_disk_op.txt
 #disk_operator accept_old_disk $DISK_SN
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/iscsi_reset.txt
@@ -617,7 +611,8 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "20. Cerebro bug ENG-247313 "																| tee  -a ~/tmp/$CASE_NUM/Cerebro_bug-ENG24713.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Cerebro_bug-ENG24713.txt
 sleep 2
-rg -z "Cannot reincarnate a previously detached entity without an incarnation_id"				| tee  -a ~/tmp/$CASE_NUM/Cerebro_bug-ENG24713.txt
+rg -z "Cannot reincarnate a previously detached entity without an incarnation_id" -g "insights_server*"				| tee  -a ~/tmp/$CASE_NUM/Cerebro_bug-ENG24713.txt
+rg -z "Cannot reincarnate a previously detached entity without an incarnation_id" -g "uhura_server*"				| tee  -a ~/tmp/$CASE_NUM/Cerebro_bug-ENG24713.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
 echo "21. ergon task issue ENG-247313 "															| tee  -a ~/tmp/$CASE_NUM/Ergon_task_issue.txt
@@ -637,7 +632,7 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "22. Segmentation Fault Check possiblely ovsd crash(ENG-279410)"							| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 sleep 2
-rg -z "Segmentation fault" -B1 -A1																| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
+rg -z "Segmentation fault" -B1 -A1 -g "messages*"												| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
 echo "23. ovsd segmenation fault - ENG-300126, ENG-279410"										| tee  -a ~/tmp/$CASE_NUM/seg_fault.txt
@@ -741,8 +736,8 @@ rg -z  "failed with NFS3ERR_NOENT" -g "catalog.out*"											| tee  -a ~/tmp/$
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "CASSANDRA_MON_HEALTH_WARNINING"															| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z  "Attempting repair of local node due to health warnings received from cassandra"  -g "cassandra_monitor.*" > ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z  "Caught Timeout exception while waiting for paxos write response"  -g "system.log*"		> ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Attempting repair of local node due to health warnings received from cassandra"  -g "cassandra_monitor.*" | tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+rg -z  "Caught Timeout exception while waiting for paxos write response"  -g "system.log*"		| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "Detecting if cassandra skipped scans"														| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
@@ -753,7 +748,7 @@ echo "###########################"																| tee -a ~/tmp/$CASE_NUM/cassa
 echo "Displays critical events"																	| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z  "Skipping row DecoratedKey"  -g "system.log*"											| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z  "Fatal exception in thread"  -g "system.log*"											| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
+#rg -z  "Fatal exception in thread"  -g "system.log*"											| tee -a ~/tmp/$CASE_NUM/cassandra_check.txt
 
 echo "###########################"																| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
 echo "Aplos LDAP login failure  "																| tee -a ~/tmp/$CASE_NUM/aplos_check.txt
