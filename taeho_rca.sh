@@ -263,7 +263,7 @@ sleep 2
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
 echo " Smartctl/Disk failure check"																| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
-rg "attempting task abort! scmd"																| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
+rg "attempting task abort! scmd" -g "message*"													| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
 #rg -z "SATA DOM|sudo smartctl | overall-health" -g "hardware_info"								| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
 sleep 2
 
@@ -331,17 +331,30 @@ echo "#############################################"											| tee  -a ~/tmp/$
 echo "Check Backend error, please check cassandra status"										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "ParseReturnCodes: Backend returns error 'Timeout Error' for extent group id:" -g "stargate.*" | tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "Stargate Crash"																			| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "Stargate exited" -g "stargate*"															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "Starting Stargate" -g "stargate*"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "zk session connection timeout"															| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "QFATAL Timed out waiting for Zookeeper session establishment" -g "stargate*"				| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Hosting of virtual IP "																	| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "SMB-SESSION-SETUP request got for connection"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "Cluster VIP address leadership change"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "Hosting of virtual IP " -g "prism_monitor*"												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "SMB session setup log"																	| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+rg -z "SMB-SESSION-SETUP request got for connection" -g "stargate*"								| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 #echo "ENG-30397 ext4 file corruption"
 #rg -z "kSliceChecksumMismatch"
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "Checking ... Disk IO latency check > 100ms"												| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 rg -z "AIO disk" -g "stargate*"  | sort -k 11n | tail -30										| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
-rg -z "Starting Stargate" -g "stargate*"														| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
+
 #rg -z "Requested deletion of egroup"
 rg -z "completed with error kRetry for vdisk"													| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_health.txt
@@ -380,18 +393,33 @@ rg -z "Expected and received checksums do not match" -g 'stargate*'								| tee
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 echo "Stargate iscsi io/cassandra  issue related logging"										| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "Stargate local stargate is down, redirecting to external"									| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 rg -z "Portal 192.168.5.254:3261 is down"  -g "iscsi_redirector*"                               | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 rg -z "INFO - Redirecting target iqn"  -g "iscsi_redirector*" | grep -v 192.168.5.254:3261      | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "IscsiServer: Preparing to close connection" -g "stargate*"                               | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "Forwarding needs to be set for" -A2 -B2 -g "genesis*"                                    | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "Stargate local stargate is up, bring iscsi traffic back to local"							| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 rg -z "INFO - Redirecting target iqn"  -g "iscsi_redirector*" | grep  192.168.5.254:3261        | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "Stargate Crash - Watchdog timeout"														| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 rg -z "Watch dog fired: event timeout" -g "stargate.*"                                          | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
-rg -z "attempting task abort! scmd" -g "message*"                                               | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "Stargate Cassandra DB query error"														| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 rg -z "ParseReturnCodes: Backend returns error kTimeoutError for extent group" -A2 -B2 -g "stargate*"   | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 rg -z "from cassandra failed with error 4. Retrying after" -g "stargate*"                               | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
-rg -z "IscsiServer: Preparing to close connection" -g "stargate*"                                       | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
-rg -z "Marking disk path: /home/nutanix/data/stargate-storage/disks" -g "stargate*"                     | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
-rg -z "Forwarding needs to be set for" -A2 -B2 -g "genesis*"                                            | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 rg -z "method GetEgroupState returned error kTimeout" -B2 -A2 -g "stargate*"                            | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 rg -z "method NfsForward returned error kTimeout" -g "stargate*"										| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "Stargate disables failed disk"															| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+echo "#############################################"											| tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
+rg -z "Marking disk path: /home/nutanix/data/stargate-storage/disks" -g "stargate*"             | tee  -a ~/tmp/$CASE_NUM/Stargate_iscsi.txt
 
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
 echo "5. Token revoke failure/success"															| tee   -a ~/tmp/$CASE_NUM/revoke_token.txt
