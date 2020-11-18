@@ -302,7 +302,8 @@ echo "#############################################"											| tee -a ~/tmp/$C
 echo "2. ISB-101-2019: Increasing the CVM Common Memory Pool "									| tee -a ~/tmp/$CASE_NUM/OOM.txt
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/OOM.txt
 sleep 2
-rg -z -B 1 -A 1 "Out of memory: Kill process" | egrep -i "ServiceVM_Centos.0.out|NTNX.serial.out.0"  | tee -a ~/tmp/$CASE_NUM/OOM.txt
+rg -z -B 1 -A 1 "Out of memory: Kill process" -g "ServiceVM_Centos.0.out*"  					| tee -a ~/tmp/$CASE_NUM/OOM.txt
+rg -z -B 1 -A 1 "Out of memory: Kill process" -g "NTNX.serial.out*"  							| tee -a ~/tmp/$CASE_NUM/OOM.txt
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
 echo "ENG-266390: CVM kernel panic	 "															| tee -a ~/tmp/$CASE_NUM/ENG-266390_panic.txt
