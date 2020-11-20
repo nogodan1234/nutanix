@@ -71,7 +71,7 @@ function unique_FRU()
 	STARTBLOCK=""
 	OK2PRINT=""
 
-	rg -z "FRU Device Description" -A14 -g "hardware_info*" > /tmp/unique_fru.$$
+	rg -z "FRU Device Description" -A14 -g "hardware_info" > /tmp/unique_fru.$$
 
 	while IFS= read -r line
 	do
@@ -175,7 +175,7 @@ echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 #rg -z "Log Collector Start time" -g sysctl_info.txt												| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
 #rg -z "Log Collector Start time" -g ncc_info.txt												| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
-#rg -z "Log Collector Start time" -g "hardware_info.INFO*" | tail -1								| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
+rg -z "Log Collector Start time" -g "hardware_info" 											| tee -a  ~/tmp/$CASE_NUM/ncc_run_time.txt
 #sleep 2
 
 echo "#############################################"
@@ -231,7 +231,7 @@ echo "#############################################"
 echo " BMC/BIOS version"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg -z "bmc info" -A5 -g "hardware_info*"														| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
+rg -z "bmc info" -A5 -g "hardware_info"															| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
 
 echo "#############################################"
 echo " Hypervisor network error check "
@@ -463,7 +463,7 @@ echo "#############################################"											| tee   -a ~/tmp/
 rg -z "has been found dead"	-g "cassandra_monitor*"												| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "does not exist when extent " -g "curator*"															| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "Leadership acquired for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
-rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
+#rg -z "RegisterForLeadership for token:" -g "cassandra_monitor*" | grep -v "stopped searching binary file"	| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 rg -z "with transformation type kCompressionLZ4 and transformed length"	-g "stargate*"						| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
 #rg -z "Failing GetEgroupStateOp as the extent group does not exist on disk"
 echo "#############################################"											| tee   -a ~/tmp/$CASE_NUM/cassandra_check.txt
