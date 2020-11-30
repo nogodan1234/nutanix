@@ -231,7 +231,8 @@ echo "#############################################"
 echo " BMC/BIOS version"
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg -z "bmc info" -A5 -g "hardware_info"															| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
+rg -z "BMC" -A6 -g "hardware_info.INFO*" | sort -u												| tee -a  ~/tmp/$CASE_NUM/bmc_ver.txt
+rg -z "BIOS Information" -A6 -g "hardware_info.INFO*" | sort -u									| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
 
 echo "#############################################"
 echo " Hypervisor network error check "
@@ -258,6 +259,7 @@ echo " NCC version check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
 rg -z "Ncc Version number" -g "zeus*"															| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
+find ~/shared/${CASE_NUM}/ ncc_upgrade.history -exec tail -1 {} \; 								| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
 sleep 2
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
