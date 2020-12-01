@@ -258,8 +258,7 @@ echo "#############################################"
 echo " NCC version check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg -z "Ncc Version number" -g "zeus*"															| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
-find ~/shared/${CASE_NUM}/ ncc_upgrade.history -exec tail -1 {} \; 								| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
+rg -z "/home/nutanix/data/ncc/installer" -g "ncc_upgrade.history"								| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
 sleep 2
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
