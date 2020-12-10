@@ -235,6 +235,12 @@ rg -z "BMC" -A6 -g "hardware_info.INFO*" | sort -u												| tee -a  ~/tmp/$C
 rg -z "BIOS Information" -A6 -g "hardware_info.INFO*" | sort -u									| tee -a  ~/tmp/$CASE_NUM/bios_ver.txt
 
 echo "#############################################"
+echo " NIC Card detail"
+echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
+echo "#############################################"
+rg -z "Ethernet controller" -g "hardware_info.INFO*" | sort -u									| tee -a  ~/tmp/$CASE_NUM/NIC_HW.txt
+
+echo "#############################################"
 echo " Hypervisor network error check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
@@ -258,7 +264,7 @@ echo "#############################################"
 echo " NCC version check "
 echo " Output file will be generated in ~/tmp/$CASE_NUM folder"
 echo "#############################################"
-rg -z "/home/nutanix/data/ncc/installer" -g "ncc_upgrade.history"								| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
+rg -z "/home/nutanix/data/ncc/installer" -g "ncc_upgrade.history" | tail -1						| tee -a ~/tmp/$CASE_NUM/NCC_Ver.txt
 sleep 2
 
 echo "#############################################"											| tee -a ~/tmp/$CASE_NUM/Disk_failure.txt
